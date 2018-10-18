@@ -12,6 +12,8 @@ pipelines:
           - node
         script: # Modify the commands below to build your repository.
           - yarn
+          - ./node_modules/.bin/sequelize db:migrate
+          - ./node_modules/.bin/sequelize db:seed:all
           - npm test
         services:
           - postgres
