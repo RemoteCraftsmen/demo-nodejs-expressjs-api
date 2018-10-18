@@ -96,7 +96,7 @@ export default class TodoController {
                 return response.sendStatus(401);
             }
 
-            todo.update(fields, { fields: ['name', 'user_id'] })
+            todo.update(fields, { fields: ['name', 'user_id', 'completed'] })
                 .then(() => {
                     response.sendStatus(200);
                 })
