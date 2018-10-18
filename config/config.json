@@ -1,0 +1,36 @@
+{
+    "development": {
+        "username": "admin",
+        "password": "admin",
+        "database": "api",
+        "host": "127.0.0.1",
+        "port": 5432,
+        "dialect": "postgres",
+        "jwt": {
+            "secret": "verySecretValue"
+        }
+    },
+    "test": {
+        "username": "admin",
+        "password": "admin",
+        "database": "api_test",
+        "host": "127.0.0.1",
+        "port": 5432,
+        "dialect": "postgres",
+        "logging": false,
+        "jwt": {
+            "secret": "verySecretValue"
+        }
+    },
+    "production": {
+        "username": "admin",
+        "password": "admin",
+        "database": "api_prod",
+        "host": "127.0.0.1",
+        "port": 5432,
+        "dialect": "postgres",
+        "jwt": {
+            "secret": "verySecretValue"
+        }
+    }
+}
