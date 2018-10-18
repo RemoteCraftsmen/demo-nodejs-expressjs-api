@@ -5,7 +5,7 @@ export default class AuthController {
     login(request, response, next) {
         const { email, password } = request.body;
 
-        User.findOne({ where: { email }, attributes: ['password'] })
+        User.findOne({ where: { email }, attributes: ['id', 'password'] })
             .then(user => {
                 if (!user) {
                     return response.status(401).json({ auth: false, token: null });

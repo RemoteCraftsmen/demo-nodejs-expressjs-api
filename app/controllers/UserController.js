@@ -13,8 +13,6 @@ export default class UserController {
     }
 
     store(request, response, next) {
-        const { email, password } = request.body;
-
         User.create({ ...request.body })
             .then(user => {
                 const token = Auth.signIn(user);
