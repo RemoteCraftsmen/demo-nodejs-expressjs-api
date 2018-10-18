@@ -1,4 +1,4 @@
-import Auth from '../lib/Auth';
+import Auth from '../services/Auth';
 import { User } from '../models';
 
 export default class UserController {

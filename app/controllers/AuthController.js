@@ -1,5 +1,5 @@
 import { User } from '../models';
-import Auth from '../lib/Auth';
+import Auth from '../services/Auth';
 
 export default class AuthController {
     login(request, response, next) {
