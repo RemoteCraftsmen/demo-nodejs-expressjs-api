@@ -14,7 +14,7 @@ pipelines:
           - yarn
           - NODE_ENV=test ./node_modules/.bin/sequelize db:migrate
           - NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all
-          - npm test-pipelines
+          - npm run test-pipeline
         services:
           - postgres
 
