@@ -5,12 +5,15 @@ import jwt from 'jsonwebtoken';
 import UserFactory from './factories/user';
 import truncateDatabase from './truncate';
 
+let server;
 let API;
 let users = [];
 let user_id;
 
 describe('API', function() {
     before(async function() {
+        server = require('../index');
+
         truncateDatabase();
         let { client, token } = await Setup.API(false);
 

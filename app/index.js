@@ -29,6 +29,6 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/todos', todoRoutes);
 
-app.listen(PORT, HOST, () => {
-    console.log(`express -> PORT: ${PORT}`);
+module.exports = app.listen(PORT, HOST, () => {
+    console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
 });

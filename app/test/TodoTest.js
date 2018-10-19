@@ -6,12 +6,15 @@ import UserFactory from './factories/user';
 import TodoFactory from './factories/todo';
 import truncateDatabase from './truncate';
 
+let server;
 let API;
 let todos = [];
 let user_id;
 
 describe('API', function() {
     before(async function() {
+        server = require('../index');
+
         truncateDatabase();
         let { client, token } = await Setup.API();
 

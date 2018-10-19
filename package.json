@@ -4,12 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "NODE_ENV=test nodemon ./app/index.js --exec babel-node -e js",
+        "dev": "NODE_ENV=development nodemon ./app/index.js --exec babel-node -e js",
         "build": "babel -d ./build ./app",
         "prebuild": "rm -rf build/*",
         "start": "NODE_ENV=production node ./build/index.js",
-        "test": "NODE_ENV=test babel-node ./app/index.js | NODE_ENV=test mocha --require babel-core/register --require babel-polyfill ./app/test/",
-        "testp": "NODE_ENV=test babel-node ./app/index.js | NODE_ENV=test mocha --require babel-core/register --require babel-polyfill --"
+        "test": "NODE_ENV=test mocha --exit --require babel-core/register --require babel-polyfill ./app/test/",
+        "testp": "NODE_ENV=test mocha --exit --require babel-core/register --require babel-polyfill --"
     },
     "author": "",
     "license": "ISC",
@@ -38,6 +38,7 @@
         "babel-preset-stage-0": "^6.24.1",
         "babel-register": "^6.26.0",
         "chai": "^4.2.0",
-        "mocha": "^5.2.0"
+        "mocha": "^5.2.0",
+        "supertest": "^3.3.0"
     }
 }
