@@ -1,0 +1,28 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:8
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+        script: # Modify the commands below to build your repository.
+          - yarn
+          - NODE_ENV=test ./node_modules/.bin/sequelize db:migrate
+          - NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all
+          - npm test
+        services:
+          - postgres
+
+definitions: 
+  services: 
+    postgres: 
+      image: postgres 
+      environment: 
+        POSTGRES_DB: 'api_test' 
+        POSTGRES_USER: 'admin'
+        POSTGRES_PASSWORD: 'admin'
