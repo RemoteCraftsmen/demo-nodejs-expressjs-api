@@ -9,7 +9,8 @@
         "prebuild": "rm -rf build/*",
         "start": "NODE_ENV=production node ./build/index.js",
         "test": "NODE_ENV=test mocha --exit --require babel-core/register --require babel-polyfill ./app/test/",
-        "testp": "NODE_ENV=test mocha --exit --require babel-core/register --require babel-polyfill --"
+        "testp": "NODE_ENV=test mocha --exit --require babel-core/register --require babel-polyfill --",
+        "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml --require babel-core/register --require babel-polyfill ./app/test/"
     },
     "author": "",
     "license": "ISC",
@@ -39,6 +40,7 @@
         "babel-register": "^6.26.0",
         "chai": "^4.2.0",
         "mocha": "^5.2.0",
+        "mocha-junit-reporter": "^1.18.0",
         "supertest": "^3.3.0"
     }
 }
