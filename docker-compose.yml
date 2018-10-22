@@ -1,12 +1,21 @@
 version: '3'
 
 services:
-    db:
-        image: postgres
-        restart: always
-        environment:
-            POSTGRES_USER: admin
-            POSTGRES_PASSWORD: admin
-            POSTGRES_DB: api
-        ports:
-            - 127.0.0.1:5432:5432
+  db:
+    image: postgres
+    container_name: postgres.nodejs-express-api.docker
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: api
+    volumes:
+    - ~/data/postgres.nodejs-express-api.docker:/var/lib/postgresql/data
+    ports:
+    - 127.0.0.1:5432:5432
+    networks:
+    - global
+
+networks:
+  global:
+    external: true
