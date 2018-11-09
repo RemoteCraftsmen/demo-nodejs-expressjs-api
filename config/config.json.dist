@@ -8,7 +8,8 @@
         "dialect": "postgres",
         "jwt": {
             "secret": "verySecretValue"
-        }
+        },
+        "frontendUrl": "localhost:4200"
     },
     "test": {
         "username": "admin",
@@ -20,7 +21,8 @@
         "logging": false,
         "jwt": {
             "secret": "verySecretValue"
-        }
+        },
+        "frontendUrl": "localhost:4200"
     },
     "production": {
         "username": "admin",
@@ -31,6 +33,7 @@
         "dialect": "postgres",
         "jwt": {
             "secret": "verySecretValue"
-        }
+        },
+        "frontendUrl": "http://angular7-demo.rmtcfm.com"
     }
 }
