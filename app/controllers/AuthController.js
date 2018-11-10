@@ -13,7 +13,7 @@ export default class AuthController {
 
                 if (Auth.checkCredentials(password, user.getDataValue('password'))) {
                     const token = Auth.signIn(user);
-                    delete user.password;
+                    user.removeAttribute('password');
 
                     return response.json({ auth: true, token, user });
                 }
