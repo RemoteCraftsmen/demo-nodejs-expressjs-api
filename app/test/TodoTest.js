@@ -9,7 +9,7 @@ import truncateDatabase from './truncate';
 let server;
 let API;
 let todos = [];
-let user_id;
+let logged_user_id;
 
 describe('API', function() {
     before(async function() {
@@ -22,11 +22,11 @@ describe('API', function() {
 
         let decoded = jwt.decode(token);
 
-        user_id = decoded.id;
+        logged_user_id = decoded.id;
 
-        todos.push(await TodoFactory({ user_id }));
-        todos.push(await TodoFactory({ user_id }));
-        todos.push(await TodoFactory({ user_id }));
+        todos.push(await TodoFactory({ user_id: logged_user_id }));
+        todos.push(await TodoFactory({ user_id: logged_user_id }));
+        todos.push(await TodoFactory({ user_id: logged_user_id }));
     });
 
     describe('todos', function() {
@@ -38,7 +38,7 @@ describe('API', function() {
 
                 expect(data)
                     .to.have.property('creator_id')
-                    .to.equal(user_id);
+                    .to.equal(logged_user_id);
             });
 
             it('returns an error if name is blank', async function() {
@@ -58,24 +58,6 @@ describe('API', function() {
                     message: 'cannot be blank'
                 });
             });
-
-            it('returns an error if user_id is blank', async function() {
-                let data;
-
-                const todo = await TodoFactory({ user_id: null }, true);
-
-                try {
-                    let { data } = await API.post(`/todos`, todo);
-                } catch (e) {
-                    data = e.response.data;
-                }
-
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
-                    param: 'user_id',
-                    message: 'cannot be blank'
-                });
-            });
         });
 
         describe('GET /todos/{id}', function() {
@@ -86,7 +68,7 @@ describe('API', function() {
 
                 let decoded = jwt.decode(token);
 
-                user_id = decoded.id;
+                logged_user_id = decoded.id;
             });
 
             it('fetches a single todo', async function() {
@@ -117,11 +99,11 @@ describe('API', function() {
 
                 let decoded = jwt.decode(token);
 
-                user_id = decoded.id;
+                logged_user_id = decoded.id;
             });
 
             it('updates a todo', async function() {
-                const todo = await TodoFactory({ user_id });
+                const todo = await TodoFactory({ user_id: logged_user_id });
 
                 await API.patch(`/todos/${todo.id}`, { name: 'upd' });
 
@@ -167,11 +149,11 @@ describe('API', function() {
 
                 let decoded = jwt.decode(token);
 
-                user_id = decoded.id;
+                logged_user_id = decoded.id;
             });
 
             it('saves a todo when not found', async function() {
-                const todo = await TodoFactory({ id: 666, user_id }, true);
+                const todo = await TodoFactory({ id: 666, user_id: logged_user_id }, true);
 
                 await API.put(`/todos/${todo.id}`, todo);
 
@@ -182,8 +164,8 @@ describe('API', function() {
             });
 
             it('puts a todo when found', async function() {
-                const todo = await TodoFactory({ user_id });
-                const anotherTodo = await TodoFactory({ user_id }, true);
+                const todo = await TodoFactory({ user_id: logged_user_id });
+                const anotherTodo = await TodoFactory({ user_id: logged_user_id }, true);
 
                 await API.put(`/todos/${todo.id}`, anotherTodo);
 
@@ -196,7 +178,7 @@ describe('API', function() {
             it('returns an error if name is blank', async function() {
                 let data;
 
-                const todo = await TodoFactory({ user_id });
+                const todo = await TodoFactory({ user_id: logged_user_id });
                 const anotherTodo = await TodoFactory({ name: null }, true);
 
                 try {
@@ -208,25 +190,6 @@ describe('API', function() {
                 expect(data).to.have.property('errors');
                 expect(data.errors).to.deep.include({
                     param: 'name',
-                    message: 'cannot be blank'
-                });
-            });
-
-            it('returns an error if user_id is blank', async function() {
-                let data;
-
-                const todo = await TodoFactory({ user_id });
-                const anotherTodo = await TodoFactory({ user_id: null }, true);
-
-                try {
-                    let { data } = await API.put(`/todos/${todo.id}`, anotherTodo);
-                } catch (e) {
-                    data = e.response.data;
-                }
-
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
-                    param: 'user_id',
                     message: 'cannot be blank'
                 });
             });
@@ -256,11 +219,11 @@ describe('API', function() {
 
                 let decoded = jwt.decode(token);
 
-                user_id = decoded.id;
+                logged_user_id = decoded.id;
             });
 
             it('deletes a todo', async function() {
-                const todo = await TodoFactory({ user_id });
+                const todo = await TodoFactory({ user_id: logged_user_id });
 
                 const response = await API.delete(`/todos/${todo.id}`);
 
