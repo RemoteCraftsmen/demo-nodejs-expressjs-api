@@ -15,8 +15,8 @@ export default class TodoController {
         const data = request.body;
 
         data.creator_id = request.logged_user_id;
-        if (request.user_id) {
-            data.creator_id = request.user_id;
+        if (!request.user_id) {
+            data.user_id = request.logged_user_id;
         }
 
         Todo.create({ ...data })
@@ -53,8 +53,8 @@ export default class TodoController {
         const fields = request.body;
 
         data.creator_id = request.logged_user_id;
-        if (request.user_id) {
-            data.creator_id = request.user_id;
+        if (!request.user_id) {
+            data.user_id = request.logged_user_id;
         }
 
         Todo.findById(todo_id).then(todo => {
