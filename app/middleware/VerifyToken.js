@@ -14,7 +14,7 @@ function verifyToken(request, response, next) {
             return response.status(403).json({ auth: false, message: 'Failed to authenticate token.' });
         }
 
-        request.user_id = decoded.id;
+        request.logged_user_id = decoded.id;
 
         next();
     });

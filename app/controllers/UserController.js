@@ -53,7 +53,7 @@ export default class UserController {
                 return response.sendStatus(404);
             }
 
-            if (user.id !== request.user_id) {
+            if (user.id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
@@ -75,7 +75,7 @@ export default class UserController {
                 return response.sendStatus(404);
             }
 
-            if (user.id !== request.user_id) {
+            if (user.id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
