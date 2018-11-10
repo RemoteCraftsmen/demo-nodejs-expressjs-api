@@ -9,12 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             user_id: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
-                validate: {
-                    notNull: {
-                        msg: 'cannot be blank'
-                    }
-                }
+                allowNull: true
             },
             creator_id: {
                 type: DataTypes.INTEGER,
