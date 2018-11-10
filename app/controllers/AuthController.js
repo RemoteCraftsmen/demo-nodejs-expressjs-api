@@ -14,13 +14,14 @@ export default class AuthController {
                 if (Auth.checkCredentials(password, user.getDataValue('password'))) {
                     const token = Auth.signIn(user);
 
-                    return response.json({ auth: true, token });
+                    return response.json({ auth: true, token, user });
                 }
 
-                return response.status(401).json({ auth: false, token: null });
+                return response.status(401).json({ auth: false, token: null, user: null });
             })
             .catch(error => {
-                return response.status(401).json({ auth: false, token: null });
+                console.error(error);
+                return response.status(401).json({ auth: false, token: null, user: null });
             });
     }
 }
