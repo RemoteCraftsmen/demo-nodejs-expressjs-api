@@ -13,9 +13,10 @@ export default class AuthController {
 
                 if (Auth.checkCredentials(password, user.getDataValue('password'))) {
                     const token = Auth.signIn(user);
-                    user.removeAttribute('password');
+                    let plainUser = user.get({ plain: true });
+                    delete plainUser.password;
 
-                    return response.json({ auth: true, token, user });
+                    return response.json({ auth: true, token, user: plainUser });
                 }
 
                 return response.status(401).json({ auth: false, token: null, user: null });
