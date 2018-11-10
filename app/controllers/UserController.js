@@ -20,7 +20,7 @@ export default class UserController {
                 let plainUser = user.get({ plain: true });
                 delete plainUser.password;
 
-                return response.json({ auth: true, token, user: userPlain });
+                return response.json({ auth: true, token, user: plainUser });
             })
             .catch(err => {
                 const errors = err.errors.map(e => {
