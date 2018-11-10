@@ -17,7 +17,10 @@ export default class UserController {
             .then(user => {
                 const token = Auth.signIn(user);
 
-                return response.json({ auth: true, token });
+                let plainUser = user.get({ plain: true });
+                delete plainUser.password;
+
+                return response.json({ auth: true, token, user: userPlain });
             })
             .catch(err => {
                 const errors = err.errors.map(e => {
