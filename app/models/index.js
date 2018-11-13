@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
+import config from '../../config';
 const db = {};
 
 const Op = Sequelize.Op;

@@ -17,7 +17,10 @@ export default class UserController {
             .then(user => {
                 const token = Auth.signIn(user);
 
-                return response.json({ auth: true, token });
+                let plainUser = user.get({ plain: true });
+                delete plainUser.password;
+
+                return response.json({ auth: true, token, user: plainUser });
             })
             .catch(err => {
                 const errors = err.errors.map(e => {
@@ -53,7 +56,7 @@ export default class UserController {
                 return response.sendStatus(404);
             }
 
-            if (user.id !== request.user_id) {
+            if (user.id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
@@ -75,7 +78,7 @@ export default class UserController {
                 return response.sendStatus(404);
             }
 
-            if (user.id !== request.user_id) {
+            if (user.id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 

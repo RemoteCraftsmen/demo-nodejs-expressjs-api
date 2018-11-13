@@ -11,7 +11,7 @@ for (let i = 1; i <= 4; i++) {
         email: faker.internet.email(),
         first_name: faker.name.firstName(),
         last_name: faker.name.lastName(),
-        password: bcrypt.hashSync(new Date().toString()),
+        password: bcrypt.hashSync('testing'),
         created_at: new Date(),
         updated_at: new Date()
     };

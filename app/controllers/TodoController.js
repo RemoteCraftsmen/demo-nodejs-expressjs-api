@@ -2,7 +2,7 @@ import { Todo } from '../models';
 
 export default class TodoController {
     index(request, response, next) {
-        Todo.findAll({ where: { user_id: request.user_id } })
+        Todo.findAll({ where: { user_id: request.logged_user_id } })
             .then(todos => {
                 return response.json({ todos });
             })
@@ -13,7 +13,11 @@ export default class TodoController {
 
     store(request, response, next) {
         const data = request.body;
-        data.creator_id = request.user_id;
+
+        data.creator_id = request.logged_user_id;
+        if (!data.user_id) {
+            data.user_id = request.logged_user_id;
+        }
 
         Todo.create({ ...data })
             .then(todo => {
@@ -47,7 +51,11 @@ export default class TodoController {
     put(request, response, next) {
         const todo_id = request.params.id;
         const fields = request.body;
-        fields.creator_id = request.user_id;
+
+        fields.creator_id = request.logged_user_id;
+        if (!fields.user_id) {
+            fields.user_id = request.logged_user_id;
+        }
 
         Todo.findById(todo_id).then(todo => {
             if (!todo) {
@@ -64,7 +72,7 @@ export default class TodoController {
                     });
             }
 
-            if (todo.user_id !== request.user_id) {
+            if (todo.user_id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
@@ -92,7 +100,7 @@ export default class TodoController {
                 return response.sendStatus(404);
             }
 
-            if (todo.user_id !== request.user_id) {
+            if (todo.user_id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
@@ -114,7 +122,7 @@ export default class TodoController {
                 return response.sendStatus(404);
             }
 
-            if (todo.user_id !== request.user_id) {
+            if (todo.user_id !== request.logged_user_id) {
                 return response.sendStatus(401);
             }
 
