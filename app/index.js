@@ -1,18 +1,17 @@
 require('babel-register');
+
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const Sequelize = require('sequelize');
 const bearerToken = require('express-bearer-token');
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
 const app = express();
 const PORT = 3000;
 const HOST = '127.0.0.1';
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-import { authRoutes, userRoutes, todoRoutes } from './routes';
+import { authRoutes, userRoutes, todoRoutes, passwordReset } from './routes';
+import db from './models';
 
-sequelize
+db.sequelize
     .authenticate()
     .then(() => {
         console.log('Connection has been established successfully.');
@@ -25,9 +24,13 @@ app.use(bearerToken());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cors());
+app.options('*', cors());
+
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/todos', todoRoutes);
+app.use('/', passwordReset);
 
 module.exports = app.listen(PORT, HOST, () => {
     console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
