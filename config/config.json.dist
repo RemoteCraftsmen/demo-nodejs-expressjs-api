@@ -6,6 +6,16 @@
         "host": "127.0.0.1",
         "port": 5432,
         "dialect": "postgres",
+        "mail": {
+            "sendgridApiKey": "",
+            "host": "127.0.0.1",
+            "port": "1025",
+            "secure": false,
+            "auth": {
+                "user": "username",
+                "pass": "password"
+            }
+        },
         "jwt": {
             "secret": "verySecretValue"
         },
@@ -19,6 +29,16 @@
         "port": 5432,
         "dialect": "postgres",
         "logging": false,
+        "mail": {
+            "sendgridApiKey": "",
+            "host": "127.0.0.1",
+            "port": "1025",
+            "secure": false,
+            "auth": {
+                "user": "username",
+                "pass": "password"
+            }
+        },
         "jwt": {
             "secret": "verySecretValue"
         },
@@ -31,6 +51,16 @@
         "host": "127.0.0.1",
         "port": 5432,
         "dialect": "postgres",
+        "mail": {
+            "sendgridApiKey": "",
+            "host": "127.0.0.1",
+            "port": "1025",
+            "secure": false,
+            "auth": {
+                "user": "username",
+                "pass": "password"
+            }
+        },
         "jwt": {
             "secret": "verySecretValue"
         },

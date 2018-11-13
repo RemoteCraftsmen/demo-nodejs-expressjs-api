@@ -40,7 +40,10 @@ module.exports = {
                     allowNull: false
                 }
             },
-            {}
+            {
+                charset: 'utf8',
+                collate: 'utf8_general_ci'
+            }
         );
     },
     down: (queryInterface, Sequelize) => {

@@ -5,9 +5,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 
-import config from '../config';
 import db from './models';
 import { authRoutes, userRoutes, todoRoutes, passwordReset } from './routes';
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,9 +40,6 @@ app.use(cors(corsOptions));
 app.use(bearerToken());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(cors());
-app.options('*', cors());
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);

@@ -11,9 +11,9 @@ export default class Mail {
     }
 
     getTransport() {
-        if (config.mail.apiKey && config.mail.apiKey !== '') {
+        if (config.mail.sendgridApiKey && config.mail.sendgridApiKey !== '') {
             const options = {
-                apiKey: config.mail.apiKey
+                apiKey: config.mail.sendgridApiKey
             };
 
             return nodemailerSendgrid(options);
