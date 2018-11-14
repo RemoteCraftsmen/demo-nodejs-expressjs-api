@@ -20,7 +20,7 @@
             "secret": "verySecretValue"
         },
         "frontendUrl": "localhost:4200",
-        "noReplyAddress": "no-reply@remotecraftsmen.com"
+        "noReplyAddress": "no-reply@localhost"
     },
     "test": {
         "username": "admin",
@@ -44,7 +44,7 @@
             "secret": "verySecretValue"
         },
         "frontendUrl": "localhost:4200",
-        "noReplyAddress": "no-reply@remotecraftsmen.com"
+        "noReplyAddress": "no-reply@localhost"
     },
     "production": {
         "username": "admin",
@@ -67,6 +67,6 @@
             "secret": "verySecretValue"
         },
         "frontendUrl": "http://angular7-demo.rmtcfm.com",
-        "noReplyAddress": "no-reply@remotecraftsmen.com
+        "noReplyAddress": "no-reply@rmtcfm.com"
     }
 }
