@@ -19,7 +19,8 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "localhost:4200"
+        "frontendUrl": "localhost:4200",
+        "noReplyAddress": "no-reply@remotecraftsmen.com"
     },
     "test": {
         "username": "admin",
@@ -42,7 +43,8 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "localhost:4200"
+        "frontendUrl": "localhost:4200",
+        "noReplyAddress": "no-reply@remotecraftsmen.com"
     },
     "production": {
         "username": "admin",
@@ -64,6 +66,7 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "http://angular7-demo.rmtcfm.com"
+        "frontendUrl": "http://angular7-demo.rmtcfm.com",
+        "noReplyAddress": "no-reply@remotecraftsmen.com
     }
 }
