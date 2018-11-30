@@ -25,11 +25,25 @@ docker-compose up --build #or install postgres manually)
 Configure the database in config/config.json (under development)
 ./node_modules/.bin/sequelize db:migrate
 ./node_modules/.bin/sequelize db:seed:all
+```
 
-#start node server
+## Run for development
+
+### start node server
+```
+npm run dev
+```
+
+## Run for production
+
+### start node server
+```
+npm run build
 npm start
+```
 
-#run tests
+## Run tests
+```
 npm run test
 ```
 
@@ -60,3 +74,8 @@ When making future requests include the token in one of these places:
 ### DEMO
 
 Live demo available at http://node-express-demo.rmtcfm.com
+
+
+###DOCUMENTATION 
+
+**path** ./apidoc/index.html

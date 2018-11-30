@@ -1,5 +1,6 @@
 {
     "development": {
+        "enableDocs": true,
         "username": "admin",
         "password": "admin",
         "database": "api",
@@ -23,6 +24,7 @@
         "noReplyAddress": "no-reply@localhost"
     },
     "test": {
+        "enableDocs": false,
         "username": "admin",
         "password": "admin",
         "database": "api_test",
@@ -47,6 +49,7 @@
         "noReplyAddress": "no-reply@localhost"
     },
     "production": {
+        "enableDocs": true,
         "username": "admin",
         "password": "admin",
         "database": "api_prod",

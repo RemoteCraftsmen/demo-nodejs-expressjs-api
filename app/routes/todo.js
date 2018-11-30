@@ -5,11 +5,11 @@ const express = require('express');
 const router = express.Router();
 const TodoController = new TodoControllerClass();
 
-router.post('/', VerifyToken, TodoController.store);
-router.get('/', VerifyToken, TodoController.index);
-router.get('/:id', VerifyToken, TodoController.show);
-router.patch('/:id', VerifyToken, TodoController.patch);
-router.put('/:id', VerifyToken, TodoController.put);
-router.delete('/:id', VerifyToken, TodoController.destroy);
+router.post('/', VerifyToken, TodoController.storeItem);
+router.get('/', VerifyToken, TodoController.getCollection);
+router.get('/:id', VerifyToken, TodoController.getItem);
+router.patch('/:id', VerifyToken, TodoController.patchItem);
+router.put('/:id', VerifyToken, TodoController.putItem);
+router.delete('/:id', VerifyToken, TodoController.destroyItem);
 
 module.exports = router;

@@ -248,7 +248,7 @@ describe('API', function() {
                 assert.equal(data.last_name, 'upd');
             });
 
-            it('returns 401 when trying to update someone else', async function() {
+            it('returns 403 when trying to update someone else', async function() {
                 let status;
 
                 const user = await UserFactory();
@@ -259,7 +259,7 @@ describe('API', function() {
                     status = err.response.status;
                 }
 
-                expect(status).to.equal(401);
+                expect(status).to.equal(403);
             });
 
             it("returns 404 if user hasn't been found", async function() {
@@ -292,7 +292,7 @@ describe('API', function() {
                 expect(response.status).to.equal(204);
             });
 
-            it('returns 401 when trying to delete someone else', async function() {
+            it('returns 403 when trying to delete someone else', async function() {
                 let status;
 
                 const user = await UserFactory();
@@ -303,7 +303,7 @@ describe('API', function() {
                     status = err.response.status;
                 }
 
-                expect(status).to.equal(401);
+                expect(status).to.equal(403);
             });
 
             it("returns 404 if user hasn't been found", async function() {

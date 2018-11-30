@@ -112,7 +112,7 @@ describe('API', function() {
                 assert.equal(data.name, 'upd');
             });
 
-            it("returns 401 when trying to update someone else's todo", async function() {
+            it("returns 403 when trying to update someone else's todo", async function() {
                 let status;
 
                 const anotherUser = await UserFactory();
@@ -125,7 +125,7 @@ describe('API', function() {
                     status = err.response.status;
                 }
 
-                expect(status).to.equal(401);
+                expect(status).to.equal(403);
             });
 
             it("returns 404 if todo hasn't been found", async function() {
@@ -194,7 +194,7 @@ describe('API', function() {
                 });
             });
 
-            it("returns 401 when trying to put to someone else's todo", async function() {
+            it("returns 403 when trying to put to someone else's todo", async function() {
                 let status;
 
                 const anotherUser = await UserFactory();
@@ -207,7 +207,7 @@ describe('API', function() {
                     status = err.response.status;
                 }
 
-                expect(status).to.equal(401);
+                expect(status).to.equal(403);
             });
         });
 
@@ -230,7 +230,7 @@ describe('API', function() {
                 expect(response.status).to.equal(204);
             });
 
-            it("returns 401 when trying to delete someone else's todo", async function() {
+            it("returns 403 when trying to delete someone else's todo", async function() {
                 let status;
 
                 const anotherUser = await UserFactory();
@@ -243,7 +243,7 @@ describe('API', function() {
                     status = err.response.status;
                 }
 
-                expect(status).to.equal(401);
+                expect(status).to.equal(403);
             });
 
             it("returns 404 if todo hasn't been found", async function() {

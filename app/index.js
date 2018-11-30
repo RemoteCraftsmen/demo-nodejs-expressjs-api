@@ -4,14 +4,22 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
+const helmet = require('helmet');
+const HTTP = require('http-status-codes');
+const util = require('util');
+const errorHandler = require('errorhandler');
 
 import db from './models';
 import { authRoutes, userRoutes, todoRoutes, passwordReset } from './routes';
+
+import ToggleAPIDocs from './middleware/ToggleAPIDocs';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 
 const app = express();
+app.use(helmet());
+ 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
 
@@ -45,6 +53,12 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/todos', todoRoutes);
 app.use('/', passwordReset);
+
+app.use('/', ToggleAPIDocs, express.static('docs'));
+
+if (process.env.NODE_ENV === 'development') {
+    app.use(errorHandler());
+}
 
 module.exports = app.listen(PORT, HOST, () => {
     console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);

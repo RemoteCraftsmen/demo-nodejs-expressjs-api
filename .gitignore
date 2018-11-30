@@ -5,3 +5,6 @@ build
 test-reports
 .idea
 config/config.json
+yarn-error.log
+package-lock.json
+apidoc

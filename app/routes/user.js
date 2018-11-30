@@ -5,10 +5,10 @@ const express = require('express');
 const router = express.Router();
 const UserController = new UserControllerClass();
 
-router.post('/', UserController.store);
-router.get('/', VerifyToken, UserController.index);
-router.get('/:id', VerifyToken, UserController.show);
-router.put('/:id', VerifyToken, UserController.update);
-router.delete('/:id', VerifyToken, UserController.destroy);
+router.post('/', UserController.storeItem);
+router.get('/', VerifyToken, UserController.getCollection);
+router.get('/:id', VerifyToken, UserController.getItem);
+router.put('/:id', VerifyToken, UserController.putItem);
+router.delete('/:id', VerifyToken, UserController.destroyItem);
 
 module.exports = router;
