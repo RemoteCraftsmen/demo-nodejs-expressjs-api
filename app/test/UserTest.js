@@ -5,19 +5,22 @@ import jwt from 'jsonwebtoken';
 import UserFactory from './factories/user';
 import truncateDatabase from './truncate';
 
-let server;
-let API;
+const app = require('../index');
+const request = require('supertest')(app);
+
 let users = [];
-let user_id;
+
+let loggedUserId;
+let loggedUserToken = null;
 
 describe('API', function() {
     before(async function() {
-        server = require('../index');
+        await truncateDatabase();
 
-        truncateDatabase();
-        let { client, token } = await Setup.API(false);
+        loggedUserToken = await Setup.API(request);
 
-        API = client;
+        let decoded = jwt.decode(loggedUserToken);
+        loggedUserId = decoded.id; 
 
         users.push(await UserFactory());
         users.push(await UserFactory());
@@ -29,134 +32,114 @@ describe('API', function() {
             it('registers a new user when passing valid data', async function() {
                 const user = await UserFactory({}, true);
 
-                const { data } = await API.post(`/users`, user);
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                expect(data)
+                expect(response.body)
                     .to.have.property('auth')
                     .to.equal(true);
             });
 
             it('returns an error if first_name is blank', async function() {
-                let data;
-
                 const user = await UserFactory({ first_name: null }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'first_name',
                     message: 'cannot be blank'
                 });
             });
 
             it('returns an error if last_name is blank', async function() {
-                let data;
-
                 const user = await UserFactory({ last_name: null }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'last_name',
                     message: 'cannot be blank'
                 });
             });
 
             it('returns an error if username is blank', async function() {
-                let data;
 
                 const user = await UserFactory({ username: null }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request
+                .post(`/users`)
+                .send(user.toJSON());
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'username',
                     message: 'cannot be blank'
                 });
             });
 
             it('returns an error if email is not a valid email address', async function() {
-                let data;
 
                 const user = await UserFactory({ email: 'definitelyNotAnEmail' }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'email',
                     message: 'is not valid'
                 });
             });
 
             it('returns an error if email is already in use', async function() {
-                let data;
 
                 await UserFactory({ email: `me@me123.com` });
                 const user = await UserFactory({ email: `me@me123.com` }, true);
+                
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
-
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'email',
                     message: 'already in use'
                 });
             });
 
             it('returns an error if password is blank', async function() {
-                let data;
+
                 const user = await UserFactory({ password: null }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'password',
                     message: 'cannot be blank'
                 });
             });
 
             it('returns an error if password contains less than 6 character', async function() {
-                let data;
 
                 const user = await UserFactory({ password: 12345 }, true);
 
-                try {
-                    let { data } = await API.post(`/users`, user);
-                } catch (e) {
-                    data = e.response.data;
-                }
-
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                let response = await request
+                    .post(`/users`)
+                    .send(user.toJSON());
+                
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'password',
                     message: 'cannot have less than 6 characters'
                 });
@@ -165,157 +148,139 @@ describe('API', function() {
 
         describe('POST /login', function() {
             it('returns a token when passing valid data', async function() {
-                const user = await UserFactory({ email: 'us@er.com', password: 'somepass' });
+                
+                await UserFactory({ email: 'us@er.com', password: 'somepass' });
 
-                const { data } = await API.post(`/auth/login`, { email: 'us@er.com', password: 'somepass' });
+                let response = await request
+                    .post(`/auth/login`)
+                    .send({
+                        email: 'us@er.com', 
+                        password: 'somepass' 
+                    });
 
-                expect(data)
+                expect(response.body)
                     .to.have.property('auth')
                     .to.equal(true);
 
-                expect(data).to.have.property('token').to.not.be.null;
+                expect(response.body).to.have.property('token').to.not.be.null;
             });
 
             it('does not authenticate with invalid data', async function() {
-                let data;
 
                 await UserFactory({ email: 'us@ere.com', password: 'somepass' });
 
-                try {
-                    let { data } = await API.post(`/auth/login`, {
-                        email: 'us@ere.com',
-                        password: 'nopityNope'
+                let response = await request
+                    .post(`/auth/login`)
+                    .send({
+                        email: 'us@ere.com', 
+                        password: 'wrongpass' 
                     });
-                } catch (e) {
-                    data = e.response.data;
-                }
 
-                expect(data)
+
+                expect(response.body)
                     .to.have.property('auth')
                     .to.equal(false);
 
-                expect(data).to.have.property('token').to.be.null;
+                expect(response.body).to.have.property('token').to.be.null;
             });
         });
 
         describe('GET /users/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                user_id = decoded.id;
-            });
 
             it('fetches a single user', async function() {
-                const { data } = await API.get(`/users/${users[0].id}`);
 
-                expect(data).to.have.property('email');
-                expect(data.email).to.equal(users[0].email);
+                let response = await request
+                    .get(`/users/${users[0].id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
+
+
+                expect(response.body).to.have.property('email');
+                expect(response.body.email).to.equal(users[0].email);
             });
 
             it("returns 404 if user hasn't been found", async function() {
-                let status;
 
-                try {
-                    await API.get(`/users/99999`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request
+                    .get(`/users/99999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(status).to.equal(404);
+                expect(response.statusCode).to.equal(404);
             });
         });
 
         describe('PUT /users/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                user_id = decoded.id;
-            });
 
             it('updates a user', async function() {
-                await API.put(`/users/${user_id}`, { last_name: 'upd' });
 
-                const { data } = await API.get(`/users/${user_id}`);
+                const updatedName = 'updated';
 
-                assert.equal(data.last_name, 'upd');
+                await request
+                    .put(`/users/${loggedUserId}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({last_name: updatedName});
+                
+                let response = await request
+                    .get(`/users/${loggedUserId}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+
+                expect(response.body.last_name).to.equal(updatedName);
             });
 
             it('returns 403 when trying to update someone else', async function() {
-                let status;
 
                 const user = await UserFactory();
+                const updatedName = 'updated';
 
-                try {
-                    await API.put(`/users/${user.id}`, { last_name: 'updated' });
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request
+                    .put(`/users/${user.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({last_name : updatedName});
 
-                expect(status).to.equal(403);
+
+                expect(response.statusCode).to.equal(403);
             });
 
             it("returns 404 if user hasn't been found", async function() {
-                let status;
 
-                try {
-                    await API.put(`/users/99999`, { last_name: 'updated' });
-                } catch (err) {
-                    status = err.response.status;
-                }
+                const updatedName = 'updated';
 
-                expect(status).to.equal(404);
+                let response = await request
+                    .put(`/users/999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({last_name : updatedName});
+
+                expect(response.statusCode).to.equal(404);
             });
         });
 
         describe('DELETE /users/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                user_id = decoded.id;
-            });
-
             it('deletes a user', async function() {
-                const response = await API.delete(`/users/${user_id}`, { last_name: 'upd' });
 
-                expect(response.status).to.equal(204);
+                let response = await request
+                    .delete(`/users/${loggedUserId}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
+
+                expect(response.statusCode).to.equal(204);
             });
 
             it('returns 403 when trying to delete someone else', async function() {
-                let status;
 
                 const user = await UserFactory();
 
-                try {
-                    await API.delete(`/users/${user.id}`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request
+                    .delete(`/users/${user.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(status).to.equal(403);
+                expect(response.statusCode).to.equal(403);
             });
 
             it("returns 404 if user hasn't been found", async function() {
-                let status;
 
-                try {
-                    await API.delete(`/users/99999`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request
+                    .delete(`/users/9999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(status).to.equal(404);
+                expect(response.statusCode).to.equal(404);
             });
         });
     });

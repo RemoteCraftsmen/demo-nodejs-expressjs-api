@@ -6,54 +6,52 @@ import UserFactory from './factories/user';
 import TodoFactory from './factories/todo';
 import truncateDatabase from './truncate';
 
-let server;
-let API;
+const app = require('../index');
+const request = require('supertest')(app);
+
 let todos = [];
 let logged_user_id;
+let loggedUserToken = null;
 
 describe('API', function() {
     before(async function() {
-        server = require('../index');
 
-        truncateDatabase();
-        let { client, token } = await Setup.API();
+        await truncateDatabase();
 
-        API = client;
+        let token = await Setup.API(request);
+        loggedUserToken = token;
 
         let decoded = jwt.decode(token);
-
-        logged_user_id = decoded.id;
+        logged_user_id = decoded.id; 
 
         todos.push(await TodoFactory({ user_id: logged_user_id }));
         todos.push(await TodoFactory({ user_id: logged_user_id }));
         todos.push(await TodoFactory({ user_id: logged_user_id }));
     });
 
-    describe('todos', function() {
+    describe('super todos', function(){
         describe('POST /todos', function() {
             it('registers a new todo when passing valid data', async function() {
                 const todo = await TodoFactory({}, true);
 
-                const { data } = await API.post(`/todos`, todo);
-
-                expect(data)
+                let response = await request
+                    .post('/todos')
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: todo.name});
+                    
+                expect(response.body)                            
                     .to.have.property('creator_id')
                     .to.equal(logged_user_id);
             });
 
             it('returns an error if name is blank', async function() {
-                let data;
+                let response = await request
+                    .post('/todos')
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: null});
 
-                const todo = await TodoFactory({ name: null }, true);
-
-                try {
-                    let { data } = await API.post(`/todos`, todo);
-                } catch (e) {
-                    data = e.response.data;
-                }
-
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'name',
                     message: 'cannot be blank'
                 });
@@ -61,201 +59,170 @@ describe('API', function() {
         });
 
         describe('GET /todos/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                logged_user_id = decoded.id;
-            });
-
             it('fetches a single todo', async function() {
-                const { data } = await API.get(`/todos/${todos[0].id}`);
 
-                expect(data).to.have.property('name');
-                expect(data.name).to.equal(todos[0].name);
+                let response = await request 
+                    .get(`/todos/${todos[0].id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+
+                expect(response.body).to.have.property('name');
+                expect(response.body.name).to.equal(todos[0].name);
             });
 
             it("returns 404 if todo hasn't been found", async function() {
-                let status;
 
-                try {
-                    await API.get(`/todos/99999`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .get(`/todos/999999999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
 
-                expect(status).to.equal(404);
+                expect(response.statusCode).to.equal(404);
             });
         });
 
         describe('PATCH /todos/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                logged_user_id = decoded.id;
-            });
-
             it('updates a todo', async function() {
+
+                const updatedName = 'updated';
                 const todo = await TodoFactory({ user_id: logged_user_id });
+                
+                await request 
+                    .patch(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: updatedName});
 
-                await API.patch(`/todos/${todo.id}`, { name: 'upd' });
+                let response = await request 
+                    .get(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
 
-                const { data } = await API.get(`/todos/${todo.id}`);
-
-                assert.equal(data.name, 'upd');
+                expect(response.body.name).to.equal(updatedName);
             });
 
             it("returns 403 when trying to update someone else's todo", async function() {
-                let status;
+
+                const updatedName = 'updated';
 
                 const anotherUser = await UserFactory();
-
                 const todo = await TodoFactory({ user_id: anotherUser.id });
 
-                try {
-                    await API.patch(`/todos/${todo.id}`, { name: 'updated' });
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .patch(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: updatedName});
 
-                expect(status).to.equal(403);
+                expect(response.statusCode).to.equal(403);
             });
 
             it("returns 404 if todo hasn't been found", async function() {
-                let status;
+                
+                const updatedName = 'updated';
 
-                try {
-                    await API.patch(`/todos/99999`, { name: 'updated' });
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .patch(`/todos/9999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: updatedName});
 
-                expect(status).to.equal(404);
+                expect(response.statusCode).to.equal(404);
             });
         });
 
         describe('PUT /todos/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                logged_user_id = decoded.id;
-            });
-
             it('saves a todo when not found', async function() {
                 const todo = await TodoFactory({ id: 666, user_id: logged_user_id }, true);
 
-                await API.put(`/todos/${todo.id}`, todo);
-
-                const { data } = await API.get(`/todos/${todo.id}`);
-
-                expect(data).to.have.property('name');
-                expect(data.name).to.equal(todo.name);
+                let response = await request 
+                    .put(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({
+                        id: todo.id,
+                        name: todo.name,
+                        user_id: todo.user_id,
+                        creator_id: todo.user_id
+                    });
+                
+                expect(response.body).to.have.property('name');
+                expect(response.body.name).to.equal(todo.name);
             });
 
             it('puts a todo when found', async function() {
                 const todo = await TodoFactory({ user_id: logged_user_id });
                 const anotherTodo = await TodoFactory({ user_id: logged_user_id }, true);
 
-                await API.put(`/todos/${todo.id}`, anotherTodo);
+                await request 
+                    .put(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: anotherTodo.name});
 
-                const { data } = await API.get(`/todos/${todo.id}`);
+                let response = await request 
+                    .get(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(data).to.have.property('name');
-                expect(data.name).to.equal(anotherTodo.name);
+                expect(response.body).to.have.property('name');
+                expect(response.body.name).to.equal(anotherTodo.name);
             });
 
             it('returns an error if name is blank', async function() {
-                let data;
 
                 const todo = await TodoFactory({ user_id: logged_user_id });
                 const anotherTodo = await TodoFactory({ name: null }, true);
 
-                try {
-                    let { data } = await API.put(`/todos/${todo.id}`, anotherTodo);
-                } catch (e) {
-                    data = e.response.data;
-                }
+                let response = await request 
+                    .put(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: anotherTodo.name});
 
-                expect(data).to.have.property('errors');
-                expect(data.errors).to.deep.include({
+                expect(response.body).to.have.property('errors');
+                expect(response.body.errors).to.deep.include({
                     param: 'name',
                     message: 'cannot be blank'
                 });
             });
 
             it("returns 403 when trying to put to someone else's todo", async function() {
-                let status;
 
+                const updatedName = 'updated';
                 const anotherUser = await UserFactory();
-
                 const todo = await TodoFactory({ user_id: anotherUser.id });
 
-                try {
-                    await API.put(`/todos/${todo.id}`, { name: 'updated' });
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .put(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({name: updatedName});
 
-                expect(status).to.equal(403);
+                expect(response.statusCode).to.equal(403);
             });
         });
 
         describe('DELETE /todos/{id}', function() {
-            before(async function() {
-                let { client, token } = await Setup.API();
-
-                API = client;
-
-                let decoded = jwt.decode(token);
-
-                logged_user_id = decoded.id;
-            });
-
             it('deletes a todo', async function() {
                 const todo = await TodoFactory({ user_id: logged_user_id });
 
-                const response = await API.delete(`/todos/${todo.id}`);
+                let response = await request 
+                    .delete(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(response.status).to.equal(204);
+
+                expect(response.statusCode).to.equal(204);
             });
 
             it("returns 403 when trying to delete someone else's todo", async function() {
-                let status;
 
                 const anotherUser = await UserFactory();
-
                 const todo = await TodoFactory({ user_id: anotherUser.id });
 
-                try {
-                    await API.delete(`/todos/${todo.id}`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .delete(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(status).to.equal(403);
+                expect(response.statusCode).to.equal(403);
             });
 
             it("returns 404 if todo hasn't been found", async function() {
-                let status;
 
-                try {
-                    await API.delete(`/todos/99999`);
-                } catch (err) {
-                    status = err.response.status;
-                }
+                let response = await request 
+                    .delete(`/todos/99999999`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(status).to.equal(404);
+                expect(response.statusCode).to.equal(404);
             });
         });
     });
