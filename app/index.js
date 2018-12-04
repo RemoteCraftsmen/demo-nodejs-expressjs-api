@@ -6,11 +6,9 @@ const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
 
-
 import db from './models';
 import { authRoutes, userRoutes, todoRoutes, passwordReset } from './routes';
 import ToggleAPIDocs from './middleware/ToggleAPIDocs';
-
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
@@ -51,7 +49,6 @@ app.use('/todos', todoRoutes);
 app.use('/', passwordReset);
 
 app.use('/', ToggleAPIDocs, express.static('docs'));
-
 
 if (process.env.NODE_ENV.toLowerCase() !== 'test') {
     app.listen(PORT, HOST, () => {
