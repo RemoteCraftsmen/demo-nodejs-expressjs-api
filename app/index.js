@@ -30,7 +30,7 @@ db.sequelize
 
 var originsWhitelist = ['http://localhost:4200', config.frontendUrl];
 var corsOptions = {
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
         if (originsWhitelist.includes(origin) || !origin) {
             callback(null, true);
         } else {
@@ -53,6 +53,10 @@ app.use('/', passwordReset);
 app.use('/', ToggleAPIDocs, express.static('docs'));
 
 
-module.exports = app.listen(PORT, HOST, () => {
-    console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
-});
+if (process.env.NODE_ENV.toLowerCase() !== 'test') {
+    app.listen(PORT, HOST, () => {
+        console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
+    });
+}
+
+module.exports = app;
