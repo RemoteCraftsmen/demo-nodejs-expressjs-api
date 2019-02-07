@@ -51,11 +51,11 @@ app.use(router);
 
 app.use('/', ToggleAPIDocs, express.static('docs'));
 
-app.use((req, res) => {
+app.use((req, res, next) => {
     res.status(404).send("Not found!");
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
         const errors = err.errors.map(e => {
             return {message: e.message, param: e.path};
