@@ -8,3 +8,4 @@ config/config.json
 yarn-error.log
 package-lock.json
 apidoc
+yarn.lock
