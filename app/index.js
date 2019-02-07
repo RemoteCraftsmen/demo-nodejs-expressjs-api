@@ -62,7 +62,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('We messed something. Sorry!');
 });
 
-if (process.env.NODE_ENV.toLowerCase() !== 'test') {
+if (process.env.NODE_ENV !== 'test') {
     app.listen(PORT, HOST, () => {
         console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
     });
