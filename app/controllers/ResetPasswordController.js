@@ -27,7 +27,12 @@ class ResetPasswordController {
      *   @apiError (400) BadRequest              Email must be specified
      */
     static async resetPassword(request, response, next) {
-        validationResult(request).throw();
+        try {
+            validationResult(request).throw();
+        } catch (err) {
+            return next(err);
+        }
+        
         const {email} = request.body;
 
         const user = await User.getByEmail(email);
@@ -74,7 +79,11 @@ class ResetPasswordController {
      */
 
     static async changePassword(request, response, next) {
-        validationResult(request).throw();
+        try {
+            validationResult(request).throw();
+        } catch (err) {
+            return next(err);
+        }
 
         const {password} = request.body;
         const token = request.params.token;
