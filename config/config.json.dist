@@ -20,7 +20,9 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "localhost:4200",
+        "frontendUrls": [
+            "localhost:4200"
+        ],
         "noReplyAddress": "no-reply@localhost"
     },
     "test": {
@@ -45,7 +47,9 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "localhost:4200",
+        "frontendUrls": [
+            "localhost:4200"
+        ],
         "noReplyAddress": "no-reply@localhost"
     },
     "production": {
@@ -69,7 +73,10 @@
         "jwt": {
             "secret": "verySecretValue"
         },
-        "frontendUrl": "http://angular7-demo.rmtcfm.com",
+        "frontendUrls": [
+            "http://angular7-demo.rmtcfm.com",
+            "https://vue-vuex-vuetify-demo.rmtcfm.com"
+        ],
         "noReplyAddress": "no-reply@rmtcfm.com"
     }
 }

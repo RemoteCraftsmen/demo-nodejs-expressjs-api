@@ -25,7 +25,8 @@ db.sequelize
         console.error('Unable to connect to the database:', err);
     });
 
-let originsWhitelist = ['http://localhost:4200', config.frontendUrl];
+let localWhiteList = ['http://localhost:4200'];
+let originsWhitelist = localWhiteList.concat(config.frontendUrls);
 let corsOptions = {
     origin: (origin, callback) => {
         if (originsWhitelist.includes(origin) || !origin) {
