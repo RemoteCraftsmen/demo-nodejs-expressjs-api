@@ -4,8 +4,6 @@ const ResetPassword = require('../emails/ResetPassword');
 const {validationResult} = require('express-validator/check');
 const HttpStatus = require('http-status-codes');
 
-/** @param {{frontendUrls:string, noReplyAddress:string}} config */
-
 class ResetPasswordController {
 
     /**
@@ -32,7 +30,7 @@ class ResetPasswordController {
         } catch (err) {
             return next(err);
         }
-        
+
         const {email} = request.body;
 
         const user = await User.getByEmail(email);
