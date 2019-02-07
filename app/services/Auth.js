@@ -1,11 +1,8 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import {User} from '../models';
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../../config');
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../../config/config.json')[env];
-
-export default class Auth {
+class Auth {
     static signIn(user) {
         return jwt.sign({id: user.getDataValue('id')}, config.jwt.secret, {expiresIn: 60 * 60 * 24});
     }
@@ -14,3 +11,5 @@ export default class Auth {
         return bcrypt.compareSync(password, dbPassword);
     }
 }
+
+module.exports = Auth;

@@ -1,10 +1,10 @@
-import {User, PasswordReset} from '../models';
-import Mail from '../services/Mail';
-import ResetPassword from '../emails/ResetPassword';
+const {User, PasswordReset} = require('../models');
+const Mail = require('../services/Mail');
+const ResetPassword = require('../emails/ResetPassword');
+const {validationResult} = require('express-validator/check');
+const HttpStatus = require('http-status-codes');
 
-import {validationResult} from 'express-validator/check';
-
-export default class PasswordResetController {
+class ResetPasswordController {
 
     /**
      *  @api {post} /reset-password Request for reset password
@@ -24,7 +24,7 @@ export default class PasswordResetController {
      *   @apiError (404) NotFound                The User was not found.
      *   @apiError (500) InternalServerError     Errors in configuration
      */
-    async resetPassword(request, response, next) {
+    static async resetPassword(request, response, next) {
         const {email} = request.body;
 
         const user = await User.getByEmail(email);
@@ -43,11 +43,11 @@ export default class PasswordResetController {
                 })
             )
             .then(() => {
-                return response.sendStatus(200);
+                return response.sendStatus(HttpStatus.OK);
             })
             .catch(err => {
                 console.error(err);
-                return response.status(500).json({
+                return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                     error: 'Server Error'
                 });
             });
@@ -74,7 +74,7 @@ export default class PasswordResetController {
      *   @apiError (500) InternalServerError     Errors in configuration
      */
 
-    changePassword(request, response, next) {
+    static async changePassword(request, response, next) {
         const validationErrors = validationResult(request);
 
         if (!validationErrors.isEmpty()) {
@@ -82,7 +82,7 @@ export default class PasswordResetController {
                 return {message: e.msg, param: e.param};
             });
 
-            return response.status(400).json({errors});
+            return response.status(HttpStatus.BAD_REQUEST).json({errors});
         }
 
         const {password} = request.body;
@@ -91,14 +91,14 @@ export default class PasswordResetController {
         PasswordReset.getByToken(token)
             .then(async passwordReset => {
                 if (!passwordReset) {
-                    return response.status(400).json({
+                    return response.status(HttpStatus.BAD_REQUEST).json({
                         status: 'error',
                         message: 'Password reset token not found'
                     });
                 }
 
                 if (passwordReset.hasExpired()) {
-                    return response.status(400).json({
+                    return response.status(HttpStatus.BAD_REQUEST).json({
                         status: 'error',
                         message: 'Password reset token expired'
                     });
@@ -113,11 +113,8 @@ export default class PasswordResetController {
                     message: 'Password changed!'
                 });
             })
-            .catch(err => {
-                console.error(err);
-                return response.status(500).json({
-                    error: 'Server Error'
-                });
-            });
+            .catch(next);
     }
 }
+
+module.exports = ResetPasswordController;

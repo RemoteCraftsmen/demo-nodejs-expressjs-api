@@ -1,17 +1,15 @@
-require('babel-register');
-
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
 
-import db from './models';
-import { authRoutes, userRoutes, todoRoutes, passwordReset } from './routes';
-import ToggleAPIDocs from './middleware/ToggleAPIDocs';
+const db = require('./models');
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
+const router = require('./routes');
+const ToggleAPIDocs = require('./middleware/ToggleAPIDocs');
+
+const config = require('../config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,9 +24,9 @@ db.sequelize
         console.error('Unable to connect to the database:', err);
     });
 
-var originsWhitelist = ['http://localhost:4200', config.frontendUrl];
-var corsOptions = {
-    origin: function (origin, callback) {
+let originsWhitelist = ['http://localhost:4200', config.frontendUrl];
+let corsOptions = {
+    origin: (origin, callback) => {
         if (originsWhitelist.includes(origin) || !origin) {
             callback(null, true);
         } else {
@@ -40,15 +38,29 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(bearerToken());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/todos', todoRoutes);
-app.use('/', passwordReset);
+app.use(router);
 
 app.use('/', ToggleAPIDocs, express.static('docs'));
+
+app.use((req, res, next) => {
+    res.status(404).send("Not found!");
+});
+
+app.use((err, req, res, next) => {
+    if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
+        const errors = err.errors.map(e => {
+            return {message: e.message, param: e.path};
+        });
+
+        return res.status(400).json({errors});
+    }
+
+    console.error(err.stack);
+    res.status(500).send('We messed something. Sorry!');
+});
 
 if (process.env.NODE_ENV.toLowerCase() !== 'test') {
     app.listen(PORT, HOST, () => {

@@ -1,4 +1,13 @@
-export const authRoutes = require('./auth');
-export const userRoutes = require('./user');
-export const todoRoutes = require('./todo');
-export const passwordReset = require('./passwordReset');
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+
+fs.readdirSync(__dirname).forEach((route) => {
+    route = route.split('.')[0];
+    if (route === 'index') {
+        return;
+    }
+    router.use(`/${route}`, require(`./${route}.js`));
+});
+
+module.exports = router;

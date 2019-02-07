@@ -1,6 +1,7 @@
-import {Todo} from '../models';
+const {Todo} = require('../models');
+const HttpStatus = require('http-status-codes');
 
-export default class TodoController {
+class TodoController {
 
     /**
      *  @api {get} /todos Read all ToDo elements
@@ -24,11 +25,11 @@ export default class TodoController {
      *        ]
      *    }
      *
-     *   @apiSuccess {Boolean}     completed 
-     *   @apiSuccess {Number}      id        
-     *   @apiSuccess {String}      name      
+     *   @apiSuccess {Boolean}     completed
+     *   @apiSuccess {Number}      id
+     *   @apiSuccess {String}      name
      *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id   
+     *   @apiSuccess {Number}      user_id
      *   @apiSuccess {Timestamp}   updated_at
      *   @apiSuccess {Timestamp}   created_at
      *
@@ -43,14 +44,12 @@ export default class TodoController {
      *        ]
      *    }
      */
-    getCollection(request, response, next) {
+    static getCollection(request, response, next) {
         Todo.findAll({where: {user_id: request.logged_user_id}})
             .then(todos => {
                 return response.json({todos});
             })
-            .catch(error => {
-                return response.sendStatus(400);
-            });
+            .catch(next);
     }
 
     /**
@@ -78,11 +77,11 @@ export default class TodoController {
      *        "created_at": "2018-11-27T10:30:29.700Z"
      *    }
      *
-     *   @apiSuccess {Boolean}     completed 
-     *   @apiSuccess {Number}      id        
-     *   @apiSuccess {String}      name      
+     *   @apiSuccess {Boolean}     completed
+     *   @apiSuccess {Number}      id
+     *   @apiSuccess {String}      name
      *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id   
+     *   @apiSuccess {Number}      user_id
      *   @apiSuccess {Timestamp}   updated_at
      *   @apiSuccess {Timestamp}   created_at
      *
@@ -97,7 +96,7 @@ export default class TodoController {
      *        ]
      *    }
      */
-    storeItem(request, response, next) {
+    static storeItem(request, response, next) {
         const data = request.body;
 
         data.creator_id = request.logged_user_id;
@@ -107,15 +106,9 @@ export default class TodoController {
 
         Todo.create({...data})
             .then(todo => {
-                return response.status(201).json(todo);
+                return response.status(HttpStatus.CREATED).json(todo);
             })
-            .catch(err => {
-                const errors = err.errors.map(e => {
-                    return {message: e.message, param: e.path};
-                });
-
-                return response.status(400).json({errors});
-            });
+            .catch(next);
     }
 
     /**
@@ -139,30 +132,28 @@ export default class TodoController {
      *        "updated_at": "2018-11-27T11:24:36.779Z"
      *    }
      *
-     *   @apiSuccess {Boolean}     completed 
-     *   @apiSuccess {Number}      id        
-     *   @apiSuccess {String}      name      
+     *   @apiSuccess {Boolean}     completed
+     *   @apiSuccess {Number}      id
+     *   @apiSuccess {String}      name
      *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id   
+     *   @apiSuccess {Number}      user_id
      *   @apiSuccess {Timestamp}   updated_at
      *   @apiSuccess {Timestamp}   created_at
      *
      *   @apiError (404) Not Found    The <code>id</code> of the ToDo element was not found.
      */
-    getItem(request, response, next) {
+    static getItem(request, response, next) {
         const todo_id = request.params.id;
 
         Todo.findByPk(todo_id)
             .then(todo => {
                 if (!todo) {
-                    return response.sendStatus(404);
+                    return response.sendStatus(HttpStatus.NOT_FOUND);
                 }
 
                 return response.json(todo);
             })
-            .catch(error => {
-                return response.sendStatus(404);
-            });
+            .catch(next);
     }
 
     /**
@@ -203,7 +194,7 @@ export default class TodoController {
      *            ]
      *    }
      */
-    putItem(request, response, next) {
+    static putItem(request, response, next) {
         const todo_id = request.params.id;
         const fields = request.body;
 
@@ -216,33 +207,21 @@ export default class TodoController {
             if (!todo) {
                 return Todo.create({...fields, todo_id})
                     .then(todo => {
-                        return response.status(201).json(todo);
+                        return response.status(HttpStatus.CREATED).json(todo);
                     })
-                    .catch(err => {
-                        const errors = err.errors.map(e => {
-                            return {message: e.message, param: e.path};
-                        });
-
-                        return response.status(400).json({errors});
-                    });
+                    .catch(next);
             }
 
             if (todo.user_id !== request.logged_user_id) {
-                return response.sendStatus(403);
+                return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             return todo
                 .update(fields, {fields: ['name', 'user_id']})
                 .then(() => {
-                    return response.sendStatus(200);
+                    return response.sendStatus(HttpStatus.OK);
                 })
-                .catch(err => {
-                    const errors = err.errors.map(e => {
-                        return {message: e.message, param: e.path};
-                    });
-
-                    return response.status(400).json({errors});
-                });
+                .catch(next);
         });
     }
 
@@ -267,26 +246,24 @@ export default class TodoController {
      *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parametr "name" is not specified
      *  @apiError Forbidden     ToDo element belongs to other User
      */
-    patchItem(request, response, next) {
+    static patchItem(request, response, next) {
         const todo_id = request.params.id;
         const fields = request.body;
 
         Todo.findByPk(todo_id).then(todo => {
             if (!todo) {
-                return response.sendStatus(404);
+                return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
             if (todo.user_id !== request.logged_user_id) {
-                return response.sendStatus(403);
+                return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             todo.update(fields, {fields: ['name', 'user_id', 'completed']})
                 .then(() => {
-                    response.sendStatus(200);
+                    response.sendStatus(HttpStatus.OK);
                 })
-                .catch(error => {
-                    response.sendStatus(400);
-                });
+                .catch(next);
         });
     }
 
@@ -305,25 +282,25 @@ export default class TodoController {
      *   @apiError Forbidden    ToDo element belongs to other User
      *   @apiError BadRequest
      */
-    destroyItem(request, response, next) {
+    static destroyItem(request, response, next) {
         const todo_id = request.params.id;
 
         Todo.findByPk(todo_id).then(todo => {
             if (!todo) {
-                return response.sendStatus(404);
+                return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
             if (todo.user_id !== request.logged_user_id) {
-                return response.sendStatus(403);
+                return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             todo.destroy()
                 .then(() => {
-                    response.sendStatus(204);
+                    response.sendStatus(HttpStatus.NO_CONTENT);
                 })
-                .catch(error => {
-                    response.sendStatus(400);
-                });
+                .catch(next);
         });
     }
 }
+
+module.exports = TodoController;

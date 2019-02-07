@@ -1,23 +1,20 @@
 const jwt = require('jsonwebtoken');
-const env = process.env.NODE_ENV || 'development';
-const config = require('../../config/config.json')[env];
+const config = require('../../config');
 
-function verifyToken(request, response, next) {
+module.exports = (request, response, next) => {
     const token = request.token || null;
 
     if (!token) {
-        return response.status(403).json({ auth: false, message: 'No token provided.' });
+        return response.status(403).json({auth: false, message: 'No token provided.'});
     }
 
-    jwt.verify(token, config.jwt.secret, function(err, decoded) {
+    jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
-            return response.status(403).json({ auth: false, message: 'Failed to authenticate token.' });
+            return response.status(403).json({auth: false, message: 'Failed to authenticate token.'});
         }
 
         request.logged_user_id = decoded.id;
 
         next();
     });
-}
-
-module.exports = verifyToken;
+};

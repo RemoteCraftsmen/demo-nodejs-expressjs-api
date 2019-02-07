@@ -1,11 +1,7 @@
-'use strict';
-
-const env = process.env.NODE_ENV || 'development';
-const config = require('../../config/config.json')[env];
-
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const config = require('../../config');
 const basename = path.basename(__filename);
 const db = {};
 
@@ -49,9 +45,9 @@ const operatorsAliases = {
 
 let sequelize;
 if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], { ...config, operatorsAliases });
+    sequelize = new Sequelize(process.env[config.use_env_variable], {...config, operatorsAliases});
 } else {
-    sequelize = new Sequelize(config.database, config.username, config.password, { ...config, operatorsAliases });
+    sequelize = new Sequelize({...config, operatorsAliases});
 }
 
 fs.readdirSync(__dirname)
@@ -74,7 +70,7 @@ Object.keys(db).forEach(modelName => {
  *
  * See https://github.com/sequelize/sequelize/issues/1500
  */
-Sequelize.Validator.notNull = function(item) {
+Sequelize.Validator.notNull = function (item) {
     return !this.isNull(item);
 };
 

@@ -1,7 +1,8 @@
-import {User} from '../models';
-import Auth from '../services/Auth';
+const {User} = require('../models');
+const Auth = require('../services/Auth');
+const HttpStatus = require('http-status-codes');
 
-export default class AuthController {
+class AuthController {
 
     /**
      *  @api {post} /auth/login Attempt to log
@@ -41,27 +42,27 @@ export default class AuthController {
      *        "user": null
      *     }
      */
-    login(request, response, next) {
+    static async login(request, response) {
         const {email, password} = request.body;
 
-        User.findOne({where: {email}, attributes: ['id', 'username', 'first_name', 'last_name', 'email', 'password']})
-            .then(user => {
-                if (!user) {
-                    return response.status(401).json({auth: false, token: null});
-                }
+        const user = await User.findOne({
+            where: {email}, attributes: ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        });
 
-                if (Auth.checkCredentials(password, user.getDataValue('password'))) {
-                    const token = Auth.signIn(user);
-                    let plainUser = user.get({plain: true});
-                    delete plainUser.password;
+        if (!user) {
+            return response.status(HttpStatus.UNAUTHORIZED).json({auth: false, token: null});
+        }
 
-                    return response.json({auth: true, token, user: plainUser});
-                }
+        if (Auth.checkCredentials(password, user.getDataValue('password'))) {
+            const token = Auth.signIn(user);
+            let plainUser = user.get({plain: true});
+            delete plainUser.password;
 
-                return response.status(401).json({auth: false, token: null, user: null});
-            })
-            .catch(error => {
-                return response.status(401).json({auth: false, token: null, user: null});
-            });
+            return response.json({auth: true, token, user: plainUser});
+        }
+
+        return response.status(HttpStatus.UNAUTHORIZED).json({auth: false, token: null, user: null});
     }
 }
+
+module.exports = AuthController;

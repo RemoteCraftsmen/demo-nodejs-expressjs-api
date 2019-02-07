@@ -1,6 +1,5 @@
-import bcrypt from 'bcryptjs';
-import faker from 'faker';
-import { User } from '../../models';
+const faker = require('faker');
+const {User} = require('../../models');
 
 const generateData = async (props = {}) => {
     const defaultProps = {
@@ -8,13 +7,23 @@ const generateData = async (props = {}) => {
         email: faker.internet.email(),
         first_name: faker.name.firstName(),
         last_name: faker.name.lastName(),
-        password: bcrypt.hashSync(new Date().toString())
+        password: faker.internet.password()
     };
 
     return Object.assign({}, defaultProps, props);
 };
 
-export default async (props = {}, make = false) => {
+module.exports = async (options = {}) => {
+    let {make = false, props = {}, raw = false} = options;
+
+    if (Object.keys(options).length !== 0 && !('make' in options) && !('raw' in options) && !('props' in options)) {
+        props = options;
+    }
+
+    if (raw) {
+        return await generateData(props);
+    }
+
     if (make) {
         return User.build(await generateData(props));
     }

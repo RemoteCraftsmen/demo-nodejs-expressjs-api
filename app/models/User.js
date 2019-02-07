@@ -72,13 +72,10 @@ module.exports = (sequelize, DataTypes) => {
         {
             underscored: true,
             defaultScope: {
-                attributes: { exclude: ['password'] }
+                attributes: {exclude: ['password']}
             },
             hooks: {
-                beforeCreate: (user, options) => {
-                    user.password = bcrypt.hashSync(user.password, 8);
-                },
-                beforeUpdate: (user, options) => {
+                beforeSave: (user, options) => {
                     if (options.fields.includes('password')) {
                         user.password = bcrypt.hashSync(user.password, 8);
                     }
@@ -89,11 +86,11 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     User.associate = models => {
-        User.hasMany(models.Todo, { as: 'todos' });
+        User.hasMany(models.Todo, {as: 'todos'});
     };
 
     User.getByEmail = async (email, options = {}) => {
-        return await User.findOne({ where: { email }, ...options });
+        return await User.findOne({where: {email}, ...options});
     };
 
     return User;

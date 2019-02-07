@@ -1,9 +1,8 @@
-import TodoControllerClass from '../controllers/TodoController';
-import VerifyToken from '../middleware/VerifyToken';
-
 const express = require('express');
 const router = express.Router();
-const TodoController = new TodoControllerClass();
+
+const TodoController = require('../controllers/TodoController');
+const VerifyToken = require('../middleware/VerifyToken');
 
 router.post('/', VerifyToken, TodoController.storeItem);
 router.get('/', VerifyToken, TodoController.getCollection);

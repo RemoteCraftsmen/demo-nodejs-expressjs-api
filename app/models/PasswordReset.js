@@ -1,5 +1,5 @@
-import moment from 'moment';
-import crypto from 'crypto';
+const moment = require('moment');
+const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
     const PasswordReset = sequelize.define(
@@ -24,11 +24,11 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             }
         },
-        { underscored: true }
+        {underscored: true}
     );
 
     PasswordReset.associate = models => {
-        PasswordReset.belongsTo(models.User, { as: 'user' });
+        PasswordReset.belongsTo(models.User, {as: 'user'});
     };
 
     PasswordReset.addToken = async user => {
@@ -64,10 +64,10 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     PasswordReset.getByToken = async token => {
-        return await PasswordReset.findOne({ where: { token }, include: [{ association: 'user' }] });
+        return await PasswordReset.findOne({where: {token}, include: [{association: 'user'}]});
     };
 
-    PasswordReset.prototype.hasExpired = function() {
+    PasswordReset.prototype.hasExpired = () => {
         return moment(this.valid_until).isBefore(moment());
     };
 

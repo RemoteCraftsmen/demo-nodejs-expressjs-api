@@ -1,9 +1,8 @@
-import Auth from '../services/Auth';
-import {User} from '../models';
+const Auth = require('../services/Auth');
+const {User} = require('../models');
+const HttpStatus = require('http-status-codes');
 
-const util = require('util');
-
-export default class UserController {
+class UserController {
 
     /**
      *  @api {get} /users Read all Users
@@ -37,14 +36,12 @@ export default class UserController {
      *
      *   @apiError (400) BadRequest
      */
-    getCollection(request, response, next) {
+    static getCollection(request, response, next) {
         User.findAll()
             .then(users => {
                 response.json({users});
             })
-            .catch(error => {
-                response.sendStatus(400);
-            });
+            .catch(next);
     }
 
     /**
@@ -90,7 +87,7 @@ export default class UserController {
      *  @apiError (400) BadRequest
      *
      */
-    async storeItem(request, response, next) {
+    static async storeItem(request, response, next) {
         await User.create({...request.body})
             .then(user => {
                 const token = Auth.signIn(user);
@@ -100,16 +97,7 @@ export default class UserController {
 
                 return response.json({auth: true, token, user: plainUser});
             })
-            .catch(err => {
-                if (err.errors) {
-                    const errors = err.errors.map(e => {
-                        return {message: e.message, param: e.path};
-                    });
-                    return response.status(400).json({errors});
-                }
-
-                return response.status(500).json({error: true, message: 'Database error. Contact with administration.'});
-            });
+            .catch(next);
     }
 
     /**
@@ -126,20 +114,18 @@ export default class UserController {
      *
      *   @apiError (404) Not Found    The User with <code>id</code> was not found.
      */
-    getItem(request, response, next) {
+    static getItem(request, response, next) {
         const user_id = request.params.id;
 
         User.findByPk(user_id)
             .then(user => {
                 if (!user) {
-                    return response.sendStatus(404);
+                    return response.sendStatus(HttpStatus.NOT_FOUND);
                 }
 
                 response.json(user);
             })
-            .catch(error => {
-                response.sendStatus(404);
-            });
+            .catch(next);
     }
 
     /**
@@ -187,26 +173,24 @@ export default class UserController {
      *   @apiError BadRequest
      *
      */
-    putItem(request, response, next) {
+    static putItem(request, response, next) {
         const user_id = request.params.id;
         const fields = request.body;
 
         User.findByPk(user_id).then(user => {
             if (!user) {
-                return response.sendStatus(404);
+                return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
             if (user.id !== request.logged_user_id) {
-                return response.sendStatus(403);
+                return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             user.update(fields)
                 .then(() => {
-                    response.sendStatus(200);
+                    response.sendStatus(HttpStatus.OK);
                 })
-                .catch(error => {
-                    response.sendStatus(400);
-                });
+                .catch(next);
         });
     }
 
@@ -225,25 +209,25 @@ export default class UserController {
      *   @apiError Forbidden    Users can delete only themselfs
      *   @apiError BadRequest
      */
-    destroyItem(request, response, next) {
+    static destroyItem(request, response, next) {
         const user_id = request.params.id;
 
         User.findByPk(user_id).then(user => {
             if (!user) {
-                return response.sendStatus(404);
+                return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
             if (user.id !== request.logged_user_id) {
-                return response.sendStatus(403);
+                return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             user.destroy()
                 .then(() => {
-                    response.sendStatus(204);
+                    response.sendStatus(HttpStatus.NO_CONTENT);
                 })
-                .catch(error => {
-                    response.sendStatus(400);
-                });
+                .catch(next);
         });
     }
 }
+
+module.exports = UserController;

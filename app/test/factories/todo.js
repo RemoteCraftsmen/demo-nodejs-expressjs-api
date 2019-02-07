@@ -1,19 +1,27 @@
-import faker from 'faker';
-import { Todo, User } from '../../models';
-
-import UserFactory from './user';
+const faker = require('faker');
+const {Todo} = require('../../models');
 
 const generateData = async (props = {}) => {
     const defaultProps = {
         name: faker.lorem.word(),
-        user_id: (await UserFactory()).id,
-        creator_id: (await UserFactory()).id
+        user_id: faker.random.number(),
+        creator_id: faker.random.number()
     };
 
     return Object.assign({}, defaultProps, props);
 };
 
-export default async (props = {}, make = false) => {
+module.exports = async (options = {}) => {
+    let {make, props, raw} = options;
+
+    if (Object.keys(options).length !== 0 && !('make' in options) && !('raw' in options) && !('props' in options)) {
+        props = options;
+    }
+
+    if (raw) {
+        return await generateData(props);
+    }
+
     if (make) {
         return Todo.build(await generateData(props));
     }

@@ -1,8 +1,10 @@
-const env = process.env.NODE_ENV || 'development';
-const config = require('../../config/config.json')[env];
+const config = require('../../config');
 
-export default function(data) {
-    const { email = 'catch@remotecraftsmen.com', first_name = 'John', last_name = 'Doe', token = 'nope' } = data;
+/**
+ * @param {{frontendUrl:string, noReplyAddress:string}} data
+ */
+module.exports = (data) => {
+    const {email = 'catch@remotecraftsmen.com', first_name = 'John', last_name = 'Doe', token = 'nope'} = data;
     const FRONTEND_URL = config.frontendUrl;
     const NO_REPLY_ADDRESS = config.noReplyAddress;
 
@@ -37,4 +39,4 @@ export default function(data) {
             </p>
         `
     };
-}
+};

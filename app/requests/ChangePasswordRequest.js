@@ -1,6 +1,6 @@
-import { check, body, param, validationResult } from 'express-validator/check';
+const {body, param} = require('express-validator/check');
 
-export default [
+module.exports = [
     param('token')
         .exists()
         .withMessage('is required'),
@@ -12,6 +12,6 @@ export default [
     body('password_confirmation')
         .exists()
         .withMessage('is required')
-        .custom((value, { req }) => value === req.body.password)
+        .custom((value, {req}) => value === req.body.password)
         .withMessage('must match password')
 ];

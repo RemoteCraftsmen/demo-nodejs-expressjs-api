@@ -1,16 +1,14 @@
-import mailer from 'nodemailer';
-import nodemailerSendgrid from 'nodemailer-sendgrid';
+const mailer = require('nodemailer');
+const nodemailerSendgrid = require('nodemailer-sendgrid');
+const config = require('../../config');
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../../config/config.json')[env];
-
-export default class Mail {
+class Mail {
     constructor() {
-        const transport = this.getTransport();
+        const transport = Mail.getTransport();
         this.service = mailer.createTransport(transport);
     }
 
-    getTransport() {
+    static getTransport() {
         if (config.mail.sendgridApiKey && config.mail.sendgridApiKey !== '') {
             const options = {
                 apiKey: config.mail.sendgridApiKey
@@ -34,3 +32,5 @@ export default class Mail {
         return await this.service.sendMail(data);
     }
 }
+
+module.exports = Mail;
