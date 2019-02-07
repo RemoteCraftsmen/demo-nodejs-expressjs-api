@@ -93,5 +93,12 @@ module.exports = (sequelize, DataTypes) => {
         return await User.findOne({where: {email}, ...options});
     };
 
+    User.prototype.toJSON =  function () {
+        let values = Object.assign({}, this.get());
+
+        delete values.password;
+        return values;
+    };
+
     return User;
 };
