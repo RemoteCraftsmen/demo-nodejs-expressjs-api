@@ -14,6 +14,7 @@ const config = require('../config');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
+const ENV = process.env.NODE_ENV || 'development';
 
 db.sequelize
     .authenticate()
@@ -36,6 +37,10 @@ let corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
+app.use(function (err, req, res, next) {
+    if (err.message !== 'Not allowed by CORS') return next();
+    res.status(200).json({code: 200, message: 'Request not allowed by CORS'});
+});
 app.use(helmet());
 app.use(bearerToken());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -45,11 +50,11 @@ app.use(router);
 
 app.use('/', ToggleAPIDocs, express.static('docs'));
 
-app.use((req, res, next) => {
+app.use((req, res) => {
     res.status(404).send("Not found!");
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
         const errors = err.errors.map(e => {
             return {message: e.message, param: e.path};
@@ -64,6 +69,7 @@ app.use((err, req, res, next) => {
 
 if (process.env.NODE_ENV !== 'test') {
     app.listen(PORT, HOST, () => {
+        console.log(`environment: ${ENV}`);
         console.log(`express -> HOST: ${HOST} PORT: ${PORT}`);
     });
 }
