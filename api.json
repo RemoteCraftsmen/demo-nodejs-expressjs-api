@@ -2,7 +2,7 @@
     "apps" : [
         {
             "name"        : "node-express-api",
-            "script"      : "./index.js",
+            "script"      : "./app/index.js",
             "watch"       : false,
             "env_production" : {
                 "NODE_ENV": "production",
