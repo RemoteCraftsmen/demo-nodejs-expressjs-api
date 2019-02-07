@@ -64,6 +64,14 @@ app.use((err, req, res, next) => {
         return res.status(400).json({errors});
     }
 
+    if (err.message === 'Validation failed') {
+        const errors = err.array().map(e => {
+            return {message: e.msg, param: e.param};
+        });
+
+        return res.status(400).json({errors});
+    }
+
     console.error(err.stack);
     res.status(500).send('We messed something. Sorry!');
 });

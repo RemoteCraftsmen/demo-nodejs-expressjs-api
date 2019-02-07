@@ -3,6 +3,7 @@ const Mail = require('../services/Mail');
 const ResetPassword = require('../emails/ResetPassword');
 const {validationResult} = require('express-validator/check');
 const HttpStatus = require('http-status-codes');
+
 /** @param {{frontendUrls:string, noReplyAddress:string}} config */
 
 class ResetPasswordController {
@@ -26,6 +27,7 @@ class ResetPasswordController {
      *   @apiError (400) BadRequest              Email must be specified
      */
     static async resetPassword(request, response, next) {
+        validationResult(request).throw();
         const {email} = request.body;
 
         const user = await User.getByEmail(email);
@@ -72,15 +74,7 @@ class ResetPasswordController {
      */
 
     static async changePassword(request, response, next) {
-        const validationErrors = validationResult(request);
-
-        if (!validationErrors.isEmpty()) {
-            const errors = validationErrors.array().map(e => {
-                return {message: e.msg, param: e.param};
-            });
-
-            return response.status(HttpStatus.BAD_REQUEST).json({errors});
-        }
+        validationResult(request).throw();
 
         const {password} = request.body;
         const token = request.params.token;

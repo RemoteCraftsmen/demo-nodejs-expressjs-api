@@ -1,7 +1,7 @@
-const {body, param} = require('express-validator/check');
+const {body} = require('express-validator/check');
 
 module.exports = [
-    param('email')
+    body('email')
         .exists()
         .withMessage('is required'),
 ];
