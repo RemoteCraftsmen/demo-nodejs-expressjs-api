@@ -1,6 +1,4 @@
-/**
- * @param {{enableDocs: string}} config
- */
+/** @param {{enableDocs: string}} config */
 const config = require('../../config');
 
 module.exports = (request, response, next) => {

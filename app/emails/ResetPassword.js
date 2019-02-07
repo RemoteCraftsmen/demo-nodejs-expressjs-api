@@ -1,8 +1,6 @@
+/** @param {{frontendUrl:string, noReplyAddress:string}} config */
 const config = require('../../config');
 
-/**
- * @param {{frontendUrl:string, noReplyAddress:string}} data
- */
 module.exports = (data) => {
     const {email = 'catch@remotecraftsmen.com', first_name = 'John', last_name = 'Doe', token = 'nope'} = data;
     const FRONTEND_URL = config.frontendUrl;
