@@ -2,8 +2,14 @@
 const config = require('../../config');
 
 module.exports = (data) => {
-    const {email = 'catch@remotecraftsmen.com', first_name = 'John', last_name = 'Doe', token = 'nope'} = data;
-    const FRONTEND_URL = config.frontendUrls[0];
+    const {
+        email = 'catch@remotecraftsmen.com',
+        first_name = 'John',
+        last_name = 'Doe',
+        token = 'nope',
+        frontendUrl = config.frontendUrls[0]
+    } = data;
+    const FRONTEND_URL = frontendUrl;
     const NO_REPLY_ADDRESS = config.noReplyAddress;
 
     return {
