@@ -243,7 +243,7 @@ class TodoController {
      *   	"completed": true
      *   }
      *
-     *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parametr "name" is not specified
+     *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parameter "name" is not specified
      *  @apiError Forbidden     ToDo element belongs to other User
      */
     static patchItem(request, response, next) {

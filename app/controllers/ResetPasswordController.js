@@ -3,12 +3,14 @@ const Mail = require('../services/Mail');
 const ResetPassword = require('../emails/ResetPassword');
 const {validationResult} = require('express-validator/check');
 const HttpStatus = require('http-status-codes');
+/** @param {{frontendUrls:string, noReplyAddress:string}} config */
+const config = require('../../config');
 
 class ResetPasswordController {
 
     /**
      *  @api {post} /reset-password Request for reset password
-     *  @apiName PostPasswordResetresetPassword
+     *  @apiName PostPasswordResetPassword
      *  @apiGroup ResetPassword
      *  @apiVersion 1.0.0
      *
@@ -21,17 +23,21 @@ class ResetPasswordController {
      *       "email": "test@test.com"
      *     }
      *
-     *   @apiError (404) NotFound                The User was not found.
-     *   @apiError (500) InternalServerError     Errors in configuration
+     *   @apiError (404) NotFound                The User was not found
+     *   @apiError (400) BadRequest              Email must be specified
      */
     static async resetPassword(request, response, next) {
-        const {email} = request.body;
+        const {email, frontendUrl} = request.body;
 
         const user = await User.getByEmail(email);
 
         if (!user) {
-            return response.sendStatus(404);
+            return response.sendStatus(HttpStatus.NOT_FOUND);
         }
+
+        // if (!config.frontendUrls.includes(frontendUrl)) {
+        //     return response.sendStatus(HttpStatus.BAD_REQUEST);
+        // }
 
         new Mail()
             .send(
@@ -45,12 +51,7 @@ class ResetPasswordController {
             .then(() => {
                 return response.sendStatus(HttpStatus.OK);
             })
-            .catch(err => {
-                console.error(err);
-                return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    error: 'Server Error'
-                });
-            });
+            .catch(next);
     }
 
     /**
@@ -68,7 +69,7 @@ class ResetPasswordController {
      *    	"password_confirmation": "1"
      *    }
      *
-     *   @apiError       BadRequest              Reset password token was not found </br>
+     *   @apiError (400) BadRequest              Reset password token was not found </br>
      *                                           Password reset token expired
      *
      *   @apiError (500) InternalServerError     Errors in configuration
