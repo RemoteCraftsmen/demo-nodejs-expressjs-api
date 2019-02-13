@@ -20,15 +20,15 @@ describe('API', () => {
         loggedUserToken = token;
         loggerUserId = user.id;
 
-        todos.push(await TodoFactory({props: {user_id: loggerUserId}}));
-        todos.push(await TodoFactory({props: {user_id: loggerUserId}}));
-        todos.push(await TodoFactory({props: {user_id: loggerUserId}}));
+        todos.push(await TodoFactory.create({user_id: loggerUserId}));
+        todos.push(await TodoFactory.create({user_id: loggerUserId}));
+        todos.push(await TodoFactory.create({user_id: loggerUserId}));
     });
 
     describe('todos', () => {
         describe('POST /todos', () => {
             it('registers a new todo when passing valid data', async () => {
-                const todo = await TodoFactory({make: true});
+                const todo = await TodoFactory.create();
 
                 let response = await request
                     .post('/todos')
@@ -76,7 +76,7 @@ describe('API', () => {
         describe('PATCH /todos/{id}', () => {
             it('updates a todo', async () => {
                 const updatedName = 'updated';
-                const todo = await TodoFactory({user_id: loggerUserId});
+                const todo = await TodoFactory.create({user_id: loggerUserId});
 
                 await request
                     .patch(`/todos/${todo.id}`)
@@ -93,8 +93,8 @@ describe('API', () => {
             it("returns 403 when trying to update someone else's todo", async () => {
                 const updatedName = 'updated';
 
-                const anotherUser = await UserFactory();
-                const todo = await TodoFactory({user_id: anotherUser.id});
+                const anotherUser = await UserFactory.create();
+                const todo = await TodoFactory.create({user_id: anotherUser.id});
 
                 let response = await request
                     .patch(`/todos/${todo.id}`)
@@ -118,7 +118,7 @@ describe('API', () => {
 
         describe('PUT /todos/{id}', () => {
             it('saves a todo when not found', async () => {
-                const todo = await TodoFactory({make: true, props: {id: 666, user_id: loggerUserId}});
+                const todo = await TodoFactory.build({id: 666, user_id: loggerUserId});
 
                 let response = await request
                     .put(`/todos/${todo.id}`)
@@ -135,8 +135,8 @@ describe('API', () => {
             });
 
             it('puts a todo when found', async () => {
-                const todo = await TodoFactory({user_id: loggerUserId});
-                const anotherTodo = await TodoFactory({make: true, props: {user_id: loggerUserId}});
+                const todo = await TodoFactory.create({user_id: loggerUserId});
+                const anotherTodo = await TodoFactory.build({user_id: loggerUserId});
 
                 await request
                     .put(`/todos/${todo.id}`)
@@ -152,8 +152,8 @@ describe('API', () => {
             });
 
             it('returns an error if name is blank', async () => {
-                const todo = await TodoFactory({user_id: loggerUserId});
-                const anotherTodo = await TodoFactory({make: true, props: {name: null}});
+                const todo = await TodoFactory.create({user_id: loggerUserId});
+                const anotherTodo = await TodoFactory.build({name: null});
 
                 let response = await request
                     .put(`/todos/${todo.id}`)
@@ -169,8 +169,8 @@ describe('API', () => {
 
             it("returns 403 when trying to put to someone else's todo", async () => {
                 const updatedName = 'updated';
-                const anotherUser = await UserFactory();
-                const todo = await TodoFactory({user_id: anotherUser.id});
+                const anotherUser = await UserFactory.create();
+                const todo = await TodoFactory.create({user_id: anotherUser.id});
 
                 let response = await request
                     .put(`/todos/${todo.id}`)
@@ -183,7 +183,7 @@ describe('API', () => {
 
         describe('DELETE /todos/{id}', () => {
             it('deletes a todo', async () => {
-                const todo = await TodoFactory({user_id: loggerUserId});
+                const todo = await TodoFactory.create({user_id: loggerUserId});
 
                 let response = await request
                     .delete(`/todos/${todo.id}`)
@@ -193,8 +193,8 @@ describe('API', () => {
             });
 
             it("returns 403 when trying to delete someone else's todo", async () => {
-                const anotherUser = await UserFactory();
-                const todo = await TodoFactory({user_id: anotherUser.id});
+                const anotherUser = await UserFactory.create();
+                const todo = await TodoFactory.create({user_id: anotherUser.id});
 
                 let response = await request
                     .delete(`/todos/${todo.id}`)

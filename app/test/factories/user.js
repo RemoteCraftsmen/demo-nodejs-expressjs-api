@@ -1,32 +1,26 @@
 const faker = require('faker');
 const {User} = require('../../models');
 
-const generateData = async (props = {}) => {
-    const defaultProps = {
-        username: faker.internet.userName(),
-        email: faker.internet.email(),
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
-        password: faker.internet.password()
-    };
+class UserFactory {
+    static generate(props) {
+        const defaultProps = {
+            username: faker.internet.userName(),
+            email: faker.internet.email(),
+            first_name: faker.name.firstName(null),
+            last_name: faker.name.lastName(null),
+            password: faker.internet.password()
+        };
 
-    return Object.assign({}, defaultProps, props);
-};
-
-module.exports = async (options = {}) => {
-    let {make = false, props = {}, raw = false} = options;
-
-    if (Object.keys(options).length !== 0 && !('make' in options) && !('raw' in options) && !('props' in options)) {
-        props = options;
+        return Object.assign({}, defaultProps, props);
     }
 
-    if (raw) {
-        return await generateData(props);
+    static build(props) {
+        return User.build(UserFactory.generate(props));
     }
 
-    if (make) {
-        return User.build(await generateData(props));
+    static create(props) {
+        return User.create(UserFactory.generate(props));
     }
+}
 
-    return User.create(await generateData(props));
-};
+module.exports = UserFactory;

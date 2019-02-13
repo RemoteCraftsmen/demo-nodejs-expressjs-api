@@ -1,30 +1,24 @@
 const faker = require('faker');
 const {Todo} = require('../../models');
 
-const generateData = async (props = {}) => {
-    const defaultProps = {
-        name: faker.lorem.word(),
-        user_id: faker.random.number(),
-        creator_id: faker.random.number()
-    };
+class TodoFactory {
+    static generate(props) {
+        const defaultProps = {
+            name: faker.lorem.word(''),
+            user_id: faker.random.number(),
+            creator_id: faker.random.number()
+        };
 
-    return Object.assign({}, defaultProps, props);
-};
-
-module.exports = async (options = {}) => {
-    let {make, props, raw} = options;
-
-    if (Object.keys(options).length !== 0 && !('make' in options) && !('raw' in options) && !('props' in options)) {
-        props = options;
+        return Object.assign({}, defaultProps, props);
     }
 
-    if (raw) {
-        return await generateData(props);
+    static build(props) {
+        return Todo.build(TodoFactory.generate(props));
     }
 
-    if (make) {
-        return Todo.build(await generateData(props));
+    static create(props) {
+        return Todo.create(TodoFactory.generate(props));
     }
+}
 
-    return Todo.create(await generateData(props));
-};
+module.exports = TodoFactory;

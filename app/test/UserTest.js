@@ -19,19 +19,19 @@ describe('API', () => {
         loggedUserToken = token;
         loggedUserId = user.id;
 
-        users.push(await UserFactory());
-        users.push(await UserFactory());
-        users.push(await UserFactory());
+        users.push(await UserFactory.create());
+        users.push(await UserFactory.create());
+        users.push(await UserFactory.create());
     });
 
     describe('users', () => {
         describe('POST /users', () => {
             it('registers a new user when passing valid data', async () => {
-                const user = await UserFactory({make: true});
+                const userData = UserFactory.generate();
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body)
                     .to.have.property('auth')
@@ -39,11 +39,11 @@ describe('API', () => {
             });
 
             it('returns an error if first_name is blank', async () => {
-                const user = await UserFactory({make: true, props: {first_name: null}});
+                const userData = await UserFactory.generate({first_name: null});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -53,11 +53,11 @@ describe('API', () => {
             });
 
             it('returns an error if last_name is blank', async () => {
-                const user = await UserFactory({make: true, props: {last_name: null}});
+                const userData = await UserFactory.generate({last_name: null});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -67,11 +67,11 @@ describe('API', () => {
             });
 
             it('returns an error if username is blank', async () => {
-                const user = await UserFactory({make: true, props: {username: null}});
+                const userData = await UserFactory.generate({username: null});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -81,11 +81,11 @@ describe('API', () => {
             });
 
             it('returns an error if email is not a valid email address', async () => {
-                const user = await UserFactory({make: true, props: {email: 'definitelyNotAnEmail'}});
+                const userData = await UserFactory.generate({email: 'definitelyNotAnEmail'});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -95,12 +95,12 @@ describe('API', () => {
             });
 
             it('returns an error if email is already in use', async () => {
-                await UserFactory({email: `me@me123.com`});
-                const user = await UserFactory({make: true, props: {email: `me@me123.com`}});
+                await UserFactory.create({email: `me@me123.com`});
+                const userData = await UserFactory.generate({email: `me@me123.com`});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -110,11 +110,11 @@ describe('API', () => {
             });
 
             it('returns an error if password is blank', async () => {
-                const user = await UserFactory({make: true, props: {password: null}});
+                const userData = await UserFactory.generate({password: null});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -124,11 +124,11 @@ describe('API', () => {
             });
 
             it('returns an error if password contains less than 6 character', async () => {
-                const user = await UserFactory({make: true, props: {password: 12345}});
+                const userData = await UserFactory.generate({password: 12345});
 
                 let response = await request
                     .post(`/users`)
-                    .send(user.toJSON());
+                    .send(userData);
 
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
@@ -140,7 +140,7 @@ describe('API', () => {
 
         describe('POST /login', () => {
             it('returns a token when passing valid data', async () => {
-                await UserFactory({email: 'us@er.com', password: 'somepass'});
+                await UserFactory.create({email: 'us@er.com', password: 'somepass'});
 
                 let response = await request
                     .post(`/auth/login`)
@@ -159,7 +159,7 @@ describe('API', () => {
             });
 
             it('does not authenticate with invalid data', async () => {
-                await UserFactory({email: 'us@ere.com', password: 'somepass'});
+                await UserFactory.create({email: 'us@ere.com', password: 'somepass'});
 
                 let response = await request
                     .post(`/auth/login`)
@@ -214,7 +214,7 @@ describe('API', () => {
             });
 
             it('returns 403 when trying to update someone else', async () => {
-                const user = await UserFactory();
+                const user = await UserFactory.create();
                 const updatedName = 'updated';
 
                 let response = await request
@@ -248,7 +248,7 @@ describe('API', () => {
             });
 
             it('returns 403 when trying to delete someone else', async () => {
-                const user = await UserFactory();
+                const user = await UserFactory.create();
 
                 let response = await request
                     .delete(`/users/${user.id}`)
