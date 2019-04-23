@@ -1,5 +1,9 @@
 #!/bin/bash
 
+LC_ALL="en_US.UTF-8";
+LANG="en_US.UTF-8";
+LANGUAGE="en_US:en";
+
 #-------------------#
 #----- Helpers -----#
 #-------------------#
@@ -11,14 +15,14 @@ usage() {
     echo "  - down: stop all containers"
     echo "  - configure: configure application"
     echo "  - recreate: recreate docker containers for env refresh"
-    echo "  - dbrebuild: rebuild database"
+    echo "  - db-rebuild: rebuild database"
 }
 
 fn_exists() {
     type $1 2>/dev/null | grep -q 'is a function'
 }
 
-COMMAND=$1
+COMMAND="$1"
 shift
 ARGUMENTS="${@}"
 
@@ -38,16 +42,12 @@ recreate() {
     docker-compose up -d --force-recreate;
 }
 
-dbrebuild() {
-    NODE_ENV=development ./node_modules/.bin/sequelize db:drop;
-    NODE_ENV=development ./node_modules/.bin/sequelize db:create;
-    NODE_ENV=development ./node_modules/.bin/sequelize db:migrate;
-    NODE_ENV=development ./node_modules/.bin/sequelize db:seed:all;
-
-    NODE_ENV=test ./node_modules/.bin/sequelize db:drop;
-    NODE_ENV=test ./node_modules/.bin/sequelize db:create;
-    NODE_ENV=test ./node_modules/.bin/sequelize db:migrate;
-    NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all;
+db-rebuild() {
+    ENV=${1:-prod}
+    NODE_ENV=${ENV} ./node_modules/.bin/sequelize db:drop;
+    NODE_ENV=${ENV} ./node_modules/.bin/sequelize db:create;
+    NODE_ENV=${ENV} ./node_modules/.bin/sequelize db:migrate;
+    NODE_ENV=${ENV} ./node_modules/.bin/sequelize db:seed:all;
 }
 
 configure() {
