@@ -3,7 +3,7 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable(
-            'users',
+            'Users',
             {
                 id: {
                     primaryKey: true,
@@ -33,11 +33,11 @@ module.exports = {
                 },
                 created_at: {
                     type: Sequelize.DATE,
-                    allowNull: false
+                    allowNull: true
                 },
                 updated_at: {
                     type: Sequelize.DATE,
-                    allowNull: false
+                    allowNull: true
                 }
             },
             {
@@ -47,6 +47,6 @@ module.exports = {
         );
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('users');
+        return queryInterface.dropTable('Users');
     }
 };

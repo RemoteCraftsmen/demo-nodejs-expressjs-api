@@ -71,8 +71,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             underscored: true,
+            tableName: 'Users',
             defaultScope: {
-                attributes: {exclude: ['password']}
+                attributes: { exclude: ['password'] }
             },
             hooks: {
                 beforeSave: (user, options) => {
@@ -86,14 +87,14 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     User.associate = models => {
-        User.hasMany(models.Todo, {as: 'todos'});
+        User.hasMany(models.Todo, { as: 'todos' });
     };
 
     User.getByEmail = async (email, options = {}) => {
-        return await User.findOne({where: {email}, ...options});
+        return await User.findOne({ where: { email }, ...options });
     };
 
-    User.prototype.toJSON =  function () {
+    User.prototype.toJSON = function () {
         let values = Object.assign({}, this.get());
 
         delete values.password;

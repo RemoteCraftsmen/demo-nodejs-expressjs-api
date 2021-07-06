@@ -32,13 +32,17 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             underscored: true,
+            tableName: 'Todos',
             scopes: {}
         }
     );
 
     Todo.associate = models => {
         Todo.belongsTo(models.User, { as: 'user' });
-        Todo.belongsTo(models.User, { as: 'creator', foreignKey: 'creator_id' });
+        Todo.belongsTo(models.User, {
+            as: 'creator',
+            foreignKey: 'creator_id'
+        });
     };
 
     return Todo;
