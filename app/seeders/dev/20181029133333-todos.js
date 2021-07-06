@@ -4,7 +4,7 @@ const todos = [];
 
 for (let i = 1; i <= 10; i++) {
     const todo = {
-        name: faker.internet.domainWord,
+        name: faker.internet.domainWord(),
         completed: false,
         user_id: i,
         creator_id: i,
