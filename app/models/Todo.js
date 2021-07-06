@@ -7,11 +7,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 autoIncrement: true
             },
-            user_id: {
+            userId: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },
-            creator_id: {
+            creatorId: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
@@ -31,17 +31,21 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
-            underscored: true,
+            modelName: 'Todo',
             tableName: 'Todos',
             scopes: {}
         }
     );
 
     Todo.associate = models => {
-        Todo.belongsTo(models.User, { as: 'user' });
+        Todo.belongsTo(models.User, {
+            as: 'user',
+            foreignKey: 'userId',
+            sourceKey: 'id'
+        });
         Todo.belongsTo(models.User, {
             as: 'creator',
-            foreignKey: 'creator_id'
+            foreignKey: 'creatorId'
         });
     };
 

@@ -1,8 +1,7 @@
-const {Todo} = require('../models');
+const { Todo } = require('../models');
 const HttpStatus = require('http-status-codes');
 
 class TodoController {
-
     /**
      *  @api {get} /todos Read all ToDo elements
      *  @apiName GetToDoIndex
@@ -15,12 +14,12 @@ class TodoController {
      *        "todos": [
      *            {
      *                "id": 1,
-     *                "user_id": 6,
-     *                "creator_id": 6,
+     *                "userId": 6,
+     *                "creatorId": 6,
      *                "name": "test",
      *                "completed": false,
-     *                "created_at": "2018-11-27T10:30:29.700Z",
-     *                "updated_at": "2018-11-27T10:30:29.700Z"
+     *                "createdAt": "2018-11-27T10:30:29.700Z",
+     *                "updatedAt": "2018-11-27T10:30:29.700Z"
      *            }
      *        ]
      *    }
@@ -28,10 +27,10 @@ class TodoController {
      *   @apiSuccess {Boolean}     completed
      *   @apiSuccess {Number}      id
      *   @apiSuccess {String}      name
-     *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id
-     *   @apiSuccess {Timestamp}   updated_at
-     *   @apiSuccess {Timestamp}   created_at
+     *   @apiSuccess {Number}      creatorId
+     *   @apiSuccess {Number}      userId
+     *   @apiSuccess {Timestamp}   updatedAt
+     *   @apiSuccess {Timestamp}   createdAt
      *
      *   @apiErrorExample Error-Response:
      *     HTTP/1.1 400 Bad Request
@@ -45,9 +44,9 @@ class TodoController {
      *    }
      */
     static getCollection(request, response, next) {
-        Todo.findAll({where: {user_id: request.logged_user_id}})
+        Todo.findAll({ where: { userId: request.loggedUserId } })
             .then(todos => {
-                return response.json({todos});
+                return response.json({ todos });
             })
             .catch(next);
     }
@@ -71,19 +70,19 @@ class TodoController {
      *        "completed": false,
      *        "id": 1,
      *        "name": "test",
-     *        "creator_id": 6,
-     *        "user_id": 6,
-     *        "updated_at": "2018-11-27T10:30:29.700Z",
-     *        "created_at": "2018-11-27T10:30:29.700Z"
+     *        "creatorId": 6,
+     *        "userId": 6,
+     *        "updatedAt": "2018-11-27T10:30:29.700Z",
+     *        "createdAt": "2018-11-27T10:30:29.700Z"
      *    }
      *
      *   @apiSuccess {Boolean}     completed
      *   @apiSuccess {Number}      id
      *   @apiSuccess {String}      name
-     *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id
-     *   @apiSuccess {Timestamp}   updated_at
-     *   @apiSuccess {Timestamp}   created_at
+     *   @apiSuccess {Number}      creatorId
+     *   @apiSuccess {Number}      userId
+     *   @apiSuccess {Timestamp}   updatedAt
+     *   @apiSuccess {Timestamp}   createdAt
      *
      *   @apiErrorExample Error-Response:
      *     HTTP/1.1 400 Bad Request
@@ -99,12 +98,12 @@ class TodoController {
     static storeItem(request, response, next) {
         const data = request.body;
 
-        data.creator_id = request.logged_user_id;
-        if (!data.user_id) {
-            data.user_id = request.logged_user_id;
+        data.creatorId = request.loggedUserId;
+        if (!data.userId) {
+            data.userId = request.loggedUserId;
         }
 
-        Todo.create({...data})
+        Todo.create({ ...data })
             .then(todo => {
                 return response.status(HttpStatus.CREATED).json(todo);
             })
@@ -124,28 +123,28 @@ class TodoController {
      *     HTTP/1.1 200 OK
      *    {
      *        "id": 3,
-     *        "user_id": 6,
-     *        "creator_id": 6,
+     *        "userId": 6,
+     *        "creatorId": 6,
      *        "name": "test",
      *        "completed": false,
-     *        "created_at": "2018-11-27T11:24:36.779Z",
-     *        "updated_at": "2018-11-27T11:24:36.779Z"
+     *        "createdAt": "2018-11-27T11:24:36.779Z",
+     *        "updatedAt": "2018-11-27T11:24:36.779Z"
      *    }
      *
      *   @apiSuccess {Boolean}     completed
      *   @apiSuccess {Number}      id
      *   @apiSuccess {String}      name
-     *   @apiSuccess {Number}      creator_id
-     *   @apiSuccess {Number}      user_id
-     *   @apiSuccess {Timestamp}   updated_at
-     *   @apiSuccess {Timestamp}   created_at
+     *   @apiSuccess {Number}      creatorId
+     *   @apiSuccess {Number}      userId
+     *   @apiSuccess {Timestamp}   updatedAt
+     *   @apiSuccess {Timestamp}   createdAt
      *
      *   @apiError (404) Not Found    The <code>id</code> of the ToDo element was not found.
      */
     static getItem(request, response, next) {
-        const todo_id = request.params.id;
+        const todoId = request.params.id;
 
-        Todo.findByPk(todo_id)
+        Todo.findByPk(todoId)
             .then(todo => {
                 if (!todo) {
                     return response.sendStatus(HttpStatus.NOT_FOUND);
@@ -174,10 +173,10 @@ class TodoController {
      *        "completed": false,
      *        "id": 5,
      *        "name": "krarkakrkar",
-     *        "creator_id": 6,
-     *        "user_id": 6,
-     *        "updated_at": "2018-11-27T12:38:16.210Z",
-     *        "created_at": "2018-11-27T12:38:16.210Z"
+     *        "creatorId": 6,
+     *        "userId": 6,
+     *        "updatedAt": "2018-11-27T12:38:16.210Z",
+     *        "createdAt": "2018-11-27T12:38:16.210Z"
      *    }
      *
      *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parametr "name" is not specified
@@ -195,29 +194,29 @@ class TodoController {
      *    }
      */
     static putItem(request, response, next) {
-        const todo_id = request.params.id;
+        const todoId = request.params.id;
         const fields = request.body;
 
-        fields.creator_id = request.logged_user_id;
-        if (!fields.user_id) {
-            fields.user_id = request.logged_user_id;
+        fields.creatorId = request.loggedUserId;
+        if (!fields.userId) {
+            fields.userId = request.loggedUserId;
         }
 
-        Todo.findByPk(todo_id).then(todo => {
+        Todo.findByPk(todoId).then(todo => {
             if (!todo) {
-                return Todo.create({...fields, todo_id})
+                return Todo.create({ ...fields, todoId })
                     .then(todo => {
                         return response.status(HttpStatus.CREATED).json(todo);
                     })
                     .catch(next);
             }
 
-            if (todo.user_id !== request.logged_user_id) {
+            if (todo.userId !== request.loggedUserId) {
                 return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
             return todo
-                .update(fields, {fields: ['name', 'user_id']})
+                .update(fields, { fields: ['name', 'userId'] })
                 .then(() => {
                     return response.sendStatus(HttpStatus.OK);
                 })
@@ -239,7 +238,7 @@ class TodoController {
      *  @apiParamExample {json} Request-Example:
      *   {
      *   	"name" : "krarkakrkar11112",
-     *   	"user_id" : 10,
+     *   	"userId" : 10,
      *   	"completed": true
      *   }
      *
@@ -247,19 +246,19 @@ class TodoController {
      *  @apiError Forbidden     ToDo element belongs to other User
      */
     static patchItem(request, response, next) {
-        const todo_id = request.params.id;
+        const todoId = request.params.id;
         const fields = request.body;
 
-        Todo.findByPk(todo_id).then(todo => {
+        Todo.findByPk(todoId).then(todo => {
             if (!todo) {
                 return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
-            if (todo.user_id !== request.logged_user_id) {
+            if (todo.userId !== request.loggedUserId) {
                 return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 
-            todo.update(fields, {fields: ['name', 'user_id', 'completed']})
+            todo.update(fields, { fields: ['name', 'userId', 'completed'] })
                 .then(() => {
                     response.sendStatus(HttpStatus.OK);
                 })
@@ -283,14 +282,14 @@ class TodoController {
      *   @apiError BadRequest
      */
     static destroyItem(request, response, next) {
-        const todo_id = request.params.id;
+        const todoId = request.params.id;
 
-        Todo.findByPk(todo_id).then(todo => {
+        Todo.findByPk(todoId).then(todo => {
             if (!todo) {
                 return response.sendStatus(HttpStatus.NOT_FOUND);
             }
 
-            if (todo.user_id !== request.logged_user_id) {
+            if (todo.userId !== request.loggedUserId) {
                 return response.sendStatus(HttpStatus.FORBIDDEN);
             }
 

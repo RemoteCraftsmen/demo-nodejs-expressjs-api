@@ -6,10 +6,10 @@ for (let i = 1; i <= 10; i++) {
     const todo = {
         name: faker.internet.domainWord(),
         completed: false,
-        user_id: i,
-        creator_id: i,
-        created_at: new Date(),
-        updated_at: new Date()
+        userId: i,
+        creatorId: i,
+        createdAt: new Date(),
+        updatedAt: new Date()
     };
 
     todos.push(todo);

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 autoIncrement: true
             },
-            user_id: {
+            userId: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            valid_until: {
+            validUntil: {
                 type: DataTypes.DATE,
                 allowNull: false
             }
         },
-        { underscored: true, tableName: 'PasswordResets' }
+        { tableName: 'PasswordResets' }
     );
 
     PasswordReset.associate = models => {
@@ -34,23 +34,23 @@ module.exports = (sequelize, DataTypes) => {
     PasswordReset.addToken = async user => {
         const passwordReset = await PasswordReset.findOne({
             where: {
-                user_id: user.id
+                userId: user.id
             }
         });
 
         const token = PasswordReset.generateToken();
-        const valid_until = moment().add(24, 'hours').toDate();
+        const validUntil = moment().add(24, 'hours').toDate();
 
         if (passwordReset) {
             await passwordReset.update({
                 token,
-                valid_until
+                validUntil
             });
         } else {
             await PasswordReset.create({
-                user_id: user.id,
+                userId: user.id,
                 token,
-                valid_until
+                validUntil
             });
         }
 
@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     PasswordReset.prototype.hasExpired = () => {
-        return moment(this.valid_until).isBefore(moment());
+        return moment(this.validUntil).isBefore(moment());
     };
 
     return PasswordReset;

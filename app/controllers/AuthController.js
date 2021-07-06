@@ -14,7 +14,7 @@ class AuthController {
      *
      *  @apiParamExample {json} Request-Example:
      *     {
-     *       "auth_token": ""
+     *       "authToken": ""
      *       "email": "test@test.com"
      *       "password": "123456"
      *     }
@@ -27,8 +27,8 @@ class AuthController {
      *        "user": {
      *            "id": 6,
      *            "username": "aaaa",
-     *            "first_name": "aaaaa",
-     *            "last_name": "aaaaa",
+     *            "firstName": "aaaaa",
+     *            "lastName": "aaaaa",
      *            "email": "test@test.com"
      *        }
      *    }
@@ -48,9 +48,9 @@ class AuthController {
             where: { email },
             attributes: [
                 'id',
-                'username',
-                'first_name',
-                'last_name',
+                'userName',
+                'firstName',
+                'lastName',
                 'email',
                 'password'
             ]

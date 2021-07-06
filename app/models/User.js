@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 autoIncrement: true
             },
-            username: {
+            userName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 }
             },
-            first_name: {
+            firstName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 }
             },
-            last_name: {
+            lastName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -70,7 +70,6 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
-            underscored: true,
             tableName: 'Users',
             defaultScope: {
                 attributes: { exclude: ['password'] }
@@ -87,7 +86,11 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     User.associate = models => {
-        User.hasMany(models.Todo, { as: 'todos' });
+        User.hasMany(models.Todo, {
+            as: 'todos',
+            foreignKey: 'userId',
+            sourceKey: 'id'
+        });
     };
 
     User.getByEmail = async (email, options = {}) => {

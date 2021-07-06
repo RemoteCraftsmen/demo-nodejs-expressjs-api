@@ -5,13 +5,13 @@ const users = [];
 
 for (let i = 1; i <= 4; i++) {
     const user = {
-        username: faker.internet.userName(),
+        userName: faker.internet.userName(),
         email: faker.internet.email(),
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
         password: bcrypt.hashSync('testing'),
-        created_at: new Date(),
-        updated_at: new Date()
+        createdAt: new Date(),
+        updatedAt: new Date()
     };
 
     users.push(user);

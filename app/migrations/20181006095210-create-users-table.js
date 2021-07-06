@@ -10,15 +10,15 @@ module.exports = {
                     type: Sequelize.INTEGER,
                     autoIncrement: true
                 },
-                username: {
+                userName: {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                first_name: {
+                firstName: {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                last_name: {
+                lastName: {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
@@ -31,13 +31,13 @@ module.exports = {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                created_at: {
+                createdAt: {
                     type: Sequelize.DATE,
-                    allowNull: true
+                    allowNull: false
                 },
-                updated_at: {
+                updatedAt: {
                     type: Sequelize.DATE,
-                    allowNull: true
+                    allowNull: false
                 }
             },
             {

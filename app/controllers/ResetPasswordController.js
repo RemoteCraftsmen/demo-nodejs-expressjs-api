@@ -42,8 +42,8 @@ class ResetPasswordController {
             .send(
                 ResetPassword({
                     email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                     token: await PasswordReset.addToken(user),
                     frontendUrl: request.get('origin')
                 })

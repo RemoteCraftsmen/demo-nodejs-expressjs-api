@@ -1,11 +1,11 @@
 /** @param {{frontendUrls:string, noReplyAddress:string}} config */
 const config = require('../../config');
 
-module.exports = (data) => {
+module.exports = data => {
     const {
         email = 'catch@remotecraftsmen.com',
-        first_name = 'John',
-        last_name = 'Doe',
+        firstName = 'John',
+        lastName = 'Doe',
         token = 'nope',
         frontendUrl = config.frontendUrls[0]
     } = data;
@@ -19,7 +19,7 @@ module.exports = (data) => {
         text: `
             Change password request!
 
-            Hi ${first_name} ${last_name}! Someone requested a password change for your account.
+            Hi ${firstName} ${lastName}! Someone requested a password change for your account.
 
             If it was not you, please ignore this email.
 
@@ -31,7 +31,7 @@ module.exports = (data) => {
         html: `
             <h3>Change password request!</h3>
             <p>
-                Hi ${first_name} ${last_name}! Someone requested a password change for your account.
+                Hi ${firstName} ${lastName}! Someone requested a password change for your account.
                 <br /><br />
                 <strong>If it was not you, please ignore this email.</strong>
             </p>

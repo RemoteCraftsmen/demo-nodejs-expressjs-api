@@ -5,7 +5,7 @@ module.exports = [
 
     body('password').exists().withMessage('is required'),
 
-    body('password_confirmation')
+    body('passwordConfirmation')
         .exists()
         .withMessage('is required')
         .custom((value, { req }) => value === req.body.password)

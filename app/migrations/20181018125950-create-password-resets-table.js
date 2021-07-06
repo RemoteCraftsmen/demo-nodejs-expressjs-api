@@ -10,7 +10,7 @@ module.exports = {
                     type: Sequelize.INTEGER,
                     autoIncrement: true
                 },
-                user_id: {
+                userId: {
                     type: Sequelize.INTEGER,
                     allowNull: false
                 },
@@ -18,16 +18,16 @@ module.exports = {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                valid_until: {
+                validUntil: {
                     type: Sequelize.DATE,
                     allowNull: false
                 },
-                created_at: {
+                createdAt: {
                     type: Sequelize.DATE,
                     allowNull: false,
                     defaultValue: Sequelize.NOW
                 },
-                updated_at: {
+                updatedAt: {
                     type: Sequelize.DATE,
                     allowNull: false,
                     defaultValue: Sequelize.NOW
