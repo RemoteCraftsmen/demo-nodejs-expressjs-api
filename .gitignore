@@ -11,5 +11,3 @@ apidoc
 yarn.lock
 docs
 .env
-.env.production
-.env.test
