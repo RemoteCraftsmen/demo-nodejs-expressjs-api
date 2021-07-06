@@ -3,7 +3,7 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable(
-            'PasswordResets',
+            'password_resets',
             {
                 id: {
                     primaryKey: true,
@@ -40,6 +40,6 @@ module.exports = {
         );
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('PasswordResets');
+        return queryInterface.dropTable('password_resets');
     }
 };

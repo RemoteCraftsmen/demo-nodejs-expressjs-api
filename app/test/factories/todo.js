@@ -1,12 +1,12 @@
 const faker = require('faker');
-const {Todo} = require('../../models');
+const { Todo } = require('../../models');
 
 class TodoFactory {
     static generate(props) {
         const defaultProps = {
-            name: faker.lorem.word(''),
-            user_id: faker.random.number(),
-            creator_id: faker.random.number()
+            name: faker.lorem.word(),
+            user_id: faker.datatype.number(),
+            creator_id: faker.datatype.number()
         };
 
         return Object.assign({}, defaultProps, props);

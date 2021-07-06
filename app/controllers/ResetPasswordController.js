@@ -1,11 +1,10 @@
-const {User, PasswordReset} = require('../models');
+const { User, PasswordReset } = require('../models');
 const Mail = require('../services/Mail');
 const ResetPassword = require('../emails/ResetPassword');
-const {validationResult} = require('express-validator/check');
+const { validationResult } = require('express-validator');
 const HttpStatus = require('http-status-codes');
 
 class ResetPasswordController {
-
     /**
      *  @api {post} /reset-password Request for reset password
      *  @apiName PostPasswordResetPassword
@@ -31,7 +30,7 @@ class ResetPasswordController {
             return next(err);
         }
 
-        const {email} = request.body;
+        const { email } = request.body;
 
         const user = await User.getByEmail(email);
 
@@ -83,7 +82,7 @@ class ResetPasswordController {
             return next(err);
         }
 
-        const {password} = request.body;
+        const { password } = request.body;
         const token = request.params.token;
 
         PasswordReset.getByToken(token)
@@ -102,7 +101,7 @@ class ResetPasswordController {
                     });
                 }
 
-                await passwordReset.user.update({password});
+                await passwordReset.user.update({ password });
 
                 await passwordReset.destroy();
 
