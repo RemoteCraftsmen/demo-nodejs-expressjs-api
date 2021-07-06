@@ -45,14 +45,21 @@ const operatorsAliases = {
 
 let sequelize;
 if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], {...config, operatorsAliases});
+    sequelize = new Sequelize(process.env[config.use_env_variable], {
+        ...config,
+        operatorsAliases
+    });
 } else {
-    sequelize = new Sequelize({...config, operatorsAliases});
+    sequelize = new Sequelize({ ...config.db, operatorsAliases });
 }
 
 fs.readdirSync(__dirname)
     .filter(file => {
-        return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
+        return (
+            file.indexOf('.') !== 0 &&
+            file !== basename &&
+            file.slice(-3) === '.js'
+        );
     })
     .forEach(file => {
         const model = sequelize['import'](path.join(__dirname, file));

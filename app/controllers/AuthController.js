@@ -1,9 +1,8 @@
-const {User} = require('../models');
+const { User } = require('../models');
 const Auth = require('../services/Auth');
 const HttpStatus = require('http-status-codes');
 
 class AuthController {
-
     /**
      *  @api {post} /auth/login Attempt to log
      *  @apiName PostAuthLogin
@@ -43,25 +42,37 @@ class AuthController {
      *     }
      */
     static async login(request, response) {
-        const {email, password} = request.body;
+        const { email, password } = request.body;
 
         const user = await User.findOne({
-            where: {email}, attributes: ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+            where: { email },
+            attributes: [
+                'id',
+                'username',
+                'first_name',
+                'last_name',
+                'email',
+                'password'
+            ]
         });
 
         if (!user) {
-            return response.status(HttpStatus.UNAUTHORIZED).json({auth: false, token: null});
+            return response
+                .status(HttpStatus.UNAUTHORIZED)
+                .json({ auth: false, token: null });
         }
 
-        if (Auth.checkCredentials(password, user.getDataValue('password'))) {
+        if (Auth.comparePasswords(password, user.getDataValue('password'))) {
             const token = Auth.signIn(user);
-            let plainUser = user.get({plain: true});
+            let plainUser = user.get({ plain: true });
             delete plainUser.password;
 
-            return response.json({auth: true, token, user: plainUser});
+            return response.json({ auth: true, token, user: plainUser });
         }
 
-        return response.status(HttpStatus.UNAUTHORIZED).json({auth: false, token: null, user: null});
+        return response
+            .status(HttpStatus.UNAUTHORIZED)
+            .json({ auth: false, token: null, user: null });
     }
 }
 
