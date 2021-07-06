@@ -6,6 +6,8 @@ const helmet = require('helmet');
 
 const db = require('./models');
 
+const sequelize = require('./util/database');
+
 const router = require('./routes');
 const ToggleAPIDocs = require('./middleware/ToggleAPIDocs');
 
@@ -15,15 +17,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
 const ENV = process.env.NODE_ENV || 'development';
-
-db.sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
 
 let localWhiteList = ['http://localhost:4200'];
 let originsWhitelist = localWhiteList.concat(config.frontendUrls);
@@ -40,11 +33,11 @@ let corsOptions = {
 app.use(cors(corsOptions));
 app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
-    res.status(200).json({code: 200, message: 'Request not allowed by CORS'});
+    res.status(200).json({ code: 200, message: 'Request not allowed by CORS' });
 });
 app.use(helmet());
 app.use(bearerToken());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(router);
@@ -52,24 +45,27 @@ app.use(router);
 app.use('/', ToggleAPIDocs, express.static('docs'));
 
 app.use((req, res, next) => {
-    res.status(404).send("Not found!");
+    res.status(404).send('Not found!');
 });
 
 app.use((err, req, res, next) => {
-    if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
+    if (
+        err.name === 'SequelizeValidationError' ||
+        err.name === 'SequelizeUniqueConstraintError'
+    ) {
         const errors = err.errors.map(e => {
-            return {message: e.message, param: e.path};
+            return { message: e.message, param: e.path };
         });
 
-        return res.status(400).json({errors});
+        return res.status(400).json({ errors });
     }
 
     if (err.message === 'Validation failed') {
         const errors = err.array().map(e => {
-            return {message: e.msg, param: e.param};
+            return { message: e.msg, param: e.param };
         });
 
-        return res.status(400).json({errors});
+        return res.status(400).json({ errors });
     }
 
     console.error(err.stack);
