@@ -41,7 +41,7 @@ class LoginController {
      *        "user": null
      *     }
      */
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const { email, password } = request.body;
 
         const user = await User.findOne({

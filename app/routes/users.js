@@ -5,11 +5,11 @@ const VerifyToken = require('../middleware/VerifyToken');
 
 //const UserController = require('../controllers/UserController');
 
-const IndexController = require('../controllers/Users/IndexController');
-const DestroyController = require('../controllers/Users/DestroyController');
-const ShowController = require('../controllers/Users/ShowController');
-const StoreController = require('../controllers/Users/StoreController');
-const UpdateController = require('../controllers/Users/UpdateController');
+const IndexController = require('../controllers/User/IndexController');
+const DestroyController = require('../controllers/User/DestroyController');
+const ShowController = require('../controllers/User/ShowController');
+const StoreController = require('../controllers/User/StoreController');
+const UpdateController = require('../controllers/User/UpdateController');
 
 const indexController = new IndexController();
 const destroyController = new DestroyController();

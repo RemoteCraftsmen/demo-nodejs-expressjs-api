@@ -38,8 +38,8 @@ module.exports = (sequelize, DataTypes) => {
             return crypto.randomBytes(64).toString('hex');
         }
 
-        async getByToken(token) {
-            return await PasswordReset.findOne({
+        getByToken(token) {
+            return PasswordReset.findOne({
                 where: { token },
                 include: [{ association: 'user' }]
             });
@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             }
         },
-        { sequelize, tableName: 'PasswordResets' }
+        { sequelize }
     );
 
     return PasswordReset;

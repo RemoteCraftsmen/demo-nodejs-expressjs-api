@@ -93,7 +93,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            tableName: 'Users',
             defaultScope: {
                 attributes: { exclude: ['password'] }
             },
