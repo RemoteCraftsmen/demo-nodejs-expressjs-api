@@ -1,8 +1,30 @@
+const { Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define(
-        'User',
+    class User extends Model {
+        async getByEmail(email, options = {}) {
+            return await this.findOne({ where: { email }, ...options });
+        }
+
+        toJSON() {
+            let values = Object.assign({}, this.get());
+
+            delete values.password;
+
+            return values;
+        }
+
+        static associate(models) {
+            User.hasMany(models.Todo, {
+                as: 'todos',
+                foreignKey: 'userId',
+                sourceKey: 'id'
+            });
+        }
+    }
+
+    User.init(
         {
             id: {
                 primaryKey: true,
@@ -70,6 +92,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
+            sequelize,
             tableName: 'Users',
             defaultScope: {
                 attributes: { exclude: ['password'] }
@@ -84,25 +107,6 @@ module.exports = (sequelize, DataTypes) => {
             scopes: {}
         }
     );
-
-    User.associate = models => {
-        User.hasMany(models.Todo, {
-            as: 'todos',
-            foreignKey: 'userId',
-            sourceKey: 'id'
-        });
-    };
-
-    User.getByEmail = async (email, options = {}) => {
-        return await User.findOne({ where: { email }, ...options });
-    };
-
-    User.prototype.toJSON = function () {
-        let values = Object.assign({}, this.get());
-
-        delete values.password;
-        return values;
-    };
 
     return User;
 };

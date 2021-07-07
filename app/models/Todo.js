@@ -1,6 +1,21 @@
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-    const Todo = sequelize.define(
-        'Todo',
+    class Todo extends Model {
+        static associate(models) {
+            Todo.belongsTo(models.User, {
+                as: 'user',
+                foreignKey: 'userId',
+                sourceKey: 'id'
+            });
+            Todo.belongsTo(models.User, {
+                as: 'creator',
+                foreignKey: 'creatorId'
+            });
+        }
+    }
+
+    Todo.init(
         {
             id: {
                 primaryKey: true,
@@ -31,23 +46,11 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
+            sequelize,
             modelName: 'Todo',
             tableName: 'Todos',
             scopes: {}
         }
     );
-
-    Todo.associate = models => {
-        Todo.belongsTo(models.User, {
-            as: 'user',
-            foreignKey: 'userId',
-            sourceKey: 'id'
-        });
-        Todo.belongsTo(models.User, {
-            as: 'creator',
-            foreignKey: 'creatorId'
-        });
-    };
-
     return Todo;
 };
