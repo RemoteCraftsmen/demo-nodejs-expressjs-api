@@ -1,13 +1,13 @@
 const faker = require('faker');
-const {User} = require('../../models');
+const { User } = require('../../models');
 
 class UserFactory {
     static generate(props) {
         const defaultProps = {
-            username: faker.internet.userName(),
+            userName: faker.internet.userName(),
             email: faker.internet.email(),
-            first_name: faker.name.firstName(null),
-            last_name: faker.name.lastName(null),
+            firstName: faker.name.firstName(null),
+            lastName: faker.name.lastName(null),
             password: faker.internet.password()
         };
 

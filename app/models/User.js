@@ -1,15 +1,37 @@
+const { Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define(
-        'User',
+    class User extends Model {
+        async getByEmail(email, options = {}) {
+            return await this.findOne({ where: { email }, ...options });
+        }
+
+        toJSON() {
+            let values = Object.assign({}, this.get());
+
+            delete values.password;
+
+            return values;
+        }
+
+        static associate(models) {
+            User.hasMany(models.Todo, {
+                as: 'todos',
+                foreignKey: 'userId',
+                sourceKey: 'id'
+            });
+        }
+    }
+
+    User.init(
         {
             id: {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
                 autoIncrement: true
             },
-            username: {
+            userName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -18,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 }
             },
-            first_name: {
+            firstName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -27,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 }
             },
-            last_name: {
+            lastName: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -70,9 +92,9 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
-            underscored: true,
+            sequelize,
             defaultScope: {
-                attributes: {exclude: ['password']}
+                attributes: { exclude: ['password'] }
             },
             hooks: {
                 beforeSave: (user, options) => {
@@ -84,21 +106,6 @@ module.exports = (sequelize, DataTypes) => {
             scopes: {}
         }
     );
-
-    User.associate = models => {
-        User.hasMany(models.Todo, {as: 'todos'});
-    };
-
-    User.getByEmail = async (email, options = {}) => {
-        return await User.findOne({where: {email}, ...options});
-    };
-
-    User.prototype.toJSON =  function () {
-        let values = Object.assign({}, this.get());
-
-        delete values.password;
-        return values;
-    };
 
     return User;
 };

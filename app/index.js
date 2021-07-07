@@ -12,6 +12,7 @@ const router = require('./routes');
 const ToggleAPIDocs = require('./middleware/ToggleAPIDocs');
 
 const config = require('../config');
+const errorHandler = require('./plugins/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(router);
+app.use(errorHandler);
 
 app.use('/', ToggleAPIDocs, express.static('docs'));
 

@@ -1,9 +1,56 @@
 const moment = require('moment');
 const crypto = require('crypto');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const PasswordReset = sequelize.define(
-        'PasswordReset',
+    class PasswordReset extends Model {
+        static associate(models) {
+            PasswordReset.belongsTo(models.User, { as: 'user' });
+        }
+
+        async addToken(user) {
+            const passwordReset = await PasswordReset.findOne({
+                where: {
+                    userId: user.id
+                }
+            });
+
+            const token = PasswordReset.generateToken();
+            const validUntil = moment().add(24, 'hours').toDate();
+
+            if (passwordReset) {
+                await passwordReset.update({
+                    token,
+                    validUntil
+                });
+            } else {
+                await PasswordReset.create({
+                    userId: user.id,
+                    token,
+                    validUntil
+                });
+            }
+
+            return token;
+        }
+
+        generateToken() {
+            return crypto.randomBytes(64).toString('hex');
+        }
+
+        getByToken(token) {
+            return PasswordReset.findOne({
+                where: { token },
+                include: [{ association: 'user' }]
+            });
+        }
+
+        hasExpired() {
+            return moment(this.validUntil).isBefore(moment());
+        }
+    }
+
+    PasswordReset.init(
         {
             id: {
                 primaryKey: true,
@@ -11,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 autoIncrement: true
             },
-            user_id: {
+            userId: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
@@ -19,57 +66,13 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            valid_until: {
+            validUntil: {
                 type: DataTypes.DATE,
                 allowNull: false
             }
         },
-        {underscored: true}
+        { sequelize }
     );
-
-    PasswordReset.associate = models => {
-        PasswordReset.belongsTo(models.User, {as: 'user'});
-    };
-
-    PasswordReset.addToken = async user => {
-        const passwordReset = await PasswordReset.findOne({
-            where: {
-                user_id: user.id
-            }
-        });
-
-        const token = PasswordReset.generateToken();
-        const valid_until = moment()
-            .add(24, 'hours')
-            .toDate();
-
-        if (passwordReset) {
-            await passwordReset.update({
-                token,
-                valid_until
-            });
-        } else {
-            await PasswordReset.create({
-                user_id: user.id,
-                token,
-                valid_until
-            });
-        }
-
-        return token;
-    };
-
-    PasswordReset.generateToken = () => {
-        return crypto.randomBytes(64).toString('hex');
-    };
-
-    PasswordReset.getByToken = async token => {
-        return await PasswordReset.findOne({where: {token}, include: [{association: 'user'}]});
-    };
-
-    PasswordReset.prototype.hasExpired = () => {
-        return moment(this.valid_until).isBefore(moment());
-    };
 
     return PasswordReset;
 };

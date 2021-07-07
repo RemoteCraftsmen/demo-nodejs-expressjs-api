@@ -1,10 +1,5 @@
 require('dotenv').config({
-    path:
-        process.env.NODE_ENV === 'test'
-            ? '.env.test'
-            : process.env.NODE_ENV === 'production'
-            ? '.env.production'
-            : '.env'
+    path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
 });
 
 const env = (key, defaultValue = null) => process.env[key] || defaultValue;

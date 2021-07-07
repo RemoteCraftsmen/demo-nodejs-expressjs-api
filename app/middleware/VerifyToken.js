@@ -5,15 +5,22 @@ module.exports = (request, response, next) => {
     const token = request.token || null;
 
     if (!token) {
-        return response.status(403).json({auth: false, message: 'No token provided.'});
+        return response
+            .status(403)
+            .json({ auth: false, message: 'No token provided.' });
     }
 
     jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
-            return response.status(403).json({auth: false, message: 'Failed to authenticate token.'});
+            return response
+                .status(403)
+                .json({
+                    auth: false,
+                    message: 'Failed to authenticate token.'
+                });
         }
 
-        request.logged_user_id = decoded.id;
+        request.loggedUserId = decoded.id;
 
         next();
     });
