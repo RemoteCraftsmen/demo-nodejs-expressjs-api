@@ -3,18 +3,6 @@ const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
-        async getByEmail(email, options = {}) {
-            return await this.findOne({ where: { email }, ...options });
-        }
-
-        toJSON() {
-            let values = Object.assign({}, this.get());
-
-            delete values.password;
-
-            return values;
-        }
-
         static associate(models) {
             User.hasMany(models.Todo, {
                 as: 'todos',
@@ -33,30 +21,15 @@ module.exports = (sequelize, DataTypes) => {
             },
             userName: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notNull: {
-                        msg: 'cannot be blank'
-                    }
-                }
+                allowNull: false
             },
             firstName: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notNull: {
-                        msg: 'cannot be blank'
-                    }
-                }
+                allowNull: false
             },
             lastName: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notNull: {
-                        msg: 'cannot be blank'
-                    }
-                }
+                allowNull: false
             },
             email: {
                 type: DataTypes.STRING,
@@ -65,30 +38,11 @@ module.exports = (sequelize, DataTypes) => {
                     args: true,
                     msg: 'already in use',
                     fields: [sequelize.fn('lower', sequelize.col('email'))]
-                },
-                validate: {
-                    isEmail: {
-                        args: true,
-                        msg: 'is not valid'
-                    },
-                    notNull: {
-                        args: true,
-                        msg: 'cannot be blank'
-                    }
                 }
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    len: {
-                        msg: 'cannot have less than 6 characters',
-                        args: [6, 64]
-                    },
-                    notNull: {
-                        msg: 'cannot be blank'
-                    }
-                }
+                allowNull: false
             }
         },
         {

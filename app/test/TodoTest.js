@@ -222,12 +222,12 @@ describe('API', () => {
                 expect(response.statusCode).to.equal(403);
             });
 
-            it("returns 404 if todo hasn't been found", async () => {
+            it("returns 204 if todo hasn't been found", async () => {
                 let response = await request
                     .delete(`/todos/99999999`)
                     .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(response.statusCode).to.equal(404);
+                expect(response.statusCode).to.equal(204);
             });
         });
     });

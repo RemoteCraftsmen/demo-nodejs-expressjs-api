@@ -5,12 +5,12 @@ const authValidator = require('../validators/authValidator');
 
 const router = express.Router();
 
-const LoginController = require('../controllers/Auth/LoginController');
+module.exports = di => {
+    const loginController = di.get('controllers.auth.loginController');
 
-const loginController = new LoginController();
+    router.post('/login', [authValidator.login, validate], (...args) =>
+        loginController.invoke(...args)
+    );
 
-router.post('/login', [authValidator.login, validate], (...args) =>
-    loginController.invoke(...args)
-);
-
-module.exports = router;
+    return router;
+};

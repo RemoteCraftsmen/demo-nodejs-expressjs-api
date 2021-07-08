@@ -125,7 +125,7 @@ describe('API', () => {
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
                     param: 'password',
-                    message: 'cannot have less than 6 characters'
+                    message: 'cannot have less than 8 characters'
                 });
             });
         });
@@ -242,12 +242,12 @@ describe('API', () => {
                 expect(response.statusCode).to.equal(403);
             });
 
-            it("returns 404 if user hasn't been found", async () => {
+            it("returns 204 if user hasn't been found", async () => {
                 let response = await request
                     .delete(`/users/9999999`)
                     .set('Authorization', 'Bearer ' + loggedUserToken);
 
-                expect(response.statusCode).to.equal(404);
+                expect(response.statusCode).to.equal(204);
             });
         });
     });

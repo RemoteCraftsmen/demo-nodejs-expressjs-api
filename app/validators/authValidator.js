@@ -1,14 +1,14 @@
-const { check, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 const login = [
-    check('email')
+    body('email')
         .not()
         .isEmpty()
         .withMessage('Should not be empty')
         .isEmail()
         .withMessage('Mail not valid'),
 
-    check('password')
+    body('password')
         .not()
         .isEmpty()
         .withMessage('Should not be empty')

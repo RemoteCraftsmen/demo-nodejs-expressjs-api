@@ -8,10 +8,12 @@ const db = require('./models');
 
 const sequelize = require('./util/database');
 
-const router = require('./routes');
 const ToggleAPIDocs = require('./middleware/ToggleAPIDocs');
 
 const config = require('../config');
+const di = require('./di');
+const router = require('./routes')(di);
+
 const errorHandler = require('./plugins/errorHandler');
 
 const app = express();
@@ -44,6 +46,7 @@ app.use(bodyParser.json());
 app.use(router);
 app.use(errorHandler);
 
+app.set('di', di);
 app.use('/', ToggleAPIDocs, express.static('docs'));
 
 app.use((req, res, next) => {

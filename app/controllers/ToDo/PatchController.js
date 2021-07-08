@@ -1,7 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { Todo } = require('../../models');
-
 class PatchController {
     /**
      *  @api {patch} /todos/:id Update {PATCH} ToDo element / Change completed state
@@ -24,25 +22,31 @@ class PatchController {
      *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parameter "name" is not specified
      *  @apiError Forbidden     ToDo element belongs to other User
      */
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
     async invoke(request, response, next) {
-        const todoId = request.params.id;
-        const fields = request.body;
+        const {
+            body: fields,
+            params: { id: todoId }
+        } = request;
 
-        Todo.findByPk(todoId).then(todo => {
-            if (!todo) {
-                return response.sendStatus(StatusCodes.NOT_FOUND);
-            }
+        const todo = await this.todoRepository.findById(todoId);
 
-            if (todo.userId !== request.loggedUserId) {
-                return response.sendStatus(StatusCodes.FORBIDDEN);
-            }
+        if (!todo) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
-            todo.update(fields, { fields: ['name', 'userId', 'completed'] })
-                .then(() => {
-                    response.sendStatus(StatusCodes.OK);
-                })
-                .catch(next);
-        });
+        if (todo.userId !== request.loggedUserId) {
+            return response.sendStatus(StatusCodes.FORBIDDEN);
+        }
+
+        await todo.update(fields, { fields: ['name', 'userId', 'completed'] });
+
+        const updatedTodo = await this.todoRepository.findById(todoId);
+
+        return response.send(updatedTodo);
     }
 }
 

@@ -1,8 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
-const { User } = require('../../models');
 
 class DestroyController {
-    //----------------------  To Destroy cont----------
     /**
      *  @api {delete} /users/:id Delete User
      *  @apiName DeleteUserDestroy
@@ -18,25 +16,24 @@ class DestroyController {
      *   @apiError Forbidden    Users can delete only themselfs
      *   @apiError BadRequest
      */
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    async invoke(request, response, next) {
-        const userId = request.params.id;
+    async invoke(request, response) {
+        const user = await this.userRepository.findById(request.params.id);
 
-        User.findByPk(request.params.id).then(user => {
-            if (!user) {
-                return response.sendStatus(StatusCodes.NOT_FOUND);
-            }
+        if (!user) {
+            return response.sendStatus(StatusCodes.NO_CONTENT);
+        }
 
-            if (user.id !== request.loggedUserId) {
-                return response.sendStatus(StatusCodes.FORBIDDEN);
-            }
+        if (user.id !== request.loggedUserId) {
+            return response.sendStatus(StatusCodes.FORBIDDEN);
+        }
 
-            user.destroy()
-                .then(() => {
-                    response.sendStatus(StatusCodes.NO_CONTENT);
-                })
-                .catch(next);
-        });
+        await user.destroy();
+
+        return response.sendStatus(StatusCodes.NO_CONTENT);
     }
 }
 

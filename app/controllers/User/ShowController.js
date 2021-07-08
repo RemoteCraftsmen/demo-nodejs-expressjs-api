@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-const { User } = require('../../models');
 
 class ShowController {
     /**
@@ -16,18 +15,18 @@ class ShowController {
      *
      *   @apiError (404) Not Found    The User with <code>id</code> was not found.
      */
-    async invoke(request, response, next) {
-        const userId = request.params.id;
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
 
-        User.findByPk(userId)
-            .then(user => {
-                if (!user) {
-                    return response.sendStatus(StatusCodes.NOT_FOUND);
-                }
+    async invoke(request, response) {
+        const user = await this.userRepository.findById(request.params.id);
 
-                response.json(user);
-            })
-            .catch(next);
+        if (!user) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
+
+        return response.send(user);
     }
 }
 
