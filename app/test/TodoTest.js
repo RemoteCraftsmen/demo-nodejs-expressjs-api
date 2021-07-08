@@ -121,7 +121,7 @@ describe('API', () => {
         });
 
         describe('PUT /todos/{id}', () => {
-            it('saves a todo when not found', async () => {
+            it('Returns 404 when not found', async () => {
                 const todo = await TodoFactory.build({
                     id: 666,
                     userId: loggerUserId
@@ -137,8 +137,7 @@ describe('API', () => {
                         creatorId: todo.userId
                     });
 
-                expect(response.body).to.have.property('name');
-                expect(response.body.name).to.equal(todo.name);
+                expect(response.statusCode).to.equal(404);
             });
 
             it('puts a todo when found', async () => {

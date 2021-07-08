@@ -58,12 +58,7 @@ class UpdateController {
         const todo = await this.todoRepository.findById(todoId);
 
         if (!todo) {
-            const newTodo = await this.todoRepository.create({
-                ...fields,
-                todoId
-            });
-
-            return response.status(StatusCodes.CREATED).send(newTodo);
+            return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
         if (todo.userId !== request.loggedUserId) {
