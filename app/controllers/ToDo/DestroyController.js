@@ -21,12 +21,14 @@ class DestroyController {
     }
 
     async invoke(request, response) {
-        const todoId = request.params.id;
+        const {
+            params: { id: todoId }
+        } = request;
 
         const todo = await this.todoRepository.findById(todoId);
 
         if (!todo) {
-            return response.sendStatus(StatusCodes.NOT_FOUND);
+            return response.sendStatus(StatusCodes.NO_CONTENT);
         }
 
         if (todo.userId !== request.loggedUserId) {

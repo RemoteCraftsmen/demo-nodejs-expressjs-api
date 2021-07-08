@@ -51,14 +51,11 @@ class StoreController {
     }
 
     async invoke(request, response, next) {
-        const user = await this.userRepository.create({ ...request.body });
+        const user = await this.userRepository.create(request.body);
 
         const token = await Auth.signIn(user);
 
-        let plainUser = user.get({ plain: true });
-        delete plainUser.password;
-
-        return response.json({ auth: true, token, user: plainUser });
+        return response.send({ auth: true, token, user });
     }
 }
 

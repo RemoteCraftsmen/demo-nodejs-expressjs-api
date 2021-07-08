@@ -37,7 +37,9 @@ class ShowController {
     }
 
     async invoke(request, response) {
-        const todoId = request.params.id;
+        const {
+            params: { id: todoId }
+        } = request;
 
         const todo = await this.todoRepository.findById(todoId);
 
@@ -45,7 +47,7 @@ class ShowController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        return response.json(todo);
+        return response.send(todo);
     }
 }
 

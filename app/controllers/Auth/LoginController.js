@@ -47,28 +47,29 @@ class LoginController {
     async invoke(request, response) {
         const { email, password } = request.body;
 
+        const { password: userPassword } = await this.userRepository.getByEmail(
+            email,
+            {
+                attributes: ['password']
+            }
+        );
+        if (!Auth.comparePasswords(password, userPassword)) {
+            return response
+                .status(StatusCodes.UNAUTHORIZED)
+                .send({ auth: false, token: null, user: null });
+        }
+
         const user = await this.userRepository.getByEmail(email);
 
         if (!user) {
             return response
                 .status(StatusCodes.UNAUTHORIZED)
-                .json({ auth: false, token: null });
+                .send({ auth: false, token: null });
         }
 
-        const userPassword = await this.userRepository.getPassword(user.id);
+        const token = Auth.signIn(user);
 
-        if (Auth.comparePasswords(password, userPassword)) {
-            const token = Auth.signIn(user);
-            let plainUser = user.get({ plain: true });
-
-            delete plainUser.password;
-
-            return response.json({ auth: true, token, user: plainUser });
-        }
-
-        return response
-            .status(StatusCodes.UNAUTHORIZED)
-            .json({ auth: false, token: null, user: null });
+        return response.send({ auth: true, token, user });
     }
 }
 

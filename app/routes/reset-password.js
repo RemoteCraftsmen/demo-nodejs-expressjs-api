@@ -3,7 +3,7 @@ const router = express.Router();
 
 module.exports = di => {
     const ResetPasswordController = require('../controllers/ResetPasswordController');
-    const changePasswordRequest = require('../requests/ChangePasswordRequest');
+    const ChangePasswordRequest = require('../requests/ChangePasswordRequest');
     const ResetPasswordRequest = require('../requests/ResetPasswordRequest');
 
     router.post(
@@ -13,7 +13,7 @@ module.exports = di => {
     );
     router.post(
         '/:token',
-        changePasswordRequest,
+        ChangePasswordRequest,
         ResetPasswordController.changePassword
     );
 

@@ -26,7 +26,7 @@ class ShowController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        return response.json(user);
+        return response.send(user);
     }
 }
 

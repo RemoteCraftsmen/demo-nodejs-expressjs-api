@@ -44,8 +44,10 @@ class UpdateController {
     }
 
     async invoke(request, response) {
-        const todoId = request.params.id;
-        const fields = request.body;
+        const {
+            body: fields,
+            params: { id: todoId }
+        } = request;
 
         fields.creatorId = request.loggedUserId;
 
@@ -61,7 +63,7 @@ class UpdateController {
                 todoId
             });
 
-            return response.status(StatusCodes.CREATED).json(newTodo);
+            return response.status(StatusCodes.CREATED).send(newTodo);
         }
 
         if (todo.userId !== request.loggedUserId) {
@@ -70,7 +72,9 @@ class UpdateController {
 
         await todo.update(fields, { fields: ['name', 'userId'] });
 
-        return response.sendStatus(StatusCodes.OK);
+        const updatedTodo = await this.todoRepository.findById(todoId);
+
+        return response.send(updatedTodo);
     }
 }
 

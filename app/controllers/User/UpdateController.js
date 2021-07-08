@@ -53,8 +53,10 @@ class UpdateController {
     }
 
     async invoke(request, response) {
-        const userId = request.params.id;
-        const fields = request.body;
+        const {
+            body: fields,
+            params: { id: userId }
+        } = request;
 
         const user = await this.userRepository.findById(userId);
 
@@ -68,7 +70,9 @@ class UpdateController {
 
         await user.update(fields);
 
-        return response.sendStatus(StatusCodes.OK);
+        const updatedUser = await this.userRepository.findById(userId);
+
+        return response.send(updatedUser);
     }
 }
 

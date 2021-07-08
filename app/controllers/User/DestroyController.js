@@ -24,7 +24,7 @@ class DestroyController {
         const user = await this.userRepository.findById(request.params.id);
 
         if (!user) {
-            return response.sendStatus(StatusCodes.NOT_FOUND);
+            return response.sendStatus(StatusCodes.NO_CONTENT);
         }
 
         if (user.id !== request.loggedUserId) {

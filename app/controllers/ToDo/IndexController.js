@@ -49,7 +49,7 @@ class IndexController {
             where: { userId: request.loggedUserId }
         });
 
-        return response.json({ todos });
+        return response.send(todos);
     }
 }
 

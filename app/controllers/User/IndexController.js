@@ -38,7 +38,7 @@ class IndexController {
     async invoke(request, response) {
         const users = await this.userRepository.findAll();
 
-        return response.json({ users });
+        return response.send(users);
     }
 }
 

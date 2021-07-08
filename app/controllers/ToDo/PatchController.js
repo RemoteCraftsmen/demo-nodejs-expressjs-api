@@ -27,8 +27,10 @@ class PatchController {
     }
 
     async invoke(request, response, next) {
-        const todoId = request.params.id;
-        const fields = request.body;
+        const {
+            body: fields,
+            params: { id: todoId }
+        } = request;
 
         const todo = await this.todoRepository.findById(todoId);
 
@@ -42,7 +44,9 @@ class PatchController {
 
         await todo.update(fields, { fields: ['name', 'userId', 'completed'] });
 
-        return response.sendStatus(StatusCodes.OK);
+        const updatedTodo = await this.todoRepository.findById(todoId);
+
+        return response.send(updatedTodo);
     }
 }
 
