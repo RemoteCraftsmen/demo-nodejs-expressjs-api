@@ -1,7 +1,3 @@
-const { StatusCodes } = require('http-status-codes');
-
-const { Todo } = require('../../models');
-
 class IndexController {
     /**
      *  @api {get} /todos Read all ToDo elements
@@ -44,13 +40,16 @@ class IndexController {
      *        ]
      *    }
      */
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
     async invoke(request, response, next) {
-        Todo.findAll({ where: { userId: request.loggedUserId } })
-            .then(todos => {
-                return response.json({ todos });
-            })
-            .catch(next);
+        const todos = await this.todoRepository.findAll({
+            where: { userId: request.loggedUserId }
+        });
+
+        return response.json({ todos });
     }
 }
 

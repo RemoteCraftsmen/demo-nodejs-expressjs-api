@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-const { Todo } = require('../../models');
 
 class DestroyController {
     /**
@@ -17,25 +16,26 @@ class DestroyController {
      *   @apiError Forbidden    ToDo element belongs to other User
      *   @apiError BadRequest
      */
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const todoId = request.params.id;
 
-        Todo.findByPk(todoId).then(todo => {
-            if (!todo) {
-                return response.sendStatus(StatusCodes.NOT_FOUND);
-            }
+        const todo = await this.todoRepository.findById(todoId);
 
-            if (todo.userId !== request.loggedUserId) {
-                return response.sendStatus(StatusCodes.FORBIDDEN);
-            }
+        if (!todo) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
-            todo.destroy()
-                .then(() => {
-                    response.sendStatus(StatusCodes.NO_CONTENT);
-                })
-                .catch(next);
-        });
+        if (todo.userId !== request.loggedUserId) {
+            return response.sendStatus(StatusCodes.FORBIDDEN);
+        }
+
+        await todo.destroy();
+
+        response.sendStatus(StatusCodes.NO_CONTENT);
     }
 }
 

@@ -1,6 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-const Auth = require('../../services/Auth');
-const { User } = require('../../models');
 
 class UpdateController {
     //------------------------- to update Cont
@@ -50,25 +48,27 @@ class UpdateController {
      *   @apiError BadRequest
      *
      */
-    async invoke(request, response, next) {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    async invoke(request, response) {
         const userId = request.params.id;
         const fields = request.body;
 
-        User.findByPk(userId).then(user => {
-            if (!user) {
-                return response.sendStatus(StatusCodes.NOT_FOUND);
-            }
+        const user = await this.userRepository.findById(userId);
 
-            if (user.id !== request.loggedUserId) {
-                return response.sendStatus(StatusCodes.FORBIDDEN);
-            }
+        if (!user) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
-            user.update(fields)
-                .then(() => {
-                    response.sendStatus(StatusCodes.OK);
-                })
-                .catch(next);
-        });
+        if (user.id !== request.loggedUserId) {
+            return response.sendStatus(StatusCodes.FORBIDDEN);
+        }
+
+        await user.update(fields);
+
+        return response.sendStatus(StatusCodes.OK);
     }
 }
 

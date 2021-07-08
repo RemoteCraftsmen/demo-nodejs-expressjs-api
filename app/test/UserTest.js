@@ -125,7 +125,7 @@ describe('API', () => {
                 expect(response.body).to.have.property('errors');
                 expect(response.body.errors).to.deep.include({
                     param: 'password',
-                    message: 'cannot have less than 6 characters'
+                    message: 'cannot have less than 8 characters'
                 });
             });
         });

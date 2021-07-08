@@ -1,7 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { Todo } = require('../../models');
-
 class UpdateController {
     /**
      *  @api {put} /todos/:id Update/Create {PUT} ToDo element
@@ -41,35 +39,38 @@ class UpdateController {
      *            ]
      *    }
      */
-    async invoke(request, response, next) {
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+    async invoke(request, response) {
         const todoId = request.params.id;
         const fields = request.body;
 
         fields.creatorId = request.loggedUserId;
+
         if (!fields.userId) {
             fields.userId = request.loggedUserId;
         }
 
-        Todo.findByPk(todoId).then(todo => {
-            if (!todo) {
-                return Todo.create({ ...fields, todoId })
-                    .then(todo => {
-                        return response.status(StatusCodes.CREATED).json(todo);
-                    })
-                    .catch(next);
-            }
+        const todo = await this.todoRepository.findById(todoId);
 
-            if (todo.userId !== request.loggedUserId) {
-                return response.sendStatus(StatusCodes.FORBIDDEN);
-            }
+        if (!todo) {
+            const newTodo = await this.todoRepository.create({
+                ...fields,
+                todoId
+            });
 
-            return todo
-                .update(fields, { fields: ['name', 'userId'] })
-                .then(() => {
-                    return response.sendStatus(StatusCodes.OK);
-                })
-                .catch(next);
-        });
+            return response.status(StatusCodes.CREATED).json(newTodo);
+        }
+
+        if (todo.userId !== request.loggedUserId) {
+            return response.sendStatus(StatusCodes.FORBIDDEN);
+        }
+
+        await todo.update(fields, { fields: ['name', 'userId'] });
+
+        return response.sendStatus(StatusCodes.OK);
     }
 }
 

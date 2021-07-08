@@ -1,5 +1,3 @@
-const { User } = require('../../models');
-
 class IndexController {
     /**
      *  @api {get} /users Read all Users
@@ -33,12 +31,14 @@ class IndexController {
      *
      *   @apiError (400) BadRequest
      */
-    async invoke(request, response, next) {
-        User.findAll()
-            .then(users => {
-                response.json({ users });
-            })
-            .catch(next);
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    async invoke(request, response) {
+        const users = await this.userRepository.findAll();
+
+        return response.json({ users });
     }
 }
 

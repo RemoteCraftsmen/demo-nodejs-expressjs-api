@@ -1,7 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { Todo } = require('../../models');
-
 class StoreController {
     /**
      *  @api {post} /todos Create ToDo element
@@ -47,6 +45,9 @@ class StoreController {
      *        ]
      *    }
      */
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
     async invoke(request, response, next) {
         const data = request.body;
@@ -56,11 +57,9 @@ class StoreController {
             data.userId = request.loggedUserId;
         }
 
-        Todo.create({ ...data })
-            .then(todo => {
-                return response.status(StatusCodes.CREATED).json(todo);
-            })
-            .catch(next);
+        const todo = await this.todoRepository.create({ ...data });
+
+        return response.status(StatusCodes.CREATED).json(todo);
     }
 }
 

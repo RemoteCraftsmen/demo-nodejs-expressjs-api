@@ -2,28 +2,36 @@ const express = require('express');
 const router = express.Router();
 
 const VerifyToken = require('../middleware/VerifyToken');
+const validate = require('../middleware/validate');
+const todoValidator = require('../validators/todoValidator');
 
-const IndexController = require('../controllers/ToDo/IndexController');
-const DestroyController = require('../controllers/ToDo/DestroyController');
-const ShowController = require('../controllers/ToDo/ShowController');
-const StoreController = require('../controllers/ToDo/StoreController');
-const UpdateController = require('../controllers/ToDo/UpdateController');
-const PatchController = require('../controllers/ToDo/PatchController');
+module.exports = di => {
+    const indexController = di.get('controllers.todo.indexController');
+    const destroyController = di.get('controllers.todo.destroyController');
+    const showController = di.get('controllers.todo.showController');
+    const storeController = di.get('controllers.todo.storeController');
+    const updateController = di.get('controllers.todo.updateController');
+    const patchController = di.get('controllers.todo.patchController');
 
-const indexController = new IndexController();
-const destroyController = new DestroyController();
-const showController = new ShowController();
-const storeController = new StoreController();
-const updateController = new UpdateController();
-const patchController = new PatchController();
+    router.post('/', [todoValidator.create, validate], VerifyToken, (...args) =>
+        storeController.invoke(...args)
+    );
+    router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
+    router.get('/:id', VerifyToken, (...args) =>
+        showController.invoke(...args)
+    );
+    router.patch('/:id', VerifyToken, (...args) =>
+        patchController.invoke(...args)
+    );
+    router.put(
+        '/:id',
+        [todoValidator.create, validate],
+        VerifyToken,
+        (...args) => updateController.invoke(...args)
+    );
+    router.delete('/:id', VerifyToken, (...args) =>
+        destroyController.invoke(...args)
+    );
 
-router.post('/', VerifyToken, (...args) => storeController.invoke(...args));
-router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
-router.get('/:id', VerifyToken, (...args) => showController.invoke(...args));
-router.patch('/:id', VerifyToken, (...args) => patchController.invoke(...args));
-router.put('/:id', VerifyToken, (...args) => updateController.invoke(...args));
-router.delete('/:id', VerifyToken, (...args) =>
-    destroyController.invoke(...args)
-);
-
-module.exports = router;
+    return router;
+};

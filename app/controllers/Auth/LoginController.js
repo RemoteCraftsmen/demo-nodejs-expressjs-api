@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-const { User } = require('../../models');
 const Auth = require('../../services/Auth');
 
 class LoginController {
@@ -41,20 +40,14 @@ class LoginController {
      *        "user": null
      *     }
      */
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
+
     async invoke(request, response) {
         const { email, password } = request.body;
 
-        const user = await User.findOne({
-            where: { email },
-            attributes: [
-                'id',
-                'userName',
-                'firstName',
-                'lastName',
-                'email',
-                'password'
-            ]
-        });
+        const user = await this.userRepository.getByEmail(email);
 
         if (!user) {
             return response
@@ -62,9 +55,12 @@ class LoginController {
                 .json({ auth: false, token: null });
         }
 
-        if (Auth.comparePasswords(password, user.getDataValue('password'))) {
+        const userPassword = await this.userRepository.getPassword(user.id);
+
+        if (Auth.comparePasswords(password, userPassword)) {
             const token = Auth.signIn(user);
             let plainUser = user.get({ plain: true });
+
             delete plainUser.password;
 
             return response.json({ auth: true, token, user: plainUser });

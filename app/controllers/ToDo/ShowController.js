@@ -1,7 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 
-const { Todo } = require('../../models');
-
 class ShowController {
     /**
      *  @api {get} /todos/:id Show ToDo element
@@ -34,18 +32,20 @@ class ShowController {
      *
      *   @apiError (404) Not Found    The <code>id</code> of the ToDo element was not found.
      */
-    async invoke(request, response, next) {
+    constructor(todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+    async invoke(request, response) {
         const todoId = request.params.id;
 
-        Todo.findByPk(todoId)
-            .then(todo => {
-                if (!todo) {
-                    return response.sendStatus(StatusCodes.NOT_FOUND);
-                }
+        const todo = await this.todoRepository.findById(todoId);
 
-                return response.json(todo);
-            })
-            .catch(next);
+        if (!todo) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
+
+        return response.json(todo);
     }
 }
 

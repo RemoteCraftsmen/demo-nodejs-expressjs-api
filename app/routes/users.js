@@ -1,28 +1,32 @@
 const express = require('express');
-const router = express.Router();
 
 const VerifyToken = require('../middleware/VerifyToken');
 
-//const UserController = require('../controllers/UserController');
+const validate = require('../middleware/validate');
+const userValidator = require('../validators/userValidator');
 
-const IndexController = require('../controllers/User/IndexController');
-const DestroyController = require('../controllers/User/DestroyController');
-const ShowController = require('../controllers/User/ShowController');
-const StoreController = require('../controllers/User/StoreController');
-const UpdateController = require('../controllers/User/UpdateController');
+const router = express.Router();
 
-const indexController = new IndexController();
-const destroyController = new DestroyController();
-const showController = new ShowController();
-const storeController = new StoreController();
-const updateController = new UpdateController();
+module.exports = di => {
+    const indexController = di.get('controllers.users.indexController');
+    const destroyController = di.get('controllers.users.destroyController');
+    const showController = di.get('controllers.users.showController');
+    const storeController = di.get('controllers.users.storeController');
+    const updateController = di.get('controllers.users.updateController');
 
-router.post('/', (...args) => storeController.invoke(...args));
-router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
-router.get('/:id', VerifyToken, (...args) => showController.invoke(...args));
-router.put('/:id', VerifyToken, (...args) => updateController.invoke(...args));
-router.delete('/:id', VerifyToken, (...args) =>
-    destroyController.invoke(...args)
-);
+    router.post('/', [userValidator.store, validate], (...args) =>
+        storeController.invoke(...args)
+    );
+    router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
+    router.get('/:id', VerifyToken, (...args) =>
+        showController.invoke(...args)
+    );
+    router.put('/:id', VerifyToken, (...args) =>
+        updateController.invoke(...args)
+    );
+    router.delete('/:id', VerifyToken, (...args) =>
+        destroyController.invoke(...args)
+    );
 
-module.exports = router;
+    return router;
+};
