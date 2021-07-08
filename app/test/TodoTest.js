@@ -73,53 +73,6 @@ describe('API', () => {
             });
         });
 
-        describe('PATCH /todos/{id}', () => {
-            it('updates a todo', async () => {
-                const updatedName = 'updated';
-                const todo = await TodoFactory.create({
-                    userId: loggerUserId
-                });
-
-                await request
-                    .patch(`/todos/${todo.id}`)
-                    .set('Authorization', 'Bearer ' + loggedUserToken)
-                    .send({ name: updatedName });
-
-                let response = await request
-                    .get(`/todos/${todo.id}`)
-                    .set('Authorization', 'Bearer ' + loggedUserToken);
-
-                expect(response.body.name).to.equal(updatedName);
-            });
-
-            it("returns 403 when trying to update someone else's todo", async () => {
-                const updatedName = 'updated';
-
-                const anotherUser = await UserFactory.create();
-                const todo = await TodoFactory.create({
-                    userId: anotherUser.id
-                });
-
-                let response = await request
-                    .patch(`/todos/${todo.id}`)
-                    .set('Authorization', 'Bearer ' + loggedUserToken)
-                    .send({ name: updatedName });
-
-                expect(response.statusCode).to.equal(403);
-            });
-
-            it("returns 404 if todo hasn't been found", async () => {
-                const updatedName = 'updated';
-
-                let response = await request
-                    .patch(`/todos/9999999`)
-                    .set('Authorization', 'Bearer ' + loggedUserToken)
-                    .send({ name: updatedName });
-
-                expect(response.statusCode).to.equal(404);
-            });
-        });
-
         describe('PUT /todos/{id}', () => {
             it('Returns 404 when not found', async () => {
                 const todo = await TodoFactory.build({

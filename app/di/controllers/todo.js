@@ -19,10 +19,6 @@ module.exports = {
         'controllers.todo.updateController': {
             class: '/controllers/ToDo/UpdateController',
             arguments: ['@repositories.todo']
-        },
-        'controllers.todo.patchController': {
-            class: '/controllers/ToDo/PatchController',
-            arguments: ['@repositories.todo']
         }
     }
 };

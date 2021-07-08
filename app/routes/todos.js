@@ -11,7 +11,6 @@ module.exports = di => {
     const showController = di.get('controllers.todo.showController');
     const storeController = di.get('controllers.todo.storeController');
     const updateController = di.get('controllers.todo.updateController');
-    const patchController = di.get('controllers.todo.patchController');
 
     router.post('/', [todoValidator.create, validate], VerifyToken, (...args) =>
         storeController.invoke(...args)
@@ -19,9 +18,6 @@ module.exports = di => {
     router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
     router.get('/:id', VerifyToken, (...args) =>
         showController.invoke(...args)
-    );
-    router.patch('/:id', VerifyToken, (...args) =>
-        patchController.invoke(...args)
     );
     router.put(
         '/:id',
