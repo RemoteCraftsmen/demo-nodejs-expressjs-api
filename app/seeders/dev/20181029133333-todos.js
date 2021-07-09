@@ -9,14 +9,16 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         const users = await userRepositories.findAll();
 
-        for (let element of users) {
-            await todoRepositories.create({
-                name: faker.internet.domainWord(),
-                completed: false,
-                userId: element.id,
-                creatorId: element.id
-            });
-        }
+        await Promise.all(
+            users.map(user =>
+                todoRepositories.create({
+                    name: faker.internet.domainWord(),
+                    completed: false,
+                    userId: user.id,
+                    creatorId: user.id
+                })
+            )
+        );
     },
 
     down: (queryInterface, Sequelize) => {

@@ -20,8 +20,6 @@ describe('API', () => {
         loggedUserToken = token;
         loggerUserId = user.id;
 
-        console.log(user.id);
-
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
