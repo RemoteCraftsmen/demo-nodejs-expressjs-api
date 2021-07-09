@@ -2,12 +2,12 @@ const faker = require('faker');
 const bcrypt = require('bcryptjs');
 
 const di = require('../../di');
-const userRepositories = di.get('repositories.user');
+const userRepository = di.get('repositories.user');
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         for (let i = 1; i <= 4; i++) {
-            await userRepositories.create({
+            await userRepository.create({
                 userName: faker.internet.userName(),
                 email: faker.internet.exampleEmail(),
                 firstName: faker.name.firstName(),

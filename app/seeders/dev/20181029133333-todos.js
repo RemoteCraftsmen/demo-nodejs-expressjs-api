@@ -1,17 +1,17 @@
 const di = require('../../di');
 
-const todoRepositories = di.get('repositories.todo');
-const userRepositories = di.get('repositories.user');
+const todoRepository = di.get('repositories.todo');
+const userRepository = di.get('repositories.user');
 
 const faker = require('faker');
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        const users = await userRepositories.findAll();
+        const users = await userRepository.findAll();
 
         await Promise.all(
             users.map(user =>
-                todoRepositories.create({
+                todoRepository.create({
                     name: faker.internet.domainWord(),
                     completed: false,
                     userId: user.id,
