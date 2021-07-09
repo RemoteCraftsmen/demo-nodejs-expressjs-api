@@ -50,7 +50,7 @@ class StoreController {
         this.userRepository = userRepository;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const user = await this.userRepository.create(request.body);
 
         const token = await Auth.signIn(user);

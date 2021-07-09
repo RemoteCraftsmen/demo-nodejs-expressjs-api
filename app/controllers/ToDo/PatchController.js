@@ -26,7 +26,7 @@ class PatchController {
         this.todoRepository = todoRepository;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const {
             body: fields,
             params: { id: todoId }

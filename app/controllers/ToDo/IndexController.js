@@ -44,7 +44,7 @@ class IndexController {
         this.todoRepository = todoRepository;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const todos = await this.todoRepository.findAll({
             where: { userId: request.loggedUserId }
         });

@@ -36,7 +36,7 @@ let corsOptions = {
 app.use(cors(corsOptions));
 app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
-    res.status(200).json({ code: 200, message: 'Request not allowed by CORS' });
+    res.send({ code: 200, message: 'Request not allowed by CORS' });
 });
 app.use(helmet());
 app.use(bearerToken());
