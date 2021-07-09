@@ -1,8 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 
 class UpdateController {
-    //------------------------- to update Cont
-
     /**
      *  @api {put} /users Update User
      *  @apiName PutUserUpdate

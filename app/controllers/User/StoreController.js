@@ -1,7 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 
-const Auth = require('../../services/Auth');
-
 class StoreController {
     /**
      *  @api {post} /users Create User
@@ -46,14 +44,15 @@ class StoreController {
      *  @apiError (400) BadRequest
      *
      */
-    constructor(userRepository) {
+    constructor(userRepository, auth) {
         this.userRepository = userRepository;
+        this.auth = auth;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const user = await this.userRepository.create(request.body);
 
-        const token = await Auth.signIn(user);
+        const token = await this.auth.signIn(user);
 
         return response.send({ auth: true, token, user });
     }

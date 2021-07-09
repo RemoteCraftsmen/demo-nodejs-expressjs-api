@@ -14,7 +14,7 @@ module.exports = {
         },
         'controllers.users.storeController': {
             class: '/controllers/User/StoreController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.auth']
         },
         'controllers.users.updateController': {
             class: '/controllers/User/UpdateController',
