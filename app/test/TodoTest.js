@@ -20,6 +20,8 @@ describe('API', () => {
         loggedUserToken = token;
         loggerUserId = user.id;
 
+        console.log(user.id);
+
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
         todos.push(await TodoFactory.create({ userId: loggerUserId }));
@@ -66,7 +68,7 @@ describe('API', () => {
 
             it("returns 404 if todo hasn't been found", async () => {
                 let response = await request
-                    .get(`/todos/99999999`)
+                    .get(`/todos/not-found`)
                     .set('Authorization', 'Bearer ' + loggedUserToken);
 
                 expect(response.statusCode).to.equal(404);
