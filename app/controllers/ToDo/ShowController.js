@@ -41,8 +41,8 @@ class ShowController {
             params: { id: todoId }
         } = request;
 
-        const todo = await this.todoRepository.findOne({
-            where: { id: todoId, userId: request.loggedUserId }
+        const todo = await this.todoRepository.findById(todoId, {
+            where: { userId: request.loggedUserId }
         });
 
         if (!todo) {

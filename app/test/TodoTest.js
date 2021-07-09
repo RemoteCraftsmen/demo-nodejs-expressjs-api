@@ -10,7 +10,7 @@ const request = require('supertest')(app);
 
 let todos = [];
 let loggerUserId;
-let loggedUserToken = null;
+let loggedUserToken;
 
 describe('API', () => {
     before(async () => {
@@ -62,6 +62,16 @@ describe('API', () => {
 
                 expect(response.body).to.have.property('name');
                 expect(response.body.name).to.equal(todos[0].name);
+            });
+
+            it('returns 404 if belongs to another user', async () => {
+                const { user, token } = await Register(request);
+
+                let response = await request
+                    .get(`/todos/${todos[0].id}`)
+                    .set('Authorization', 'Bearer ' + token);
+
+                expect(response.statusCode).to.equal(404);
             });
 
             it("returns 404 if todo hasn't been found", async () => {
