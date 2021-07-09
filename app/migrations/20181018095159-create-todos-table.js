@@ -1,21 +1,18 @@
-'use strict';
-
 module.exports = {
-    up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable(
+    up: async (queryInterface, Sequelize) => {
+        return await queryInterface.createTable(
             'Todos',
             {
                 id: {
                     primaryKey: true,
-                    type: Sequelize.INTEGER,
-                    autoIncrement: true
+                    type: Sequelize.UUID
                 },
                 userId: {
-                    type: Sequelize.INTEGER,
+                    type: Sequelize.UUID,
                     allowNull: true
                 },
                 creatorId: {
-                    type: Sequelize.INTEGER,
+                    type: Sequelize.UUID,
                     allowNull: false
                 },
                 name: {
@@ -42,7 +39,7 @@ module.exports = {
             }
         );
     },
-    down: (queryInterface, Sequelize) => {
+    down: async (queryInterface, Sequelize) => {
         return queryInterface.dropTable('Todos');
     }
 };
