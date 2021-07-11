@@ -46,13 +46,13 @@ class StoreController {
      */
     constructor(userRepository, auth) {
         this.userRepository = userRepository;
-        this.auth = auth;
+        this.authService = auth;
     }
 
     async invoke(request, response) {
         const user = await this.userRepository.create(request.body);
 
-        const token = await this.auth.signIn(user);
+        const token = await this.authService.signIn(user);
 
         return response.send({ auth: true, token, user });
     }

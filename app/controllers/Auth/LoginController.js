@@ -41,7 +41,7 @@ class LoginController {
      */
     constructor(userRepository, auth) {
         this.userRepository = userRepository;
-        this.auth = auth;
+        this.authService = auth;
     }
 
     async invoke(request, response) {
@@ -57,13 +57,15 @@ class LoginController {
 
         const userPassword = await this.userRepository.getPassword(user.id);
 
-        if (!(await this.auth.comparePasswords(password, userPassword))) {
+        if (
+            !(await this.authService.comparePasswords(password, userPassword))
+        ) {
             return response
                 .status(StatusCodes.UNAUTHORIZED)
                 .send({ auth: false, token: null, user: null });
         }
 
-        const token = this.auth.signIn(user);
+        const token = this.authService.signIn(user);
 
         return response.send({ auth: true, token, user });
     }
