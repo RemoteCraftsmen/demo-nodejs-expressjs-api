@@ -12,7 +12,7 @@ module.exports = {
                 email: faker.internet.exampleEmail(),
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
-                password: bcrypt.hashSync('testing123'),
+                password: 'testing123',
                 createdAt: new Date(),
                 updatedAt: new Date()
             });

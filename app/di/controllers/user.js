@@ -6,11 +6,11 @@ module.exports = {
         },
         'controllers.users.destroyController': {
             class: '/controllers/User/DestroyController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.IsValidUuid']
         },
         'controllers.users.showController': {
             class: '/controllers/User/ShowController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.IsValidUuid']
         },
         'controllers.users.storeController': {
             class: '/controllers/User/StoreController',
@@ -18,7 +18,7 @@ module.exports = {
         },
         'controllers.users.updateController': {
             class: '/controllers/User/UpdateController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.IsValidUuid']
         }
     }
 };
