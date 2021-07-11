@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
             PasswordReset.belongsTo(models.User, { as: 'user' });
         }
 
-        async addToken(user) {
+        static async addToken(user) {
             const passwordReset = await PasswordReset.findOne({
                 where: {
                     userId: user.id
@@ -34,11 +34,11 @@ module.exports = (sequelize, DataTypes) => {
             return token;
         }
 
-        generateToken() {
+        static generateToken() {
             return crypto.randomBytes(64).toString('hex');
         }
 
-        getByToken(token) {
+        static getByToken(token) {
             return PasswordReset.findOne({
                 where: { token },
                 include: [{ association: 'user' }]

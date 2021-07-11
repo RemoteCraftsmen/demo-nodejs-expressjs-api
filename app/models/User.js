@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
                 sourceKey: 'id'
             });
         }
+
+        isPasswordResetTokenExpired() {
+            return Date.now() > new Date(this.passwordResetTokenExpiresAt);
+        }
     }
 
     User.init(
@@ -43,6 +47,14 @@ module.exports = (sequelize, DataTypes) => {
             password: {
                 type: DataTypes.STRING,
                 allowNull: false
+            },
+            passwordResetToken: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            passwordResetTokenExpiresAt: {
+                type: DataTypes.DATE,
+                allowNull: true
             }
         },
         {

@@ -38,6 +38,14 @@ module.exports = {
                 updatedAt: {
                     type: Sequelize.DATE,
                     allowNull: false
+                },
+                passwordResetToken: {
+                    type: Sequelize.STRING,
+                    allowNull: true
+                },
+                passwordResetTokenExpiresAt: {
+                    allowNull: true,
+                    type: Sequelize.DATE
                 }
             },
             {
