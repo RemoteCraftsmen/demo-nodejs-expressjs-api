@@ -10,7 +10,7 @@ class Auth {
     }
 
     comparePasswords(password, dbPassword) {
-        return bcrypt.compareSync(password, dbPassword);
+        return bcrypt.compare(password, dbPassword);
     }
 }
 

@@ -57,7 +57,7 @@ class LoginController {
 
         const userPassword = await this.userRepository.getPassword(user.id);
 
-        if (!this.auth.comparePasswords(password, userPassword)) {
+        if (!(await this.auth.comparePasswords(password, userPassword))) {
             return response
                 .status(StatusCodes.UNAUTHORIZED)
                 .send({ auth: false, token: null, user: null });
