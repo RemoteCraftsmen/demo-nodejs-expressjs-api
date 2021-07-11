@@ -2,7 +2,7 @@ module.exports = {
     services: {
         'controllers.auth.loginController': {
             class: '/controllers/Auth/LoginController',
-            arguments: ['@repositories.user']
+            arguments: ['@repositories.user', '@services.auth']
         }
     }
 };
