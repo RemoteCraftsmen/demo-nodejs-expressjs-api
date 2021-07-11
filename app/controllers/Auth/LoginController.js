@@ -42,7 +42,6 @@ class LoginController {
     constructor(userRepository, auth) {
         this.userRepository = userRepository;
         this.auth = auth;
-        console.log(userRepository);
     }
 
     async invoke(request, response) {
