@@ -15,16 +15,17 @@ class ShowController {
      *
      *   @apiError (404) Not Found    The User with <code>id</code> was not found.
      */
-    constructor(userRepository, isValidUuidServices) {
+    constructor(userRepository, isUUIDValidHandler) {
         this.userRepository = userRepository;
-        this.isValidUuidServices = isValidUuidServices;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
         const {
             params: { id: userId }
         } = request;
-        if (!(await this.isValidUuidServices.handle(userId))) {
+
+        if (!this.isUUIDValidHandler.handle(userId)) {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
