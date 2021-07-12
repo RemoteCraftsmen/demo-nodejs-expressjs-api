@@ -39,8 +39,9 @@ class UpdateController {
      *            ]
      *    }
      */
-    constructor(todoRepository) {
+    constructor(todoRepository, isValidUuidServices) {
         this.todoRepository = todoRepository;
+        this.isValidUuidServices = isValidUuidServices;
     }
 
     async invoke(request, response) {
@@ -48,6 +49,10 @@ class UpdateController {
             body: fields,
             params: { id: todoId }
         } = request;
+
+        if (!(await this.isValidUuidServices.handle(todoId))) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
         fields.creatorId = request.loggedUserId;
 

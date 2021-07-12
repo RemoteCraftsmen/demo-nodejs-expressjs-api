@@ -22,8 +22,9 @@ class PatchController {
      *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parameter "name" is not specified
      *  @apiError Forbidden     ToDo element belongs to other User
      */
-    constructor(todoRepository) {
+    constructor(todoRepository, isValidUuidServices) {
         this.todoRepository = todoRepository;
+        this.isValidUuidServices = isValidUuidServices;
     }
 
     async invoke(request, response) {
@@ -31,6 +32,10 @@ class PatchController {
             body: fields,
             params: { id: todoId }
         } = request;
+
+        if (!(await this.isValidUuidServices.handle(todoId))) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
         const todo = await this.todoRepository.findById(todoId);
 

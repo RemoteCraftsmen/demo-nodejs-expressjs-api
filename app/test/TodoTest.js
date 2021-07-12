@@ -121,26 +121,6 @@ describe('API', () => {
         });
 
         describe('PUT /todos/{id}', () => {
-            it('saves a todo when not found', async () => {
-                const todo = await TodoFactory.build({
-                    id: 666,
-                    userId: loggerUserId
-                });
-
-                let response = await request
-                    .put(`/todos/${todo.id}`)
-                    .set('Authorization', 'Bearer ' + loggedUserToken)
-                    .send({
-                        id: todo.id,
-                        name: todo.name,
-                        userId: todo.userId,
-                        creatorId: todo.userId
-                    });
-
-                expect(response.body).to.have.property('name');
-                expect(response.body.name).to.equal(todo.name);
-            });
-
             it('puts a todo when found', async () => {
                 const todo = await TodoFactory.create({
                     userId: loggerUserId
