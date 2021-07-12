@@ -34,7 +34,6 @@ Object.defineProperty(Layer.prototype, 'handle', {
     },
 
     set(fn) {
-        // Bizarre, but Express checks for 4 args to detect error middleware: https://github.com/expressjs/express/blob/master/lib/router/layer.js
         if (fn.length === 4) {
             fn = wrapErrorMiddleware(fn);
         } else {
