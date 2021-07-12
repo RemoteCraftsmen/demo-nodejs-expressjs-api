@@ -1,7 +1,6 @@
 const ResetPassword = require('../../emails/ResetPassword');
-const HttpStatus = require('http-status-codes');
-const { User, PasswordReset } = require('../../models');
-const { validationResult } = require('express-validator');
+const { StatusCodes } = require('http-status-codes');
+const { PasswordReset } = require('../../models');
 
 class ChangePasswordController {
     /**
@@ -28,36 +27,34 @@ class ChangePasswordController {
         this.userRepository = userRepository;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const { password } = request.body;
         const token = request.params.token;
 
-        PasswordReset.getByToken(token)
-            .then(async passwordReset => {
-                if (!passwordReset) {
-                    return response.status(HttpStatus.BAD_REQUEST).json({
-                        status: 'error',
-                        message: 'Password reset token not found'
-                    });
-                }
+        const passwordReset = await PasswordReset.getByToken(token);
 
-                if (passwordReset.hasExpired()) {
-                    return response.status(HttpStatus.BAD_REQUEST).json({
-                        status: 'error',
-                        message: 'Password reset token expired'
-                    });
-                }
+        if (!passwordReset) {
+            return response.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Password reset token not found'
+            });
+        }
 
-                await passwordReset.user.update({ password });
+        if (passwordReset.hasExpired()) {
+            return response.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Password reset token expired'
+            });
+        }
 
-                await passwordReset.destroy();
+        await passwordReset.user.update({ password });
 
-                return response.json({
-                    status: 'success',
-                    message: 'Password changed!'
-                });
-            })
-            .catch(next);
+        await passwordReset.destroy();
+
+        return response.json({
+            status: 'success',
+            message: 'Password changed!'
+        });
     }
 }
 

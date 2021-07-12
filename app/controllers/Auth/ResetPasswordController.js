@@ -1,7 +1,7 @@
 const Mail = require('../../services/Mail');
 const ResetPassword = require('../../emails/ResetPassword');
 const { StatusCodes } = require('http-status-codes');
-const { User, PasswordReset } = require('../../models');
+const { PasswordReset } = require('../../models');
 
 class ResetPasswordController {
     //PasswordResetController.js

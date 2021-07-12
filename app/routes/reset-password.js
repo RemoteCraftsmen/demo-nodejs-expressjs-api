@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const changePasswordRequest = require('../validators/changePasswordValidator');
-const resetPasswordRequest = require('../validators/resetPasswordValidator');
+const validate = require('../middleware/validate');
+const changePasswordValidator = require('../validators/changePasswordValidator');
+const resetPasswordValidator = require('../validators/resetPasswordValidator');
 
 module.exports = di => {
     const resetPasswordController = di.get(
@@ -12,11 +13,11 @@ module.exports = di => {
         'controllers.auth.changePasswordController'
     );
 
-    router.post('/', resetPasswordRequest, (...args) =>
+    router.post('/', [resetPasswordValidator, validate], (...args) =>
         resetPasswordController.invoke(...args)
     );
 
-    router.post('/:token', changePasswordRequest, (...args) =>
+    router.post('/:token', [changePasswordValidator, validate], (...args) =>
         changePasswordController.invoke(...args)
     );
 
