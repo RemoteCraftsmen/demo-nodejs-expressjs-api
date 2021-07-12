@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable(
@@ -7,15 +5,14 @@ module.exports = {
             {
                 id: {
                     primaryKey: true,
-                    type: Sequelize.INTEGER,
-                    autoIncrement: true
+                    type: Sequelize.UUID
                 },
                 userId: {
-                    type: Sequelize.INTEGER,
+                    type: Sequelize.UUID,
                     allowNull: true
                 },
                 creatorId: {
-                    type: Sequelize.INTEGER,
+                    type: Sequelize.UUID,
                     allowNull: false
                 },
                 name: {

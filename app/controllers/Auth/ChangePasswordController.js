@@ -27,6 +27,7 @@ class ChangePasswordController {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
+
     async invoke(request, response, next) {
         const { password } = request.body;
         const token = request.params.token;

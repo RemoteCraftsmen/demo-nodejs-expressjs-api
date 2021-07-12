@@ -13,7 +13,7 @@ class UpdateController {
      *  @apiParam {Number} id
      *  @apiParam {String} name
      *
-     * @apiSuccessExample {json} Succes : Creating new element - only when :id does not exist in table
+     * @apiSuccessExample {json} Success : Creating new element - only when :id does not exist in table
      *     HTTP/1.1 201 OK
      *    {
      *        "completed": false,
@@ -25,7 +25,7 @@ class UpdateController {
      *        "createdAt": "2018-11-27T12:38:16.210Z"
      *    }
      *
-     *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parametr "name" is not specified
+     *  @apiError BadRequest    The <code>id</code> of the ToDo element was not found, <code>id</code> does not exist in table ToDo and parameter "name" is not specified
      *  @apiError Forbidden     ToDo element belongs to other User
      *  @apiErrorExample Error-Response:
      *     HTTP/1.1 404 NotFound
@@ -39,8 +39,9 @@ class UpdateController {
      *            ]
      *    }
      */
-    constructor(todoRepository) {
+    constructor(todoRepository, isUUIDValidHandler) {
         this.todoRepository = todoRepository;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
@@ -48,6 +49,10 @@ class UpdateController {
             body: fields,
             params: { id: todoId }
         } = request;
+
+        if (!this.isUUIDValidHandler.handle(todoId)) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
         fields.creatorId = request.loggedUserId;
 

@@ -5,8 +5,8 @@ class TodoFactory {
     static generate(props) {
         const defaultProps = {
             name: faker.lorem.word(),
-            userId: faker.datatype.number(),
-            creatorId: faker.datatype.number()
+            userId: faker.datatype.uuid(),
+            creatorId: faker.datatype.uuid()
         };
 
         return Object.assign({}, defaultProps, props);

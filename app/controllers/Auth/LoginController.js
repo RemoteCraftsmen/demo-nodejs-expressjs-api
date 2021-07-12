@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-const Auth = require('../../services/Auth');
 
 class LoginController {
     /**
@@ -40,24 +39,13 @@ class LoginController {
      *        "user": null
      *     }
      */
-    constructor(userRepository) {
+    constructor(userRepository, auth) {
         this.userRepository = userRepository;
+        this.authService = auth;
     }
 
     async invoke(request, response) {
         const { email, password } = request.body;
-
-        const { password: userPassword } = await this.userRepository.getByEmail(
-            email,
-            {
-                attributes: ['password']
-            }
-        );
-        if (!Auth.comparePasswords(password, userPassword)) {
-            return response
-                .status(StatusCodes.UNAUTHORIZED)
-                .send({ auth: false, token: null, user: null });
-        }
 
         const user = await this.userRepository.getByEmail(email);
 
@@ -67,7 +55,17 @@ class LoginController {
                 .send({ auth: false, token: null });
         }
 
-        const token = Auth.signIn(user);
+        const userPassword = await this.userRepository.getPassword(user.id);
+
+        if (
+            !(await this.authService.comparePasswords(password, userPassword))
+        ) {
+            return response
+                .status(StatusCodes.UNAUTHORIZED)
+                .send({ auth: false, token: null, user: null });
+        }
+
+        const token = this.authService.signIn(user);
 
         return response.send({ auth: true, token, user });
     }
