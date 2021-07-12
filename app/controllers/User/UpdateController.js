@@ -1,8 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 
 class UpdateController {
-    //------------------------- to update Cont
-
     /**
      *  @api {put} /users Update User
      *  @apiName PutUserUpdate
@@ -48,8 +46,9 @@ class UpdateController {
      *   @apiError BadRequest
      *
      */
-    constructor(userRepository) {
+    constructor(userRepository, isUUIDValidHandler) {
         this.userRepository = userRepository;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
@@ -57,6 +56,10 @@ class UpdateController {
             body: fields,
             params: { id: userId }
         } = request;
+
+        if (!this.isUUIDValidHandler.handle(userId)) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
+        }
 
         const user = await this.userRepository.findById(userId);
 

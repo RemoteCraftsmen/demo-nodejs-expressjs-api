@@ -28,8 +28,8 @@ class Mail {
         };
     }
 
-    async send(data) {
-        return await this.service.sendMail(data);
+    send(data) {
+        return this.service.sendMail(data);
     }
 }
 
