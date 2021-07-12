@@ -1,5 +1,6 @@
 const { Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
@@ -9,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'userId',
                 sourceKey: 'id'
             });
+        }
+
+        isPasswordResetTokenExpired() {
+            return moment().isAfter(this.passwordResetTokenExpiresAt);
         }
     }
 
@@ -43,6 +48,14 @@ module.exports = (sequelize, DataTypes) => {
             password: {
                 type: DataTypes.STRING,
                 allowNull: false
+            },
+            passwordResetToken: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            passwordResetTokenExpiresAt: {
+                type: DataTypes.DATE,
+                allowNull: true
             }
         },
         {
