@@ -49,7 +49,7 @@ class StoreController {
         this.todoRepository = todoRepository;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const { body: data } = request;
 
         data.creatorId = request.loggedUserId;
