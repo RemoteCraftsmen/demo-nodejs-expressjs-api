@@ -39,6 +39,7 @@ class ShowController {
 
     async invoke(request, response) {
         const {
+            loggedUserId,
             params: { id: todoId }
         } = request;
 
@@ -47,7 +48,7 @@ class ShowController {
         }
 
         const todo = await this.todoRepository.findById(todoId, {
-            where: { userId: request.loggedUserId }
+            where: { userId: loggedUserId }
         });
 
         if (!todo) {

@@ -45,6 +45,7 @@ class UpdateController {
 
     async invoke(request, response) {
         const {
+            loggedUserId,
             body: fields,
             params: { id: todoId }
         } = request;
@@ -53,10 +54,10 @@ class UpdateController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        fields.creatorId = request.loggedUserId;
+        fields.creatorId = loggedUserId;
 
         if (!fields.userId) {
-            fields.userId = request.loggedUserId;
+            fields.userId = loggedUserId;
         }
 
         const todo = await this.todoRepository.findById(todoId);
@@ -65,7 +66,7 @@ class UpdateController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        if (todo.userId !== request.loggedUserId) {
+        if (todo.userId !== loggedUserId) {
             return response.sendStatus(StatusCodes.FORBIDDEN);
         }
 
