@@ -1,3 +1,5 @@
+const deepmerge = require('deepmerge');
+
 class AbstractRepository {
     constructor(db) {
         this.db = db;
@@ -12,7 +14,7 @@ class AbstractRepository {
     }
 
     findById(id, options = {}) {
-        return this.model.findByPk(id, options);
+        return this.model.findOne(deepmerge(options, { where: { id } }));
     }
 
     create(options = {}, id) {

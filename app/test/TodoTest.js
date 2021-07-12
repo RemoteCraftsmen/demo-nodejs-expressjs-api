@@ -10,7 +10,7 @@ const request = require('supertest')(app);
 
 let todos = [];
 let loggerUserId;
-let loggedUserToken = null;
+let loggedUserToken;
 
 describe('API', () => {
     before(async () => {
@@ -64,6 +64,16 @@ describe('API', () => {
                 expect(response.body.name).to.equal(todos[0].name);
             });
 
+            it('returns 404 if belongs to another user', async () => {
+                const { user, token } = await Register(request);
+
+                let response = await request
+                    .get(`/todos/${todos[0].id}`)
+                    .set('Authorization', 'Bearer ' + token);
+
+                expect(response.statusCode).to.equal(404);
+            });
+
             it("returns 404 if todo hasn't been found", async () => {
                 let response = await request
                     .get(`/todos/not-found`)
@@ -74,6 +84,25 @@ describe('API', () => {
         });
 
         describe('PUT /todos/{id}', () => {
+            it('Returns 404 when not found', async () => {
+                const todo = await TodoFactory.build({
+                    id: 666,
+                    userId: loggerUserId
+                });
+
+                let response = await request
+                    .put(`/todos/${todo.id}`)
+                    .set('Authorization', 'Bearer ' + loggedUserToken)
+                    .send({
+                        id: todo.id,
+                        name: todo.name,
+                        userId: todo.userId,
+                        creatorId: todo.userId
+                    });
+
+                expect(response.statusCode).to.equal(404);
+            });
+
             it('puts a todo when found', async () => {
                 const todo = await TodoFactory.create({
                     userId: loggerUserId

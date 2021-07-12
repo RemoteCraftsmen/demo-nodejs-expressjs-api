@@ -2,13 +2,12 @@ const { StatusCodes } = require('http-status-codes');
 
 class UpdateController {
     /**
-     *  @api {put} /todos/:id Update/Create {PUT} ToDo element
+     *  @api {put} /todos/:id Update ToDo element / Change completed state
      *  @apiName PutToDoPut
      *  @apiGroup ToDo
      *  @apiVersion 1.0.0
      *
-     *  @apiDescription With this method we can not only update elements, but also create them, depends on :id pamaretr.
-     *  If :id already exist in db table we are updating, if not we are creating element
+     *  @apiDescription With this method we can  update elements.
      *
      *  @apiParam {Number} id
      *  @apiParam {String} name
@@ -46,6 +45,7 @@ class UpdateController {
 
     async invoke(request, response) {
         const {
+            loggedUserId,
             body: fields,
             params: { id: todoId }
         } = request;
@@ -54,28 +54,23 @@ class UpdateController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        fields.creatorId = request.loggedUserId;
+        fields.creatorId = loggedUserId;
 
         if (!fields.userId) {
-            fields.userId = request.loggedUserId;
+            fields.userId = loggedUserId;
         }
 
         const todo = await this.todoRepository.findById(todoId);
 
         if (!todo) {
-            const newTodo = await this.todoRepository.create({
-                ...fields,
-                todoId
-            });
-
-            return response.status(StatusCodes.CREATED).send(newTodo);
+            return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        if (todo.userId !== request.loggedUserId) {
+        if (todo.userId !== loggedUserId) {
             return response.sendStatus(StatusCodes.FORBIDDEN);
         }
 
-        await todo.update(fields, { fields: ['name', 'userId'] });
+        await todo.update(fields, { fields: ['name', 'userId', 'completed'] });
 
         const updatedTodo = await this.todoRepository.findById(todoId);
 

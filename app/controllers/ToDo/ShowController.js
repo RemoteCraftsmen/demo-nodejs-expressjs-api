@@ -39,6 +39,7 @@ class ShowController {
 
     async invoke(request, response) {
         const {
+            loggedUserId,
             params: { id: todoId }
         } = request;
 
@@ -46,7 +47,9 @@ class ShowController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        const todo = await this.todoRepository.findById(todoId);
+        const todo = await this.todoRepository.findById(todoId, {
+            where: { userId: loggedUserId }
+        });
 
         if (!todo) {
             return response.sendStatus(StatusCodes.NOT_FOUND);
