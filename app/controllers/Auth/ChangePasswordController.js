@@ -1,6 +1,4 @@
-const ResetPassword = require('../../emails/ResetPassword');
 const { StatusCodes } = require('http-status-codes');
-const { PasswordReset } = require('../../models');
 
 class ChangePasswordController {
     /**
@@ -28,28 +26,33 @@ class ChangePasswordController {
     }
 
     async invoke(request, response) {
-        const { password } = request.body;
-        const token = request.params.token;
+        const {
+            params: { passwordResetToken },
+            body: { password }
+        } = request;
 
-        const passwordReset = await PasswordReset.getByToken(token);
+        const user = await this.userRepository.findOne({
+            where: { passwordResetToken }
+        });
 
-        if (!passwordReset) {
-            return response.status(StatusCodes.BAD_REQUEST).json({
-                status: 'error',
-                message: 'Password reset token not found'
-            });
+        if (!user) {
+            return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        if (passwordReset.hasExpired()) {
-            return response.status(StatusCodes.BAD_REQUEST).json({
-                status: 'error',
-                message: 'Password reset token expired'
-            });
+        const isTokenExpired = await user.isPasswordResetTokenExpired();
+
+        if (isTokenExpired) {
+            user.passwordResetTokenExpiresAt = null;
+            user.passwordResetToken = null;
+
+            return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        await passwordReset.user.update({ password });
-
-        await passwordReset.destroy();
+        await user.update({
+            password,
+            passwordResetToken: null,
+            passwordResetTokenExpiresAt: null
+        });
 
         return response.json({
             status: 'success',

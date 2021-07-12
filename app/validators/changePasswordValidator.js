@@ -1,7 +1,7 @@
 const { body, param } = require('express-validator');
 
 module.exports = [
-    param('token').exists().withMessage('is required'),
+    param('passwordResetToken').exists().withMessage('is required'),
 
     body('password').exists().withMessage('is required'),
 

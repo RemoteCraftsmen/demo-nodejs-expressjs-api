@@ -6,7 +6,12 @@ module.exports = {
         },
         'controllers.auth.resetPasswordController': {
             class: '/controllers/Auth/ResetPasswordController',
-            arguments: ['@repositories.user']
+            arguments: [
+                '@repositories.user',
+                '@services.sendMailHandler',
+                '@mails.passwordReset',
+                '@services.passwordResetTokenGeneratorHandler'
+            ]
         },
         'controllers.auth.changePasswordController': {
             class: '/controllers/Auth/ChangePasswordController',
