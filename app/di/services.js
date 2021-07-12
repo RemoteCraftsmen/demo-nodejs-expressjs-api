@@ -3,8 +3,8 @@ module.exports = {
         'services.auth': {
             class: 'services/AuthService'
         },
-        'services.IsValidUuid': {
-            class: 'services/IsValidUuid'
+        'services.isUUIDValidHandler': {
+            class: 'services/IsUUIDValidHandler'
         }
     }
 };

@@ -39,9 +39,9 @@ class UpdateController {
      *            ]
      *    }
      */
-    constructor(todoRepository, isValidUuidServices) {
+    constructor(todoRepository, isUUIDValidHandler) {
         this.todoRepository = todoRepository;
-        this.isValidUuidServices = isValidUuidServices;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
@@ -50,7 +50,7 @@ class UpdateController {
             params: { id: todoId }
         } = request;
 
-        if (!(await this.isValidUuidServices.handle(todoId))) {
+        if (!this.isUUIDValidHandler.handle(todoId)) {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 

@@ -32,9 +32,9 @@ class ShowController {
      *
      *   @apiError (404) Not Found    The <code>id</code> of the ToDo element was not found.
      */
-    constructor(todoRepository, isValidUuidServices) {
+    constructor(todoRepository, isUUIDValidHandler) {
         this.todoRepository = todoRepository;
-        this.isValidUuidServices = isValidUuidServices;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
@@ -42,7 +42,7 @@ class ShowController {
             params: { id: todoId }
         } = request;
 
-        if (!(await this.isValidUuidServices.handle(todoId))) {
+        if (!this.isUUIDValidHandler.handle(todoId)) {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 

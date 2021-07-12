@@ -1,9 +1,9 @@
 const { validate } = require('uuid');
 
-class isValidUuid {
+class IsUUIDValidHandler {
     handle(uuid) {
         return validate(uuid);
     }
 }
 
-module.exports = isValidUuid;
+module.exports = IsUUIDValidHandler;

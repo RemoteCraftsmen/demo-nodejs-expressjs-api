@@ -46,9 +46,9 @@ class UpdateController {
      *   @apiError BadRequest
      *
      */
-    constructor(userRepository, isValidUuidServices) {
+    constructor(userRepository, isUUIDValidHandler) {
         this.userRepository = userRepository;
-        this.isValidUuidServices = isValidUuidServices;
+        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
@@ -57,7 +57,7 @@ class UpdateController {
             params: { id: userId }
         } = request;
 
-        if (!(await this.isValidUuidServices.handle(request.params.id))) {
+        if (!this.isUUIDValidHandler.handle(userId)) {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
