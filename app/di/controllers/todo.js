@@ -6,11 +6,11 @@ module.exports = {
         },
         'controllers.todo.destroyController': {
             class: '/controllers/ToDo/DestroyController',
-            arguments: ['@repositories.todo', '@services.isUUIDValidHandler']
+            arguments: ['@repositories.todo']
         },
         'controllers.todo.showController': {
             class: '/controllers/ToDo/ShowController',
-            arguments: ['@repositories.todo', '@services.isUUIDValidHandler']
+            arguments: ['@repositories.todo']
         },
         'controllers.todo.storeController': {
             class: '/controllers/ToDo/StoreController',
@@ -18,7 +18,7 @@ module.exports = {
         },
         'controllers.todo.updateController': {
             class: '/controllers/ToDo/UpdateController',
-            arguments: ['@repositories.todo', '@services.isUUIDValidHandler']
+            arguments: ['@repositories.todo']
         }
     }
 };

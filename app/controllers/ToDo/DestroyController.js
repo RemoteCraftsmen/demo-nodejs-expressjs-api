@@ -16,19 +16,14 @@ class DestroyController {
      *   @apiError Forbidden    ToDo element belongs to other User
      *   @apiError BadRequest
      */
-    constructor(todoRepository, isUUIDValidHandler) {
+    constructor(todoRepository) {
         this.todoRepository = todoRepository;
-        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
         const {
             params: { id: todoId }
         } = request;
-
-        if (!this.isUUIDValidHandler.handle(todoId)) {
-            return response.sendStatus(StatusCodes.NO_CONTENT);
-        }
 
         const todo = await this.todoRepository.findById(todoId);
 
