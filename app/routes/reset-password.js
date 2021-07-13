@@ -17,8 +17,10 @@ module.exports = di => {
         resetPasswordController.invoke(...args)
     );
 
-    router.post('/:token', [changePasswordValidator, validate], (...args) =>
-        changePasswordController.invoke(...args)
+    router.post(
+        '/:passwordResetToken',
+        [changePasswordValidator, validate],
+        (...args) => changePasswordController.invoke(...args)
     );
 
     return router;
