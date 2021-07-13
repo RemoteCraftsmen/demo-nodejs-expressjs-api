@@ -1,79 +1,57 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
-const Register = require('../../helpers/register');
 const UserFactory = require('../../factories/user');
 const truncateDatabase = require('../../helpers/truncate');
 
 const app = require('../../../index');
 const request = require('supertest')(app);
 
-let users = [];
-let loggedUserId = null;
-let loggedUserToken = null;
-
 describe('Users', () => {
     before(async () => {
         await truncateDatabase();
-
-        const { user, token } = await Register(request);
-        loggedUserToken = token;
-        loggedUserId = user.id;
-
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
     });
 
     describe('POST /users', () => {
-        it('registers a new user when passing valid data', async () => {
+        it('Registers a new user and returns OK when passing valid data', async () => {
             const userData = UserFactory.generate();
 
             let response = await request.post(`/users`).send(userData);
 
             expect(response.body).to.have.property('auth').to.equal(true);
+
+            expect(response.statusCode).to.equal(StatusCodes.CREATED);
         });
 
-        it('returns an error if firstName is blank', async () => {
-            const userData = await UserFactory.generate({
-                firstName: null
-            });
-
-            let response = await request.post(`/users`).send(userData);
+        it('Returns BAD_REQUEST sending no data', async () => {
+            let response = await request.post(`/users`);
 
             expect(response.body).to.have.property('errors');
+
             expect(response.body.errors).to.deep.include({
                 param: 'firstName',
                 message: 'cannot be blank'
             });
-        });
 
-        it('returns an error if lastName is blank', async () => {
-            const userData = await UserFactory.generate({
-                lastName: null
-            });
-
-            let response = await request.post(`/users`).send(userData);
-
-            expect(response.body).to.have.property('errors');
             expect(response.body.errors).to.deep.include({
                 param: 'lastName',
                 message: 'cannot be blank'
             });
-        });
 
-        it('returns an error if username is blank', async () => {
-            const userData = await UserFactory.generate({ userName: null });
-
-            let response = await request.post(`/users`).send(userData);
-
-            expect(response.body).to.have.property('errors');
             expect(response.body.errors).to.deep.include({
                 param: 'userName',
                 message: 'cannot be blank'
             });
+
+            expect(response.body.errors).to.deep.include({
+                param: 'password',
+                message: 'cannot be blank'
+            });
+
+            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('returns an error if email is not a valid email address', async () => {
+        it('Returns BAD_REQUEST sending invalid email address', async () => {
             const userData = await UserFactory.generate({
                 email: 'definitelyNotAnEmail'
             });
@@ -85,9 +63,11 @@ describe('Users', () => {
                 param: 'email',
                 message: 'is not valid'
             });
+
+            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('returns an error if email is already in use', async () => {
+        it('Returns BAD_REQUEST if email is already in use', async () => {
             await UserFactory.create({ email: `me@me123.com` });
             const userData = await UserFactory.generate({
                 email: `me@me123.com`
@@ -100,21 +80,11 @@ describe('Users', () => {
                 param: 'email',
                 message: 'already in use'
             });
+
+            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('returns an error if password is blank', async () => {
-            const userData = await UserFactory.generate({ password: null });
-
-            let response = await request.post(`/users`).send(userData);
-
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
-                param: 'password',
-                message: 'cannot be blank'
-            });
-        });
-
-        it('returns an error if password contains less than 6 character', async () => {
+        it('Returns BAD_REQUEST sending password shorter than 8 character', async () => {
             const userData = await UserFactory.generate({
                 password: 12345
             });
@@ -126,6 +96,8 @@ describe('Users', () => {
                 param: 'password',
                 message: 'cannot have less than 8 characters'
             });
+
+            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

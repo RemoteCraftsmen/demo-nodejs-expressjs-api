@@ -54,7 +54,9 @@ class StoreController {
 
         const token = await this.authService.signIn(user);
 
-        return response.send({ auth: true, token, user });
+        return response
+            .status(StatusCodes.CREATED)
+            .send({ auth: true, token, user });
     }
 }
 

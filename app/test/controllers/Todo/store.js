@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const TodoFactory = require('../../factories/todo');
@@ -7,7 +8,6 @@ const truncateDatabase = require('../../helpers/truncate');
 const app = require('../../../index');
 const request = require('supertest')(app);
 
-let todos = [];
 let loggerUserId;
 let loggedUserToken;
 
@@ -18,14 +18,10 @@ describe('Todos', () => {
         const { user, token } = await Register(request);
         loggedUserToken = token;
         loggerUserId = user.id;
-
-        todos.push(await TodoFactory.create({ userId: loggerUserId }));
-        todos.push(await TodoFactory.create({ userId: loggerUserId }));
-        todos.push(await TodoFactory.create({ userId: loggerUserId }));
     });
 
     describe('POST /todos', () => {
-        it('registers a new todo when passing valid data', async () => {
+        it('Registers a new todo and returns CREATED when passing valid data', async () => {
             const todo = await TodoFactory.create();
 
             let response = await request
@@ -36,9 +32,11 @@ describe('Todos', () => {
             expect(response.body)
                 .to.have.property('creatorId')
                 .to.equal(loggerUserId);
+
+            expect(response.statusCode).to.equal(StatusCodes.CREATED);
         });
 
-        it('returns an error if name is blank', async () => {
+        it('Returns BAD_REQUEST if name is blank', async () => {
             let response = await request
                 .post('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken)
@@ -49,6 +47,8 @@ describe('Todos', () => {
                 param: 'name',
                 message: 'cannot be blank'
             });
+
+            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

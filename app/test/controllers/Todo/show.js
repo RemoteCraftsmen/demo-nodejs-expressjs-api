@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const TodoFactory = require('../../factories/todo');
@@ -25,31 +26,33 @@ describe('Todos', () => {
     });
 
     describe('GET /todos/{id}', () => {
-        it('fetches a single todo', async () => {
+        it('Returns OK and fetches a single todo sending valid data', async () => {
             let response = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             expect(response.body).to.have.property('name');
             expect(response.body.name).to.equal(todos[0].name);
+
+            expect(response.statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns 404 if belongs to another user', async () => {
-            const { user, token } = await Register(request);
+        it('Returns NOT_FOUND if belongs to another user', async () => {
+            const { token } = await Register(request);
 
             let response = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + token);
 
-            expect(response.statusCode).to.equal(404);
+            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
 
-        it("returns 404 if todo hasn't been found", async () => {
+        it("Returns NOT_FOUND if todo doesn't exist", async () => {
             let response = await request
                 .get(`/todos/not-found`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(404);
+            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });
