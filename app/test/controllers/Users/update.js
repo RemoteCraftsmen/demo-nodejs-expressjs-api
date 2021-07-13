@@ -21,7 +21,7 @@ describe('Users', () => {
     });
 
     describe('PUT /users/{id}', () => {
-        it('Returns OK and updates a user sending valid data', async () => {
+        it('returns OK and updates a user sending valid data as USER', async () => {
             const updatedName = 'updated';
 
             await request
@@ -29,36 +29,36 @@ describe('Users', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            let response = await request
+            const { body, statusCode } = await request
                 .get(`/users/${loggedUserId}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body.lastName).to.equal(updatedName);
+            expect(body.lastName).to.equal(updatedName);
 
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns FORBIDDEN  trying to update someone else', async () => {
+        it('returns FORBIDDEN  trying to update someone else as USER', async () => {
             const user = await UserFactory.create();
             const updatedName = 'updated';
 
-            let response = await request
+            const { statusCode } = await request
                 .put(`/users/${user.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
 
-        it("Returns NOT_FOUND if user hasn't been found", async () => {
+        it("returns NOT_FOUND if user hasn't been found as USER", async () => {
             const updatedName = 'updated';
 
-            let response = await request
-                .put(`/users/999999`)
+            const { statusCode } = await request
+                .put('/users/999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });

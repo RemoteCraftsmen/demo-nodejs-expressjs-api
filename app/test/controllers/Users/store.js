@@ -13,91 +13,99 @@ describe('Users', () => {
     });
 
     describe('POST /users', () => {
-        it('Registers a new user and returns OK when passing valid data', async () => {
+        it('returns OK when passing valid data as NOT-LOGGED-IN', async () => {
             const userData = UserFactory.generate();
 
-            let response = await request.post(`/users`).send(userData);
+            const { body, statusCode } = await request
+                .post('/users')
+                .send(userData);
 
-            expect(response.body).to.have.property('auth').to.equal(true);
+            expect(body).to.have.property('auth').to.equal(true);
 
-            expect(response.statusCode).to.equal(StatusCodes.CREATED);
+            expect(statusCode).to.equal(StatusCodes.CREATED);
         });
 
-        it('Returns BAD_REQUEST sending no data', async () => {
-            let response = await request.post(`/users`);
+        it('returns BAD_REQUEST sending no data as NOT-LOGGED-IN', async () => {
+            const { body, statusCode } = await request.post(`/users`);
 
-            expect(response.body).to.have.property('errors');
+            expect(body).to.have.property('errors');
 
-            expect(response.body.errors).to.deep.include({
+            expect(body.errors).to.deep.include({
                 param: 'firstName',
                 message: 'cannot be blank'
             });
 
-            expect(response.body.errors).to.deep.include({
+            expect(body.errors).to.deep.include({
                 param: 'lastName',
                 message: 'cannot be blank'
             });
 
-            expect(response.body.errors).to.deep.include({
+            expect(body.errors).to.deep.include({
                 param: 'userName',
                 message: 'cannot be blank'
             });
 
-            expect(response.body.errors).to.deep.include({
+            expect(body.errors).to.deep.include({
                 param: 'password',
                 message: 'cannot be blank'
             });
 
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('Returns BAD_REQUEST sending invalid email address', async () => {
+        it('returns BAD_REQUEST sending invalid email address as NOT-LOGGED-IN', async () => {
             const userData = await UserFactory.generate({
                 email: 'definitelyNotAnEmail'
             });
 
-            let response = await request.post(`/users`).send(userData);
+            const { body, statusCode } = await request
+                .post('/users')
+                .send(userData);
 
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
                 param: 'email',
                 message: 'is not valid'
             });
 
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('Returns BAD_REQUEST if email is already in use', async () => {
+        it('returns BAD_REQUEST if email is already in use as NOT-LOGGED-IN', async () => {
             await UserFactory.create({ email: `me@me123.com` });
             const userData = await UserFactory.generate({
                 email: `me@me123.com`
             });
 
-            let response = await request.post(`/users`).send(userData);
+            const { body, statusCode } = await request
+                .post('/users')
+                .send(userData);
 
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
                 param: 'email',
                 message: 'already in use'
             });
 
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it('Returns BAD_REQUEST sending password shorter than 8 character', async () => {
+        it('returns BAD_REQUEST sending password shorter than 8 character as NOT-LOGGED-IN', async () => {
             const userData = await UserFactory.generate({
                 password: 12345
             });
 
-            let response = await request.post(`/users`).send(userData);
+            const { body, statusCode } = await request
+                .post('/users')
+                .send(userData);
 
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
                 param: 'password',
                 message: 'cannot have less than 8 characters'
             });
 
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

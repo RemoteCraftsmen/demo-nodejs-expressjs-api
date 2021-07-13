@@ -13,40 +13,40 @@ describe('Auth', () => {
     });
 
     describe('POST /login', () => {
-        it('Returns OK  passing valid data', async () => {
+        it('returns OK  passing valid data as NOT-LOGGED-IN', async () => {
             await UserFactory.create({
                 email: 'us@er.com',
                 password: 'somepass'
             });
 
-            let response = await request.post(`/auth/login`).send({
-                email: 'us@er.com',
-                password: 'somepass'
-            });
+            const { body, statusCode } = await request
+                .post('/auth/login')
+                .send({
+                    email: 'us@er.com',
+                    password: 'somepass'
+                });
 
-            expect(response.body).to.have.property('auth').to.equal(true);
-
-            expect(response.body).to.have.property('token').to.not.be.null;
-
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(body).to.have.property('auth').to.equal(true);
+            expect(body).to.have.property('token').to.not.be.null;
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns UNAUTHORIZED sending invalid data', async () => {
+        it('returns UNAUTHORIZED sending invalid data as NOT-LOGGED-IN', async () => {
             await UserFactory.create({
                 email: 'us@ere.com',
                 password: 'somepass'
             });
 
-            let response = await request.post(`/auth/login`).send({
-                email: 'us@ere.com',
-                password: 'wrongpass'
-            });
+            const { body, statusCode } = await request
+                .post('/auth/login')
+                .send({
+                    email: 'us@ere.com',
+                    password: 'wrongpass'
+                });
 
-            expect(response.body).to.have.property('auth').to.equal(false);
-
-            expect(response.body).to.have.property('token').to.be.null;
-
-            expect(response.statusCode).to.equal(StatusCodes.UNAUTHORIZED);
+            expect(body).to.have.property('auth').to.equal(false);
+            expect(body).to.have.property('token').to.be.null;
+            expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
         });
     });
 });

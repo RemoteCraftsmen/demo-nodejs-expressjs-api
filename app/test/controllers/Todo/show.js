@@ -26,33 +26,32 @@ describe('Todos', () => {
     });
 
     describe('GET /todos/{id}', () => {
-        it('Returns OK and fetches a single todo sending valid data', async () => {
-            let response = await request
+        it('returns OK when TODO exists as USER', async () => {
+            const { body, statusCode } = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body).to.have.property('name');
-            expect(response.body.name).to.equal(todos[0].name);
-
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(body).to.have.property('name');
+            expect(body.name).to.equal(todos[0].name);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns NOT_FOUND if belongs to another user', async () => {
+        it('returns NOT_FOUND if belongs to another user as USER', async () => {
             const { token } = await Register(request);
 
-            let response = await request
+            const { statusCode } = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + token);
 
-            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
 
-        it("Returns NOT_FOUND if todo doesn't exist", async () => {
-            let response = await request
-                .get(`/todos/not-found`)
+        it("returns NOT_FOUND if todo doesn't exist as USER", async () => {
+            const { statusCode } = await request
+                .get('/todos/not-found')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });

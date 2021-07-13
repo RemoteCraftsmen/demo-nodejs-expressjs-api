@@ -26,23 +26,23 @@ describe('Users', () => {
     });
 
     describe('GET /users/{id}', () => {
-        it('Returns OK fetches a single user as USER', async () => {
-            let response = await request
+        it('returns OK sending valid data as USER', async () => {
+            const { body, statusCode } = await request
                 .get(`/users/${users[0].id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body).to.have.property('email');
-            expect(response.body.email).to.equal(users[0].email);
+            expect(body).to.have.property('email');
+            expect(body.email).to.equal(users[0].email);
 
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it("Returns NOT_FOUND if user doesn't exist", async () => {
-            let response = await request
-                .get(`/users/99999999`)
+        it("returns NOT_FOUND if user doesn't exist as USER", async () => {
+            const { statusCode } = await request
+                .get('/users/99999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });

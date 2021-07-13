@@ -27,28 +27,30 @@ describe('Users', () => {
     });
 
     describe('GET /users', () => {
-        it('Returns OK fetches a all users as USER', async () => {
-            let response = await request
-                .get(`/users`)
+        it('returns OK sending valid data as USER', async () => {
+            const { body, statusCode } = await request
+                .get('/users')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            for (let user of users) {
-                expect(response.body).to.deep.include({
+            for (const user of users) {
+                expect(body).to.deep.include({
                     id: user.id,
                     userName: user.userName,
                     lastName: user.lastName,
                     firstName: user.firstName,
-                    email: user.email
+                    email: user.email,
+                    createdAt: user.createdAt.toISOString(),
+                    updatedAt: user.updatedAt.toISOString()
                 });
             }
 
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns FORBIDDEN as not logged in', async () => {
-            let response = await request.get(`/users`);
+        it('returns FORBIDDEN as NOT-LOGGED-IN', async () => {
+            const { statusCode } = await request.get('/users');
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });

@@ -32,13 +32,13 @@ describe('Todos', () => {
     });
 
     describe('GET /todos', () => {
-        it('Returns OK and fetches all todos that belongs to user as Logged in', async () => {
-            let response = await request
-                .get(`/todos`)
+        it('returns OK with all todos that belongs to user as USER', async () => {
+            const { body, statusCode } = await request
+                .get('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            for (let todo of todos) {
-                expect(response.body).to.deep.include({
+            for (const todo of todos) {
+                expect(body).to.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     creatorId: todo.creatorId,
@@ -49,8 +49,8 @@ describe('Todos', () => {
                 });
             }
 
-            for (let todo of todosAnotherUser) {
-                expect(response.body).to.not.deep.include({
+            for (const todo of todosAnotherUser) {
+                expect(body).to.not.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     creatorId: todo.creatorId,
@@ -61,13 +61,13 @@ describe('Todos', () => {
                 });
             }
 
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns FORBIDDEN as Not Logged in', async () => {
-            let response = await request.get(`/todos`);
+        it('returns FORBIDDEN as NOT-LOGGED-IN', async () => {
+            const { statusCode } = await request.get('/todos');
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });

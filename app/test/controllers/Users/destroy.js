@@ -21,30 +21,30 @@ describe('Users', () => {
     });
 
     describe('DELETE /users/{id}', () => {
-        it('Returns NO_CONTENT sending valid data', async () => {
-            let response = await request
+        it('returns NO_CONTENT sending valid data as USER', async () => {
+            const { statusCode } = await request
                 .delete(`/users/${loggedUserId}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NO_CONTENT);
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it("Returns NO_CONTENT when user doesn't exist ", async () => {
-            let response = await request
-                .delete(`/users/9999999`)
+        it("returns NO_CONTENT when user doesn't exist as USER", async () => {
+            const { statusCode } = await request
+                .delete('/users/9999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NO_CONTENT);
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it('Returns FORBIDDEN deleting another user', async () => {
+        it('returns FORBIDDEN deleting another user as USER', async () => {
             const user = await UserFactory.create();
 
-            let response = await request
+            const { statusCode } = await request
                 .delete(`/users/${user.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });

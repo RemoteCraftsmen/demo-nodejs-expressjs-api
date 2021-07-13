@@ -21,34 +21,31 @@ describe('Todos', () => {
     });
 
     describe('POST /todos', () => {
-        it('Registers a new todo and returns CREATED when passing valid data', async () => {
+        it('registers CREATED sending valid data as USER', async () => {
             const todo = await TodoFactory.create();
 
-            let response = await request
+            const { body, statusCode } = await request
                 .post('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: todo.name });
 
-            expect(response.body)
-                .to.have.property('creatorId')
-                .to.equal(loggerUserId);
-
-            expect(response.statusCode).to.equal(StatusCodes.CREATED);
+            expect(body).to.have.property('creatorId').to.equal(loggerUserId);
+            expect(statusCode).to.equal(StatusCodes.CREATED);
         });
 
-        it('Returns BAD_REQUEST if name is blank', async () => {
-            let response = await request
+        it('returns BAD_REQUEST if name is blank as USER', async () => {
+            const { body, statusCode } = await request
                 .post('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: null });
 
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
                 param: 'name',
                 message: 'cannot be blank'
             });
 
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

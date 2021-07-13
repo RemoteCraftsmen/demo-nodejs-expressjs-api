@@ -65,9 +65,7 @@ module.exports = (sequelize, DataTypes) => {
                     exclude: [
                         'password',
                         'passwordResetTokenExpiresAt',
-                        'passwordResetToken',
-                        'createdAt',
-                        'updatedAt'
+                        'passwordResetToken'
                     ]
                 }
             },

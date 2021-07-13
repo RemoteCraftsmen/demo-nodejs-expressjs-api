@@ -1,6 +1,8 @@
 const { expect } = require('chai');
 const { StatusCodes } = require('http-status-codes');
 
+const { v4: uuidv4 } = require('uuid');
+
 const Register = require('../../helpers/register');
 const UserFactory = require('../../factories/user');
 const TodoFactory = require('../../factories/todo');
@@ -22,7 +24,7 @@ describe('Todos', () => {
     });
 
     describe('PUT /todos/{id}', () => {
-        it('Returns OK and puts a todo when found', async () => {
+        it('returns OK sending valid data as USER', async () => {
             const todo = await TodoFactory.create({
                 userId: loggerUserId
             });
@@ -35,58 +37,56 @@ describe('Todos', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: anotherTodo.name });
 
-            let response = await request
+            const { body, statusCode } = await request
                 .get(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body).to.have.property('name');
-            expect(response.body.name).to.equal(anotherTodo.name);
-
-            expect(response.statusCode).to.equal(StatusCodes.OK);
+            expect(body).to.have.property('name');
+            expect(body.name).to.equal(anotherTodo.name);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('Returns BAD_REQUEST if name is blank', async () => {
+        it('returns BAD_REQUEST if name is blank as USER', async () => {
             const todo = await TodoFactory.create({
                 userId: loggerUserId
             });
             const anotherTodo = await TodoFactory.build({ name: null });
 
-            let response = await request
+            const { body, statusCode } = await request
                 .put(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: anotherTodo.name });
 
-            expect(response.body).to.have.property('errors');
-            expect(response.body.errors).to.deep.include({
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
                 param: 'name',
                 message: 'cannot be blank'
             });
-
-            expect(response.statusCode).to.equal(StatusCodes.BAD_REQUEST);
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
-        it("Returns FORBIDDEN when trying to put to someone else's todo", async () => {
+        it("returns FORBIDDEN when trying to put to someone else's todo as USER", async () => {
             const updatedName = 'updated';
             const anotherUser = await UserFactory.create();
             const todo = await TodoFactory.create({
                 userId: anotherUser.id
             });
 
-            let response = await request
+            const { statusCode } = await request
                 .put(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: updatedName });
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
 
-        it('Returns NOT_FOUND when todo does not exist', async () => {
+        it('returns NOT_FOUND when todo does not exist as USER', async () => {
             const todo = await TodoFactory.build({
-                id: 666,
+                id: uuidv4(),
                 userId: loggerUserId
             });
 
-            let response = await request
+            const { statusCode } = await request
                 .put(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({
@@ -96,7 +96,7 @@ describe('Todos', () => {
                     creatorId: todo.userId
                 });
 
-            expect(response.statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });

@@ -22,37 +22,37 @@ describe('Todos', () => {
     });
 
     describe('DELETE /todos/{id}', () => {
-        it('Returns NO_CONTENT sending valid data', async () => {
+        it('returns NO_CONTENT deleting TODO as USER', async () => {
             const todo = await TodoFactory.create({
                 userId: loggerUserId
             });
 
-            let response = await request
+            const { statusCode } = await request
                 .delete(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NO_CONTENT);
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it("Returns NO_CONTENT when todo doesn't exist", async () => {
-            let response = await request
-                .delete(`/todos/99999999`)
+        it('returns NO_CONTENT deleting non-existing TODO as USER', async () => {
+            const { statusCode } = await request
+                .delete('/todos/99999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.NO_CONTENT);
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it("Returns FORBIDDEN deleting someone else's todo", async () => {
+        it("returns FORBIDDEN deleting someone else's todo as USER", async () => {
             const anotherUser = await UserFactory.create();
             const todo = await TodoFactory.create({
                 userId: anotherUser.id
             });
 
-            let response = await request
+            const { statusCode } = await request
                 .delete(`/todos/${todo.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });
