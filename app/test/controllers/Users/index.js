@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+
 const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
@@ -25,24 +26,31 @@ describe('Users', () => {
         users.push(await UserFactory.create());
     });
 
-    describe('GET /users/{id}', () => {
+    describe('GET /users', () => {
         it('returns OK sending valid data as USER', async () => {
             const { body, statusCode } = await request
-                .get(`/users/${users[0].id}`)
+                .get('/users')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(body).to.have.property('email');
-            expect(body.email).to.equal(users[0].email);
+            for (const user of users) {
+                expect(body).to.deep.include({
+                    id: user.id,
+                    userName: user.userName,
+                    lastName: user.lastName,
+                    firstName: user.firstName,
+                    email: user.email,
+                    createdAt: user.createdAt.toISOString(),
+                    updatedAt: user.updatedAt.toISOString()
+                });
+            }
 
             expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it("returns NOT_FOUND if user doesn't exist as USER", async () => {
-            const { statusCode } = await request
-                .get('/users/99999999')
-                .set('Authorization', 'Bearer ' + loggedUserToken);
+        it('returns FORBIDDEN as NOT-LOGGED-IN', async () => {
+            const { statusCode } = await request.get('/users');
 
-            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });

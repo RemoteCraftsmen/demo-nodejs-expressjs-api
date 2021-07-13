@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const UserFactory = require('../../factories/user');
@@ -7,7 +8,6 @@ const truncateDatabase = require('../../helpers/truncate');
 const app = require('../../../index');
 const request = require('supertest')(app);
 
-let users = [];
 let loggedUserId = null;
 let loggedUserToken = null;
 
@@ -18,14 +18,10 @@ describe('Users', () => {
         const { user, token } = await Register(request);
         loggedUserToken = token;
         loggedUserId = user.id;
-
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
     });
 
     describe('PUT /users/{id}', () => {
-        it('updates a user', async () => {
+        it('returns OK and updates a user sending valid data as USER', async () => {
             const updatedName = 'updated';
 
             await request
@@ -33,34 +29,36 @@ describe('Users', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            let response = await request
+            const { body, statusCode } = await request
                 .get(`/users/${loggedUserId}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body.lastName).to.equal(updatedName);
+            expect(body.lastName).to.equal(updatedName);
+
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns 403 when trying to update someone else', async () => {
+        it('returns FORBIDDEN  trying to update someone else as USER', async () => {
             const user = await UserFactory.create();
             const updatedName = 'updated';
 
-            let response = await request
+            const { statusCode } = await request
                 .put(`/users/${user.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            expect(response.statusCode).to.equal(403);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
 
-        it("returns 404 if user hasn't been found", async () => {
+        it("returns NOT_FOUND if user hasn't been found as USER", async () => {
             const updatedName = 'updated';
 
-            let response = await request
-                .put(`/users/999999`)
+            const { statusCode } = await request
+                .put('/users/999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ lastName: updatedName });
 
-            expect(response.statusCode).to.equal(404);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });

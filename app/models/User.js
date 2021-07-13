@@ -61,7 +61,13 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             defaultScope: {
-                attributes: { exclude: ['password'] }
+                attributes: {
+                    exclude: [
+                        'password',
+                        'passwordResetTokenExpiresAt',
+                        'passwordResetToken'
+                    ]
+                }
             },
             hooks: {
                 beforeSave: (user, options) => {

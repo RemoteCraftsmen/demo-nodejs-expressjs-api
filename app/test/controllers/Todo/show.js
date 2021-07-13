@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const TodoFactory = require('../../factories/todo');
@@ -25,31 +26,32 @@ describe('Todos', () => {
     });
 
     describe('GET /todos/{id}', () => {
-        it('fetches a single todo', async () => {
-            let response = await request
+        it('returns OK when TODO exists as USER', async () => {
+            const { body, statusCode } = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.body).to.have.property('name');
-            expect(response.body.name).to.equal(todos[0].name);
+            expect(body).to.have.property('name');
+            expect(body.name).to.equal(todos[0].name);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns 404 if belongs to another user', async () => {
-            const { user, token } = await Register(request);
+        it('returns NOT_FOUND if belongs to another user as USER', async () => {
+            const { token } = await Register(request);
 
-            let response = await request
+            const { statusCode } = await request
                 .get(`/todos/${todos[0].id}`)
                 .set('Authorization', 'Bearer ' + token);
 
-            expect(response.statusCode).to.equal(404);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
 
-        it("returns 404 if todo hasn't been found", async () => {
-            let response = await request
-                .get(`/todos/not-found`)
+        it("returns NOT_FOUND if todo doesn't exist as USER", async () => {
+            const { statusCode } = await request
+                .get('/todos/not-found')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(404);
+            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
     });
 });
