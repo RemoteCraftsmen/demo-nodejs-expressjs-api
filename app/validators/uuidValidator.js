@@ -7,6 +7,4 @@ async function isUUIDValid(id) {
     }
 }
 
-const id = [param('id').custom(id => isUUIDValid(id))];
-
-module.exports = { id };
+module.exports = [param('id').custom(id => isUUIDValid(id))];
