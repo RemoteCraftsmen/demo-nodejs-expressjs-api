@@ -1,9 +1,4 @@
-const config = require('../../config');
-
 module.exports = {
-    parameters: {
-        config
-    },
     services: {
         'services.auth': {
             class: 'services/AuthService'
@@ -13,7 +8,7 @@ module.exports = {
         },
         'services.sendMailHandler': {
             class: 'services/SendMailHandler',
-            arguments: ['@nodemailer', '%config%']
+            arguments: ['@nodemailer']
         },
         'services.passwordResetTokenGeneratorHandler': {
             class: 'services/PasswordResetTokenGeneratorHandler'

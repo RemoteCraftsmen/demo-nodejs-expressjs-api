@@ -42,8 +42,10 @@ class ChangePasswordController {
         const isTokenExpired = await user.isPasswordResetTokenExpired();
 
         if (isTokenExpired) {
-            user.passwordResetTokenExpiresAt = null;
-            user.passwordResetToken = null;
+            await user.update({
+                passwordResetToken: null,
+                passwordResetTokenExpiresAt: null
+            });
 
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }

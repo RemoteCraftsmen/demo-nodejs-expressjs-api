@@ -1,6 +1,6 @@
 /** @param {{frontendUrls:string, noReplyAddress:string}} config */
 
-class PasswordResetRequest {
+class PasswordReset {
     constructor(config) {
         this.config = config;
     }
@@ -51,4 +51,4 @@ class PasswordResetRequest {
     }
 }
 
-module.exports = PasswordResetRequest;
+module.exports = PasswordReset;

@@ -1,7 +1,6 @@
 class SendMailHandler {
-    constructor(mailer, config) {
+    constructor(mailer) {
         this.mailer = mailer;
-        this.config = config;
     }
 
     handle(data) {

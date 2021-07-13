@@ -6,7 +6,7 @@ module.exports = {
 
     services: {
         'mails.passwordReset': {
-            class: '/emails/ResetPassword',
+            class: '/emails/PasswordReset',
             arguments: ['%config%']
         }
     }
