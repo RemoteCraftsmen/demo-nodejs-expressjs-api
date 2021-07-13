@@ -9,7 +9,7 @@
     "scripts": {
         "dev": "NODE_ENV=development nodemon ./app/index.js",
         "start": "NODE_ENV=production node ./app/index.js",
-        "test": "NODE_ENV=test mocha --exit ./app/test/",
+        "test": "NODE_ENV=test mocha --exit ./app/test/ --recursive",
         "testp": "NODE_ENV=test mocha --exit --",
         "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./app/test/",
         "docs": "rm -rf /docs & apidoc -i app/ -o docs/"

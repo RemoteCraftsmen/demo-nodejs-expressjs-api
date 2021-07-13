@@ -3,9 +3,6 @@ module.exports = {
         'services.auth': {
             class: 'services/AuthService'
         },
-        'services.isUUIDValidHandler': {
-            class: 'services/IsUUIDValidHandler'
-        },
         'services.sendMailHandler': {
             class: 'services/SendMailHandler',
             arguments: ['@nodemailer']

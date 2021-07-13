@@ -4,6 +4,7 @@ const VerifyToken = require('../middleware/VerifyToken');
 
 const validate = require('../middleware/validate');
 const userValidator = require('../validators/userValidator');
+const uuidValidator = require('../validators/uuidValidator');
 
 const router = express.Router();
 
@@ -18,14 +19,17 @@ module.exports = di => {
         storeController.invoke(...args)
     );
     router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
-    router.get('/:id', VerifyToken, (...args) =>
+    router.get('/:id', [uuidValidator.id, validate], VerifyToken, (...args) =>
         showController.invoke(...args)
     );
-    router.put('/:id', VerifyToken, (...args) =>
+    router.put('/:id', [uuidValidator.id, validate], VerifyToken, (...args) =>
         updateController.invoke(...args)
     );
-    router.delete('/:id', VerifyToken, (...args) =>
-        destroyController.invoke(...args)
+    router.delete(
+        '/:id',
+        [uuidValidator.id, validate],
+        VerifyToken,
+        (...args) => destroyController.invoke(...args)
     );
 
     return router;

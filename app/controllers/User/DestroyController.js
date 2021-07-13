@@ -16,19 +16,14 @@ class DestroyController {
      *   @apiError Forbidden    Users can delete only themselfs
      *   @apiError BadRequest
      */
-    constructor(userRepository, isUUIDValidHandler) {
+    constructor(userRepository) {
         this.userRepository = userRepository;
-        this.isUUIDValidHandler = isUUIDValidHandler;
     }
 
     async invoke(request, response) {
         const {
             params: { id: userId }
         } = request;
-
-        if (!this.isUUIDValidHandler.handle(userId)) {
-            return response.sendStatus(StatusCodes.NO_CONTENT);
-        }
 
         const user = await this.userRepository.findById(userId);
 
