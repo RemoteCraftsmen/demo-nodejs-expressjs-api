@@ -1,7 +1,6 @@
-const Mail = require('../../services/Mail');
-const ResetPassword = require('../../emails/ResetPassword');
+//const ResetPassword = require('../../emails/ResetPassword');
 const { StatusCodes } = require('http-status-codes');
-const { PasswordReset } = require('../../models');
+const moment = require('moment');
 
 class ResetPasswordController {
     //PasswordResetController.js
@@ -23,11 +22,20 @@ class ResetPasswordController {
      *   @apiError (404) NotFound                The User was not found
      *   @apiError (400) BadRequest              Email must be specified
      */
-    constructor(userRepository) {
+    constructor(
+        userRepository,
+        sendMailHandler,
+        resetPasswordMail,
+        passwordResetTokenGeneratorHandler
+    ) {
         this.userRepository = userRepository;
+        this.sendMailHandler = sendMailHandler;
+        this.resetPasswordMail = resetPasswordMail;
+        this.passwordResetTokenGeneratorHandler =
+            passwordResetTokenGeneratorHandler;
     }
 
-    async invoke(request, response, next) {
+    async invoke(request, response) {
         const { email } = request.body;
 
         const user = await this.userRepository.getByEmail(email);
@@ -36,17 +44,22 @@ class ResetPasswordController {
             return response.sendStatus(StatusCodes.NO_CONTENT);
         }
 
-        const mail = new Mail();
+        const passwordResetToken =
+            await this.passwordResetTokenGeneratorHandler.handle();
 
-        const mailContent = ResetPassword({
+        const passwordResetTokenExpiresAt = moment().add(1, 'day');
+
+        await user.update({ passwordResetToken, passwordResetTokenExpiresAt });
+
+        const mailContent = this.resetPasswordMail.generateMessage({
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-            token: await PasswordReset.addToken(user),
+            token: passwordResetToken,
             frontendUrl: request.get('origin')
         });
 
-        await mail.send(mailContent);
+        await this.sendMailHandler.handle(mailContent);
 
         return response.sendStatus(StatusCodes.NO_CONTENT);
     }

@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const UserFactory = require('../../factories/user');
@@ -7,7 +8,6 @@ const truncateDatabase = require('../../helpers/truncate');
 const app = require('../../../index');
 const request = require('supertest')(app);
 
-let users = [];
 let loggedUserId = null;
 let loggedUserToken = null;
 
@@ -18,37 +18,33 @@ describe('Users', () => {
         const { user, token } = await Register(request);
         loggedUserToken = token;
         loggedUserId = user.id;
-
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
-        users.push(await UserFactory.create());
     });
 
     describe('DELETE /users/{id}', () => {
-        it('deletes a user', async () => {
-            let response = await request
+        it('returns NO_CONTENT sending valid data as USER', async () => {
+            const { statusCode } = await request
                 .delete(`/users/${loggedUserId}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(204);
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it('returns 403 when trying to delete someone else', async () => {
+        it("returns NO_CONTENT when user doesn't exist as USER", async () => {
+            const { statusCode } = await request
+                .delete('/users/9999999')
+                .set('Authorization', 'Bearer ' + loggedUserToken);
+
+            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
+        });
+
+        it('returns FORBIDDEN deleting another user as USER', async () => {
             const user = await UserFactory.create();
 
-            let response = await request
+            const { statusCode } = await request
                 .delete(`/users/${user.id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(response.statusCode).to.equal(403);
-        });
-
-        it("returns 204 if user hasn't been found", async () => {
-            let response = await request
-                .delete(`/users/9999999`)
-                .set('Authorization', 'Bearer ' + loggedUserToken);
-
-            expect(response.statusCode).to.equal(204);
+            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
         });
     });
 });
