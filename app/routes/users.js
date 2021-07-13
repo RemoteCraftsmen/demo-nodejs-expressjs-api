@@ -19,15 +19,21 @@ module.exports = di => {
         storeController.invoke(...args)
     );
     router.get('/', VerifyToken, (...args) => indexController.invoke(...args));
-    router.get('/:id', [uuidValidator.id, validate], VerifyToken, (...args) =>
-        showController.invoke(...args)
+    router.get(
+        '/:id',
+        [uuidValidator('id'), validate],
+        VerifyToken,
+        (...args) => showController.invoke(...args)
     );
-    router.put('/:id', [uuidValidator.id, validate], VerifyToken, (...args) =>
-        updateController.invoke(...args)
+    router.put(
+        '/:id',
+        [uuidValidator('id'), validate],
+        VerifyToken,
+        (...args) => updateController.invoke(...args)
     );
     router.delete(
         '/:id',
-        [uuidValidator.id, validate],
+        [uuidValidator('id'), validate],
         VerifyToken,
         (...args) => destroyController.invoke(...args)
     );
