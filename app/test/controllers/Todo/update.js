@@ -98,5 +98,30 @@ describe('Todos', () => {
 
             expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
         });
+
+        it('returns BAD_REQUEST when todo.id is not valid UUID as USER', async () => {
+            const todo = await TodoFactory.build({
+                id: 'Not_Valid_UUID',
+                userId: loggerUserId
+            });
+
+            const { body, statusCode } = await request
+                .put(`/todos/${todo.id}`)
+                .set('Authorization', 'Bearer ' + loggedUserToken)
+                .send({
+                    id: todo.id,
+                    name: todo.name,
+                    userId: todo.userId,
+                    creatorId: todo.userId
+                });
+
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
+                message: 'must be valid UUID',
+                param: 'id'
+            });
+
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
+        });
     });
 });

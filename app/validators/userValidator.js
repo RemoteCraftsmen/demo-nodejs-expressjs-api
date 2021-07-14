@@ -30,15 +30,35 @@ const basic = [
         .isEmpty()
         .withMessage('cannot be blank')
         .isLength({ min: 2 })
-        .withMessage('last Name must have more than 2 characters'),
+        .withMessage('last Name must have more than 2 characters')
+];
 
+const withPassword = [
     body('password')
         .not()
         .isEmpty()
         .withMessage('cannot be blank')
         .isLength({ min: 8 })
-        .withMessage('cannot have less than 8 characters'),
+        .withMessage('cannot have less than 8 characters')
+];
 
+const update = [
+    ...basic,
+    body('email')
+        .not()
+        .isEmpty()
+        .withMessage('cannot be blank')
+        .isEmail()
+        .withMessage('is not valid')
+        .bail()
+        .custom((email, { req }) =>
+            isMailTaken(email, req.app.get('di'), req.params.id)
+        )
+];
+
+const store = [
+    ...basic,
+    ...withPassword,
     body('email')
         .not()
         .isEmpty()
@@ -48,5 +68,5 @@ const basic = [
         .bail()
         .custom((email, { req }) => isMailTaken(email, req.app.get('di')))
 ];
-const store = [...basic];
-module.exports = { store };
+
+module.exports = { store, update };

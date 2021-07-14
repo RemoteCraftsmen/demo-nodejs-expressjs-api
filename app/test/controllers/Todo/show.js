@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const { StatusCodes } = require('http-status-codes');
+const { v4: uuidv4 } = require('uuid');
 
 const Register = require('../../helpers/register');
 const TodoFactory = require('../../factories/todo');
@@ -48,10 +49,24 @@ describe('Todos', () => {
 
         it("returns NOT_FOUND if todo doesn't exist as USER", async () => {
             const { statusCode } = await request
-                .get('/todos/not-found')
+                .get(`/todos/${uuidv4()}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
+        });
+
+        it('returns NOT_FOUND if todo.id is not valid as USER', async () => {
+            const { body, statusCode } = await request
+                .get('/todos/Wrong_ID_not_UUID')
+                .set('Authorization', 'Bearer ' + loggedUserToken);
+
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
+                message: 'must be valid UUID',
+                param: 'id'
+            });
+
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

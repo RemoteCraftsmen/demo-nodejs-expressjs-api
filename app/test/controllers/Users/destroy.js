@@ -29,12 +29,18 @@ describe('Users', () => {
             expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
         });
 
-        it("returns NO_CONTENT when user doesn't exist as USER", async () => {
-            const { statusCode } = await request
+        it('returns BAD_REQUEST when user.id is not valid UUID as USER', async () => {
+            const { body, statusCode } = await request
                 .delete('/users/9999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(statusCode).to.equal(StatusCodes.NO_CONTENT);
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
+                message: 'must be valid UUID',
+                param: 'id'
+            });
+
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
 
         it('returns FORBIDDEN deleting another user as USER', async () => {

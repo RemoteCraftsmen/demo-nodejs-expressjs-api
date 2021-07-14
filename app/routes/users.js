@@ -27,7 +27,7 @@ module.exports = di => {
     );
     router.put(
         '/:id',
-        [uuidValidator('id'), validate],
+        [uuidValidator('id'), userValidator.update, validate],
         VerifyToken,
         (...args) => updateController.invoke(...args)
     );

@@ -20,7 +20,21 @@ describe('Users', () => {
                 .post('/users')
                 .send(userData);
 
-            expect(body).to.have.property('auth').to.equal(true);
+            expect(body).to.have.property('id');
+            expect(body)
+                .to.have.property('firstName')
+                .to.equal(userData.firstName);
+            expect(body)
+                .to.have.property('userName')
+                .to.equal(userData.userName);
+            expect(body)
+                .to.have.property('lastName')
+                .to.equal(userData.lastName);
+            expect(body).to.have.property('email').to.equal(userData.email);
+
+            expect(body).to.not.have.property('password');
+            expect(body).to.not.have.property('passwordResetToken');
+            expect(body).to.not.have.property('passwordResetTokenExpiresAt');
 
             expect(statusCode).to.equal(StatusCodes.CREATED);
         });
