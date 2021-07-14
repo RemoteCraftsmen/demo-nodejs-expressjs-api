@@ -74,16 +74,6 @@ module.exports = (sequelize, DataTypes) => {
                     if (options.fields.includes('password')) {
                         user.password = bcrypt.hashSync(user.password, 8);
                     }
-                },
-                afterCreate: record => {
-                    delete record.dataValues.password;
-                    delete record.dataValues.passwordResetToken;
-                    delete record.dataValues.passwordResetTokenExpiresAt;
-                },
-                afterUpdate: record => {
-                    delete record.dataValues.password;
-                    delete record.dataValues.passwordResetToken;
-                    delete record.dataValues.passwordResetTokenExpiresAt;
                 }
             },
             scopes: {}

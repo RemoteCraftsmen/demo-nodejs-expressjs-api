@@ -53,6 +53,7 @@ class RegisterController {
         const user = await this.userRepository.create(request.body);
 
         const token = await this.authService.signIn(user);
+
         return response
             .status(StatusCodes.CREATED)
             .send({ auth: true, token, user });

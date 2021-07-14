@@ -116,7 +116,7 @@ describe('Users', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'password',
-                message: 'cannot have less than 8 characters'
+                message: 'password should be longer  than 8 characters'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
