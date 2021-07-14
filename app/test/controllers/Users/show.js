@@ -37,12 +37,18 @@ describe('Users', () => {
             expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it("returns NOT_FOUND if user doesn't exist as USER", async () => {
-            const { statusCode } = await request
+        it('returns BAD_REQUEST if user.id is not valid UUID as USER', async () => {
+            const { body, statusCode } = await request
                 .get('/users/99999999')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(statusCode).to.equal(StatusCodes.NOT_FOUND);
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
+                message: 'must be valid UUID',
+                param: 'id'
+            });
+
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });

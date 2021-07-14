@@ -1,8 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 
-class StoreController {
+class RegisterController {
     /**
-     *  @api {post} /users Create User
+     *  @api {post} /auth/register Create User
      *  @apiName PostUserStore
      *  @apiGroup Users
      *  @apiVersion 1.0.0
@@ -50,13 +50,14 @@ class StoreController {
     }
 
     async invoke(request, response) {
-        const { body: userData } = request;
-        const createdUser = await this.userRepository.create(userData);
+        const user = await this.userRepository.create(request.body);
 
-        const user = await this.userRepository.findById(createdUser.id);
+        const token = await this.authService.signIn(user);
 
-        return response.status(StatusCodes.CREATED).send(user);
+        return response
+            .status(StatusCodes.CREATED)
+            .send({ auth: true, token, user });
     }
 }
 
-module.exports = StoreController;
+module.exports = RegisterController;

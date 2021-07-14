@@ -16,6 +16,10 @@ module.exports = {
         'controllers.auth.changePasswordController': {
             class: '/controllers/Auth/ChangePasswordController',
             arguments: ['@repositories.user']
+        },
+        'controllers.auth.registerController': {
+            class: '/controllers/Auth/RegisterController',
+            arguments: ['@repositories.user', '@services.auth']
         }
     }
 };
