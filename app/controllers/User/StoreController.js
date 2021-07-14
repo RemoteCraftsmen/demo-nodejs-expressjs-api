@@ -50,7 +50,7 @@ class StoreController {
     }
 
     async invoke(request, response) {
-        const userData = request.body;
+        const { body: userData } = request;
         const createdUser = await this.userRepository.create(userData);
 
         const user = await this.userRepository.findById(createdUser.id);
