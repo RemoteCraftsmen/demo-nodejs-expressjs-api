@@ -56,10 +56,7 @@ class ChangePasswordController {
             passwordResetTokenExpiresAt: null
         });
 
-        return response.json({
-            status: 'success',
-            message: 'Password changed!'
-        });
+        return response.sendStatus(StatusCodes.NO_CONTENT);
     }
 }
 

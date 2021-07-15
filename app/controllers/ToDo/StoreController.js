@@ -50,12 +50,12 @@ class StoreController {
     }
 
     async invoke(request, response) {
-        const { body: data } = request;
+        const { loggedUserId, body: data } = request;
 
-        data.creatorId = request.loggedUserId;
+        data.creatorId = loggedUserId;
 
         if (!data.userId) {
-            data.userId = request.loggedUserId;
+            data.userId = loggedUserId;
         }
 
         const todo = await this.todoRepository.create(data);

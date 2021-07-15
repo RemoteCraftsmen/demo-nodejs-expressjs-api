@@ -22,6 +22,7 @@ class DestroyController {
 
     async invoke(request, response) {
         const {
+            loggedUserId,
             params: { id: userId }
         } = request;
 
@@ -31,7 +32,7 @@ class DestroyController {
             return response.sendStatus(StatusCodes.NO_CONTENT);
         }
 
-        if (user.id !== request.loggedUserId) {
+        if (user.id !== loggedUserId) {
             return response.sendStatus(StatusCodes.FORBIDDEN);
         }
 

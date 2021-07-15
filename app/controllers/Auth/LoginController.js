@@ -50,9 +50,7 @@ class LoginController {
         const user = await this.userRepository.getByEmail(email);
 
         if (!user) {
-            return response
-                .status(StatusCodes.UNAUTHORIZED)
-                .send({ auth: false, token: null });
+            return response.status(StatusCodes.UNAUTHORIZED);
         }
 
         const userPassword = await this.userRepository.getPassword(user.id);
@@ -62,12 +60,12 @@ class LoginController {
         ) {
             return response
                 .status(StatusCodes.UNAUTHORIZED)
-                .send({ auth: false, token: null, user: null });
+                .send({ token: null, user: null });
         }
 
         const token = this.authService.signIn(user);
 
-        return response.send({ auth: true, token, user });
+        return response.send({ token, user });
     }
 }
 

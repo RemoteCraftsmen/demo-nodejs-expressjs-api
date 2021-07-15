@@ -52,7 +52,8 @@ class UpdateController {
 
     async invoke(request, response) {
         const {
-            body: fields,
+            loggedUserId,
+            body: data,
             params: { id: userId }
         } = request;
 
@@ -62,11 +63,11 @@ class UpdateController {
             return response.sendStatus(StatusCodes.NOT_FOUND);
         }
 
-        if (user.id !== request.loggedUserId) {
+        if (user.id !== loggedUserId) {
             return response.sendStatus(StatusCodes.FORBIDDEN);
         }
 
-        await user.update(fields);
+        await user.update(data);
 
         const updatedUser = await this.userRepository.findById(userId);
 

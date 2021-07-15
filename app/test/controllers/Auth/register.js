@@ -20,7 +20,6 @@ describe('Auth', () => {
                 .post('/auth/register')
                 .send(userData);
 
-            expect(body).to.have.property('auth').to.equal(true);
             expect(body).to.have.property('token').to.not.be.null;
             expect(statusCode).to.equal(StatusCodes.CREATED);
         });
