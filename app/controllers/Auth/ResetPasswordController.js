@@ -1,5 +1,4 @@
 const { StatusCodes } = require('http-status-codes');
-
 const dayjs = require('dayjs');
 
 class ResetPasswordController {

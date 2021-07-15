@@ -58,9 +58,7 @@ class LoginController {
         if (
             !(await this.authService.comparePasswords(password, userPassword))
         ) {
-            return response
-                .status(StatusCodes.UNAUTHORIZED)
-                .send({ token: null, user: null });
+            return response.status(StatusCodes.UNAUTHORIZED);
         }
 
         const token = this.authService.signIn(user);

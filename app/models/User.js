@@ -1,6 +1,6 @@
 const { Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
-var dayjs = require('dayjs');
+const dayjs = require('dayjs');
 
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
