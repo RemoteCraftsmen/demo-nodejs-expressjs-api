@@ -9,6 +9,10 @@ class AbstractRepository {
         return this.model.findAll(options);
     }
 
+    findAndCountAll(options = {}) {
+        return this.model.findAndCountAll(options);
+    }
+
     findOne(options = {}) {
         return this.model.findOne(options);
     }

@@ -33,7 +33,7 @@ describe('Users', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             for (const user of users) {
-                expect(body).to.deep.include({
+                expect(body.rows).to.deep.include({
                     id: user.id,
                     userName: user.userName,
                     lastName: user.lastName,

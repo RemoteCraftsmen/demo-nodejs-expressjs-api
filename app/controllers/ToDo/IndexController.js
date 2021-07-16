@@ -45,8 +45,14 @@ class IndexController {
     }
 
     async invoke(request, response) {
-        const todos = await this.todoRepository.findAll({
-            where: { userId: request.loggedUserId }
+        const { page = 1, perPage = 20 } = request.query;
+
+        const offset = (page - 1) * perPage;
+
+        const todos = await this.todoRepository.findAndCountAll({
+            where: { userId: request.loggedUserId },
+            limit: perPage,
+            offset
         });
 
         return response.send(todos);

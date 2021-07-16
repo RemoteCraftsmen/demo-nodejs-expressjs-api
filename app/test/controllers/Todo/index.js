@@ -38,7 +38,7 @@ describe('Todos', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             for (const todo of todos) {
-                expect(body).to.deep.include({
+                expect(body.rows).to.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     createdBy: todo.createdBy,
@@ -50,7 +50,7 @@ describe('Todos', () => {
             }
 
             for (const todo of todosAnotherUser) {
-                expect(body).to.not.deep.include({
+                expect(body.rows).to.not.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     createdBy: todo.createdBy,
