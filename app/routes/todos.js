@@ -5,6 +5,7 @@ const verifyToken = require('../middleware/verifyToken');
 const validate = require('../middleware/validate');
 const todoValidator = require('../validators/todoValidator');
 const uuidValidator = require('../validators/uuidValidator');
+const paginationValidator = require('../validators/paginationValidator');
 
 module.exports = di => {
     const indexController = di.get('controllers.todo.indexController');
@@ -16,7 +17,9 @@ module.exports = di => {
     router.post('/', [todoValidator.create, validate], verifyToken, (...args) =>
         storeController.invoke(...args)
     );
-    router.get('/', verifyToken, (...args) => indexController.invoke(...args));
+    router.get('/', [paginationValidator, validate], verifyToken, (...args) =>
+        indexController.invoke(...args)
+    );
     router.get(
         '/:id',
         [uuidValidator('id'), validate],
