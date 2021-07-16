@@ -50,9 +50,7 @@ class LoginController {
         const user = await this.userRepository.getByEmail(email);
 
         if (!user) {
-            return response
-                .status(StatusCodes.UNAUTHORIZED)
-                .send({ auth: false, token: null });
+            return response.sendStatus(StatusCodes.UNAUTHORIZED);
         }
 
         const userPassword = await this.userRepository.getPassword(user.id);
@@ -60,14 +58,12 @@ class LoginController {
         if (
             !(await this.authService.comparePasswords(password, userPassword))
         ) {
-            return response
-                .status(StatusCodes.UNAUTHORIZED)
-                .send({ auth: false, token: null, user: null });
+            return response.sendStatus(StatusCodes.UNAUTHORIZED);
         }
 
         const token = this.authService.signIn(user);
 
-        return response.send({ auth: true, token, user });
+        return response.send({ token, user });
     }
 }
 

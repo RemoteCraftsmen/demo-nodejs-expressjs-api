@@ -29,7 +29,7 @@ describe('Todos', () => {
                 .set('Authorization', 'Bearer ' + loggedUserToken)
                 .send({ name: todo.name });
 
-            expect(body).to.have.property('creatorId').to.equal(loggerUserId);
+            expect(body).to.have.property('createdBy').to.equal(loggerUserId);
             expect(statusCode).to.equal(StatusCodes.CREATED);
         });
 

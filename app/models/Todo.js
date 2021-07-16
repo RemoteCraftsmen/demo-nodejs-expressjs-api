@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             });
             Todo.belongsTo(models.User, {
                 as: 'creator',
-                foreignKey: 'creatorId'
+                foreignKey: 'createdBy'
             });
         }
     }
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 allowNull: true
             },
-            creatorId: {
+            createdBy: {
                 type: DataTypes.UUID,
                 allowNull: false
             },

@@ -15,7 +15,7 @@ module.exports = {
                     name: faker.internet.domainWord(),
                     completed: false,
                     userId: user.id,
-                    creatorId: user.id
+                    createdBy: user.id
                 })
             )
         );

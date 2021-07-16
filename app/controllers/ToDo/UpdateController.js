@@ -45,14 +45,12 @@ class UpdateController {
     async invoke(request, response) {
         const {
             loggedUserId,
-            body: fields,
+            body: data,
             params: { id: todoId }
         } = request;
 
-        fields.creatorId = loggedUserId;
-
-        if (!fields.userId) {
-            fields.userId = loggedUserId;
+        if (!data.userId) {
+            data.userId = loggedUserId;
         }
 
         const todo = await this.todoRepository.findById(todoId);
@@ -65,7 +63,7 @@ class UpdateController {
             return response.sendStatus(StatusCodes.FORBIDDEN);
         }
 
-        await todo.update(fields, { fields: ['name', 'userId', 'completed'] });
+        await todo.update(data, { fields: ['name', 'userId', 'completed'] });
 
         const updatedTodo = await this.todoRepository.findById(todoId);
 

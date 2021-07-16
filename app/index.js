@@ -10,7 +10,7 @@ const db = require('./models');
 
 const sequelize = require('./util/database');
 
-const ToggleAPIDocs = require('./middleware/ToggleAPIDocs');
+const toggleAPIDocs = require('./middleware/toggleAPIDocs');
 
 const config = require('../config');
 const di = require('./di');
@@ -49,7 +49,7 @@ app.use(router);
 app.use(errorHandler);
 
 app.set('di', di);
-app.use('/', ToggleAPIDocs, express.static('docs'));
+app.use('/', toggleAPIDocs, express.static('docs'));
 
 app.use((req, res, next) => {
     res.status(404).send('Not found!');

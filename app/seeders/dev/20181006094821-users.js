@@ -1,5 +1,4 @@
 const faker = require('faker');
-const bcrypt = require('bcryptjs');
 
 const di = require('../../di');
 const userRepository = di.get('repositories.user');

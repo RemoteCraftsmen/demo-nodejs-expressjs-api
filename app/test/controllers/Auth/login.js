@@ -26,7 +26,6 @@ describe('Auth', () => {
                     password: 'somepass'
                 });
 
-            expect(body).to.have.property('auth').to.equal(true);
             expect(body).to.have.property('token').to.not.be.null;
             expect(statusCode).to.equal(StatusCodes.OK);
         });
@@ -44,8 +43,6 @@ describe('Auth', () => {
                     password: 'wrongpass'
                 });
 
-            expect(body).to.have.property('auth').to.equal(false);
-            expect(body).to.have.property('token').to.be.null;
             expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
         });
     });

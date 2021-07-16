@@ -19,7 +19,11 @@ module.exports = {
         logging: isEnabled(env('DATABASE_LOGGING')),
         host: env('DATABASE_HOST'),
         port: env('DATABASE_PORT'),
-        dialect: env('DATABASE_DIALECT')
+        dialect: env('DATABASE_DIALECT'),
+        define: {
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci'
+        }
     },
     mail: {
         sendgridApiKey: env('MAIL_SENDGRID_API_KEY'),

@@ -47,10 +47,10 @@ describe('Users', () => {
             expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns FORBIDDEN as NOT-LOGGED-IN', async () => {
+        it('returns UNAUTHORIZED as NOT-LOGGED-IN', async () => {
             const { statusCode } = await request.get('/users');
 
-            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
         });
     });
 });

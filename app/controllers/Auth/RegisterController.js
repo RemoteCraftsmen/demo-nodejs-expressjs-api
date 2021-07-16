@@ -54,9 +54,7 @@ class RegisterController {
 
         const token = await this.authService.signIn(user);
 
-        return response
-            .status(StatusCodes.CREATED)
-            .send({ auth: true, token, user });
+        return response.status(StatusCodes.CREATED).send({ token, user });
     }
 }
 

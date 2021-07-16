@@ -1,6 +1,5 @@
-//const ResetPassword = require('../../emails/ResetPassword');
 const { StatusCodes } = require('http-status-codes');
-const moment = require('moment');
+const dayjs = require('dayjs');
 
 class ResetPasswordController {
     //PasswordResetController.js
@@ -47,7 +46,7 @@ class ResetPasswordController {
         const passwordResetToken =
             await this.passwordResetTokenGeneratorHandler.handle();
 
-        const passwordResetTokenExpiresAt = moment().add(1, 'day');
+        const passwordResetTokenExpiresAt = dayjs().add(1, 'day');
 
         await user.update({ passwordResetToken, passwordResetTokenExpiresAt });
 

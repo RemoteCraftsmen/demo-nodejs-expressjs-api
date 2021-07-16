@@ -41,7 +41,7 @@ describe('Todos', () => {
                 expect(body).to.deep.include({
                     id: todo.id,
                     userId: todo.userId,
-                    creatorId: todo.creatorId,
+                    createdBy: todo.createdBy,
                     name: todo.name,
                     completed: todo.completed,
                     createdAt: todo.createdAt.toISOString(),
@@ -53,7 +53,7 @@ describe('Todos', () => {
                 expect(body).to.not.deep.include({
                     id: todo.id,
                     userId: todo.userId,
-                    creatorId: todo.creatorId,
+                    createdBy: todo.createdBy,
                     name: todo.name,
                     completed: todo.completed,
                     createdAt: todo.createdAt.toISOString(),
@@ -64,10 +64,10 @@ describe('Todos', () => {
             expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns FORBIDDEN as NOT-LOGGED-IN', async () => {
+        it('returns UNAUTHORIZED as NOT-LOGGED-IN', async () => {
             const { statusCode } = await request.get('/todos');
 
-            expect(statusCode).to.equal(StatusCodes.FORBIDDEN);
+            expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
         });
     });
 });

@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const { StatusCodes } = require('http-status-codes');
+
 const config = require('../../config');
 
 module.exports = (request, response, next) => {
@@ -6,18 +8,15 @@ module.exports = (request, response, next) => {
 
     if (!token) {
         return response
-            .status(403)
-            .json({ auth: false, message: 'No token provided.' });
+            .status(StatusCodes.UNAUTHORIZED)
+            .send({ message: 'No token provided.' });
     }
 
     jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
-            return response
-                .status(403)
-                .json({
-                    auth: false,
-                    message: 'Failed to authenticate token.'
-                });
+            return response.status(StatusCodes.UNAUTHORIZED).send({
+                message: 'Failed to authenticate token.'
+            });
         }
 
         request.loggedUserId = decoded.id;
