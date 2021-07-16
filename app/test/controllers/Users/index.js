@@ -28,12 +28,15 @@ describe('Users', () => {
 
     describe('GET /users', () => {
         it('returns OK sending valid data as USER', async () => {
-            const { body, statusCode } = await request
+            const {
+                body: { rows },
+                statusCode
+            } = await request
                 .get('/users')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             for (const user of users) {
-                expect(body.rows).to.deep.include({
+                expect(rows).to.deep.include({
                     id: user.id,
                     userName: user.userName,
                     lastName: user.lastName,

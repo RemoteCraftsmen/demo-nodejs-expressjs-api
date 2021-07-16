@@ -35,7 +35,7 @@ describe('Todos', () => {
         it('returns OK with all todos that belongs to user as USER', async () => {
             const {
                 body: { rows, count },
-                status
+                statusCode
             } = await request
                 .get('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
@@ -64,9 +64,9 @@ describe('Todos', () => {
                 });
             }
 
-            expect(parseInt(count)).to.deep.equal(todos.length);
+            expect(count).to.deep.equal(todos.length);
 
-            expect(status).to.equal(StatusCodes.OK);
+            expect(statusCode).to.equal(StatusCodes.OK);
         });
 
         it('returns UNAUTHORIZED as NOT-LOGGED-IN', async () => {
