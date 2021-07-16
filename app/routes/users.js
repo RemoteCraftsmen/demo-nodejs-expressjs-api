@@ -1,7 +1,6 @@
 const express = require('express');
 
 const verifyToken = require('../middleware/verifyToken');
-
 const validate = require('../middleware/validate');
 const userValidator = require('../validators/userValidator');
 const uuidValidator = require('../validators/uuidValidator');

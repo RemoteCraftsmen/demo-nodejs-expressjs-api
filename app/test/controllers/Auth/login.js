@@ -43,7 +43,6 @@ describe('Auth', () => {
                     password: 'wrongpass'
                 });
 
-            expect(body).to.have.property('token').to.be.null;
             expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
         });
     });

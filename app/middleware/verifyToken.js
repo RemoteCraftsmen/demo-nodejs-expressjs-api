@@ -8,13 +8,13 @@ module.exports = (request, response, next) => {
 
     if (!token) {
         return response
-            .status(StatusCodes.NO_CONTENT)
+            .status(StatusCodes.UNAUTHORIZED)
             .json({ message: 'No token provided.' });
     }
 
     jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
-            return response.status(StatusCodes.NO_CONTENT).json({
+            return response.status(StatusCodes.UNAUTHORIZED).json({
                 message: 'Failed to authenticate token.'
             });
         }

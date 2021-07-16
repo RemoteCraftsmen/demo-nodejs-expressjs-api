@@ -52,7 +52,7 @@ class StoreController {
     async invoke(request, response) {
         const { loggedUserId, body: data } = request;
 
-        data.creatorId = loggedUserId;
+        data.createdBy = loggedUserId;
 
         if (!data.userId) {
             data.userId = loggedUserId;
