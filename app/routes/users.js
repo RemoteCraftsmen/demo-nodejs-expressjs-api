@@ -4,6 +4,7 @@ const verifyToken = require('../middleware/verifyToken');
 const validate = require('../middleware/validate');
 const userValidator = require('../validators/userValidator');
 const uuidValidator = require('../validators/uuidValidator');
+const paginationValidator = require('../validators/paginationValidator');
 
 const router = express.Router();
 
@@ -17,7 +18,9 @@ module.exports = di => {
     router.post('/', [userValidator.store, validate], (...args) =>
         storeController.invoke(...args)
     );
-    router.get('/', verifyToken, (...args) => indexController.invoke(...args));
+    router.get('/', [paginationValidator, validate], verifyToken, (...args) =>
+        indexController.invoke(...args)
+    );
     router.get(
         '/:id',
         [uuidValidator('id'), validate],

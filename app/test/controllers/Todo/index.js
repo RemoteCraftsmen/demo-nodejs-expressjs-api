@@ -33,12 +33,15 @@ describe('Todos', () => {
 
     describe('GET /todos', () => {
         it('returns OK with all todos that belongs to user as USER', async () => {
-            const { body, statusCode } = await request
+            const {
+                body: { rows, count },
+                statusCode
+            } = await request
                 .get('/todos')
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
             for (const todo of todos) {
-                expect(body).to.deep.include({
+                expect(rows).to.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     createdBy: todo.createdBy,
@@ -50,7 +53,7 @@ describe('Todos', () => {
             }
 
             for (const todo of todosAnotherUser) {
-                expect(body).to.not.deep.include({
+                expect(rows).to.not.deep.include({
                     id: todo.id,
                     userId: todo.userId,
                     createdBy: todo.createdBy,
@@ -60,6 +63,8 @@ describe('Todos', () => {
                     updatedAt: todo.updatedAt.toISOString()
                 });
             }
+
+            expect(count).to.deep.equal(todos.length);
 
             expect(statusCode).to.equal(StatusCodes.OK);
         });

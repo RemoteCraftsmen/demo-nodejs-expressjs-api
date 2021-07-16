@@ -36,7 +36,14 @@ class IndexController {
     }
 
     async invoke(request, response) {
-        const users = await this.userRepository.findAll();
+        const { page = 1, perPage = 20 } = request.query;
+
+        const offset = (parseInt(page) - 1) * parseInt(perPage);
+
+        const users = await this.userRepository.findAndCountAll({
+            limit: perPage,
+            offset
+        });
 
         return response.send(users);
     }
