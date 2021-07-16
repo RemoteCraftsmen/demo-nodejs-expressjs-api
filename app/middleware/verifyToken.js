@@ -9,12 +9,12 @@ module.exports = (request, response, next) => {
     if (!token) {
         return response
             .status(StatusCodes.UNAUTHORIZED)
-            .json({ message: 'No token provided.' });
+            .send({ message: 'No token provided.' });
     }
 
     jwt.verify(token, config.jwt.secret, (err, decoded) => {
         if (err) {
-            return response.status(StatusCodes.UNAUTHORIZED).json({
+            return response.status(StatusCodes.UNAUTHORIZED).send({
                 message: 'Failed to authenticate token.'
             });
         }
