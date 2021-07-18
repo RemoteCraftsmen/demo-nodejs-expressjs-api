@@ -2,13 +2,11 @@ const { expect } = require('chai');
 const { StatusCodes } = require('http-status-codes');
 
 const truncateDatabase = require('../../helpers/truncate');
-const Register = require('../../helpers/register');
+const userFactory = require('../../factories/user');
 
 const app = require('../../../index');
 const request = require('supertest')(app);
 
-let loggedUserId;
-let loggedUserToken;
 let userData;
 
 const di = app.get('di');
@@ -18,13 +16,11 @@ describe('Reset-password', () => {
     before(async () => {
         await truncateDatabase();
 
-        const { user, token } = await Register(request);
-        loggedUserToken = token;
-        loggedUserId = user.id;
-        userData = user;
+        userData = userFactory.generate();
+        user = await userFactory.create(userData);
     });
 
-    it('returns OK sending valid data as NOT LOGGED', async () => {
+    it('returns NO_CONTENT sending valid data as NOT LOGGED', async () => {
         const { email } = userData;
         const { status } = await request
             .post('/reset-password/')
@@ -37,7 +33,7 @@ describe('Reset-password', () => {
         expect(status).to.equal(StatusCodes.NO_CONTENT);
     });
 
-    it('returns OK sending invalid data as NOT LOGGED ', async () => {
+    it('returns NO_CONTENT sending invalid data as NOT LOGGED ', async () => {
         const email = 'fakemail@example.com';
 
         const { status } = await request
