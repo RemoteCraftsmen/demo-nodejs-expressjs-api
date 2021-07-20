@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 
-module.exports = (err, request, response) => {
+module.exports = (err, request, response, next) => {
     if (err.message === 'Not allowed by CORS') {
         return response.json({ message: 'Request not allowed by CORS' });
     }
@@ -37,6 +37,6 @@ module.exports = (err, request, response) => {
     console.error(err);
 
     return response
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
         .send('We messed something up. Sorry!');
 };

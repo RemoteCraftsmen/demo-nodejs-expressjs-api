@@ -1,0 +1,16 @@
+components:
+    requestBodies:
+        LoginBody:
+            description: A JSON object containing login information
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            password:
+                                type: string
+                                format: password
+                            email:
+                                type: string
+                                format: email
