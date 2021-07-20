@@ -11,6 +11,8 @@ components:
                             password:
                                 type: string
                                 format: password
+                                description: 'Users password'
                             email:
                                 type: string
                                 format: email
+                                description: 'Users email'

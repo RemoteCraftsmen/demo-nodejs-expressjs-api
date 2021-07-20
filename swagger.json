@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Demo Todo app",
+    "title": "Express Todo API",
     "version": "1.0.0",
-    "description": "API documentation for Demo Todo app"
+    "description": "    Documentation for Simple Todo API with Express.js. App is using JWT, which provides authorization token. If user has logged, token is generated and is necessary to any other actions handle with VerifyToken middleware."
   },
   "servers": [
     {
@@ -29,11 +29,13 @@
               "properties": {
                 "password": {
                   "type": "string",
-                  "format": "password"
+                  "format": "password",
+                  "description": "Users password"
                 },
                 "email": {
                   "type": "string",
-                  "format": "email"
+                  "format": "email",
+                  "description": "Users email"
                 }
               }
             }
@@ -177,11 +179,14 @@
             "format": "uuid"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "test",
+            "description": "User.id (Foreign Key)"
           },
-          "complete": {
+          "completed": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "Is task completed"
           }
         }
       },
@@ -229,7 +234,7 @@
           "auth"
         ],
         "summary": "Login",
-        "description": "",
+        "description": "Attempt to log",
         "operationId": "authLogin",
         "requestBody": {
           "$ref": "#/components/requestBodies/LoginBody"
@@ -270,8 +275,8 @@
         "tags": [
           "reset-password"
         ],
-        "summary": "Generate token for reset password",
-        "description": "",
+        "summary": "Request for reset password",
+        "description": "User ask server to change his password, as respond he gets an email with token, which is giving access to this action",
         "operationId": "generateResetPasswordToken",
         "requestBody": {
           "content": {
@@ -305,13 +310,13 @@
           "reset-password"
         ],
         "summary": "Set new password using token",
-        "description": "",
+        "description": "If user already has recived email with token, he can send new password which will be hashed and stored in db",
         "operationId": "useResetPasswordToken",
         "parameters": [
           {
             "in": "path",
             "name": "passwordResetToken",
-            "description": "Token for reset password",
+            "description": "Token which was send to users email, when asking for password reset",
             "required": true,
             "schema": {
               "type": "string"
@@ -327,12 +332,14 @@
                   "password": {
                     "description": "New password",
                     "type": "string",
-                    "format": "password"
+                    "format": "password",
+                    "example": "password123"
                   },
                   "passwordConfirmation": {
                     "description": "New password confirmation",
                     "type": "string",
-                    "format": "password"
+                    "format": "password",
+                    "example": "password123"
                   }
                 }
               }
@@ -404,7 +411,7 @@
         "tags": [
           "todos"
         ],
-        "summary": "Find todo by ID",
+        "summary": "Show ToDo element",
         "description": "Returns a single todo",
         "operationId": "getTodoById",
         "parameters": [
@@ -438,7 +445,7 @@
         "tags": [
           "todos"
         ],
-        "summary": "Updates a todo",
+        "summary": "Update ToDo element",
         "description": "",
         "operationId": "updateTodoWithForm",
         "requestBody": {
@@ -479,7 +486,7 @@
           {
             "name": "todoId",
             "in": "path",
-            "description": "Todo id to delete",
+            "description": "ID of a ToDo List element",
             "required": true,
             "schema": {
               "type": "string",
@@ -674,7 +681,7 @@
       "description": "Operations to-do items"
     },
     {
-      "name": "user",
+      "name": "users",
       "description": "Operations about user"
     },
     {

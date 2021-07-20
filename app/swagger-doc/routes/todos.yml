@@ -38,7 +38,7 @@ paths:
         get:
             tags:
                 - todos
-            summary: Find todo by ID
+            summary: 'Show ToDo element'
             description: Returns a single todo
             operationId: getTodoById
             parameters:
@@ -61,7 +61,7 @@ paths:
         put:
             tags:
                 - todos
-            summary: Updates a todo
+            summary: 'Update ToDo element'
             description: ''
             operationId: updateTodoWithForm
             requestBody:
@@ -90,7 +90,7 @@ paths:
             parameters:
                 - name: todoId
                   in: path
-                  description: Todo id to delete
+                  description: 'ID of a ToDo List element'
                   required: true
                   schema:
                       type: string

@@ -4,7 +4,7 @@ paths:
             tags:
                 - auth
             summary: Login
-            description: ''
+            description: 'Attempt to log'
             operationId: authLogin
             requestBody:
                 $ref: '#/components/requestBodies/LoginBody'

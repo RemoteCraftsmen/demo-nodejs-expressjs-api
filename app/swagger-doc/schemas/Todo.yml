@@ -5,18 +5,21 @@ components:
             properties:
                 id:
                     type: string
-                    description: ToDo ID (Primary Key)
+                    description: 'ToDo ID (Primary Key)'
                     format: uuid
                 userId:
                     type: string
-                    description: User.id (Foreign Key)
+                    description: 'User.id (Foreign Key)'
                     format: uuid
                 createdBy:
                     type: string
-                    description: User.id (Foreign Key)
+                    description: 'User.id (Foreign Key)'
                     format: uuid
                 name:
                     type: string
-                complete:
+                    example: 'test'
+                    description: 'User.id (Foreign Key)'
+                completed:
                     type: boolean
                     default: false
+                    description: 'Is task completed'
