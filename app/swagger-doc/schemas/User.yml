@@ -15,3 +15,11 @@ components:
                     type: string
                 email:
                     type: string
+                createdAt:
+                    type: string
+                    format: date
+                    description: 'Creation date'
+                updatedAt:
+                    type: string
+                    format: date
+                    description: 'Updated date'

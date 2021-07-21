@@ -1,9 +1,22 @@
 components:
     requestBodies:
         TodoBody:
-        description: A JSON object containing todo information
-        required: true
-        content:
-            application/json:
-                schema:
-                    $ref: '#/components/schemas/Todo'
+            description: 'A JSON object containing todo information'
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            userId:
+                                type: string
+                                description: 'User.id (Foreign Key)'
+                                format: uuid
+                            name:
+                                type: string
+                                example: 'test'
+                                description: 'User.id (Foreign Key)'
+                            completed:
+                                type: boolean
+                                default: false
+                                description: 'Is task completed'

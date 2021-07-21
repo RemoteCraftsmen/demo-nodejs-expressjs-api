@@ -3,9 +3,8 @@ paths:
         post:
             tags:
                 - user
-            summary: Create user
-            description: Add new user
-            operationId: createUser
+            summary: 'Create user'
+            description: 'Add new user.'
             requestBody:
                 $ref: '#/components/requestBodies/UserBody'
             responses:
@@ -20,12 +19,11 @@ paths:
         get:
             tags:
                 - user
-            summary: Get list of users
-            description: ''
-            operationId: getUsers
+            summary: 'Get list of users'
+            description: 'Get list of users.'
             responses:
                 '200':
-                    description: successful operation
+                    description: Successful operation
                     content:
                         application/json:
                             schema:
@@ -40,9 +38,8 @@ paths:
         get:
             tags:
                 - user
-            summary: Get user by user id
-            description: ''
-            operationId: getUserById
+            summary: 'Get user by user id'
+            description: 'Get user by user id.'
             parameters:
                 - name: userId
                   in: path
@@ -63,13 +60,12 @@ paths:
         put:
             tags:
                 - user
-            summary: Updated user
-            description: ''
-            operationId: updateUser
+            summary: 'Updated user'
+            description: 'Updated user.'
             parameters:
                 - name: userId
                   in: path
-                  description: id of user that need to be updated
+                  description: 'Id of user that need to be updated.'
                   required: true
                   schema:
                       type: string
@@ -86,13 +82,12 @@ paths:
         delete:
             tags:
                 - user
-            summary: Delete user
-            description: ''
-            operationId: deleteUser
+            summary: 'Delete user'
+            description: 'Delete user.'
             parameters:
                 - name: userId
                   in: path
-                  description: Id of user that needs to be deleted
+                  description: 'Id of user that needs to be deleted.'
                   required: true
                   schema:
                       type: string

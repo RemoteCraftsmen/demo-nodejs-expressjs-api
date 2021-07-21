@@ -23,3 +23,11 @@ components:
                     type: boolean
                     default: false
                     description: 'Is task completed'
+                createdAt:
+                    type: string
+                    format: date
+                    description: 'Creation date'
+                updatedAt:
+                    type: string
+                    format: date
+                    description: 'Updated date'

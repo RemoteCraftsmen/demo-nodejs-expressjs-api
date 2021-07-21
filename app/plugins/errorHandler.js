@@ -37,6 +37,6 @@ module.exports = (err, request, response, next) => {
     console.error(err);
 
     return response
-        .sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send('We messed something up. Sorry!');
 };

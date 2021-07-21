@@ -3,9 +3,8 @@ paths:
         post:
             tags:
                 - auth
-            summary: Login
-            description: 'Attempt to log'
-            operationId: authLogin
+            summary: 'Login'
+            description: 'Attempt to log.'
             requestBody:
                 $ref: '#/components/requestBodies/LoginBody'
             responses:
@@ -17,9 +16,8 @@ paths:
         post:
             tags:
                 - auth
-            summary: Register new user
-            description: ''
-            operationId: authRegister
+            summary: 'Register new user'
+            description: 'Register new user.'
             requestBody:
                 $ref: '#/components/requestBodies/UserBody'
             responses:
