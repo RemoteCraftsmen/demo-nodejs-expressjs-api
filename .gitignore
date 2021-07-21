@@ -10,3 +10,6 @@ package-lock.json
 apidoc
 yarn.lock
 .env
+public/*
+swagger.json
+apidoc/*
