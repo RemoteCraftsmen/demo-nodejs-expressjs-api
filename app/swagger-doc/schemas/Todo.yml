@@ -1,0 +1,33 @@
+components:
+    schemas:
+        Todo:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: 'ToDo ID (Primary Key)'
+                    format: uuid
+                userId:
+                    type: string
+                    description: 'User.id (Foreign Key)'
+                    format: uuid
+                createdBy:
+                    type: string
+                    description: 'User.id (Foreign Key)'
+                    format: uuid
+                name:
+                    type: string
+                    example: 'test'
+                    description: 'User.id (Foreign Key)'
+                completed:
+                    type: boolean
+                    default: false
+                    description: 'Is task completed'
+                createdAt:
+                    type: string
+                    format: date
+                    description: 'Creation date'
+                updatedAt:
+                    type: string
+                    format: date
+                    description: 'Updated date'

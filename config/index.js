@@ -7,6 +7,9 @@ const isEnabled = key => env(key) && env(key) === 'true';
 
 module.exports = {
     enableDocs: isEnabled(env('ENABLEDOCS')),
+    app: {
+        url: env('APP_URL', 'http://127.0.0.1:3000')
+    },
     db: {
         url: `${env('DATABASE_DIALECT')}://${env('DATABASE_USERNAME')}:${env(
             'DATABASE_PASSWORD'

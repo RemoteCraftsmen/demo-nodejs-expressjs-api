@@ -35,6 +35,7 @@ let corsOptions = {
     },
     credentials: true
 };
+
 app.use(cors(corsOptions));
 app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
@@ -49,6 +50,7 @@ app.use(router);
 app.use(errorHandler);
 
 app.set('di', di);
+
 app.use('/', toggleAPIDocs, express.static('docs'));
 
 app.use((req, res, next) => {

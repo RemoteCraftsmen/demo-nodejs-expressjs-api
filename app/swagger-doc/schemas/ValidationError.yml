@@ -1,0 +1,11 @@
+components:
+    schemas:
+        ValidationError:
+            type: object
+            properties:
+                param:
+                    type: string
+                    example: 'name'
+                message:
+                    type: string
+                    example: 'cannot be blank'

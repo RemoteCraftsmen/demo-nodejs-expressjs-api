@@ -12,7 +12,10 @@
         "test": "NODE_ENV=test mocha --exit ./app/test/ --recursive",
         "testp": "NODE_ENV=test mocha --exit --",
         "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./app/test/",
-        "docs": "rm -rf /docs & apidoc -i app/ -o docs/"
+        "docs": "rm -rf /docs & apidoc -i app/ -o docs/",
+        "swagger2json": "rm -f swagger.json & ./node_modules/swagger-jsdoc/bin/swagger-jsdoc.js -d app/swaggerDefinition.js app/swagger-doc/**/*.yml",
+        "swagger2html": "rm -f ./public/swagger/index.html & app/scripts/swagger2html/index.js swagger.json ./public/swagger/index.html",
+        "generate-swagger": "npm run swagger2json; npm run swagger2html"
     },
     "author": "",
     "license": "ISC",
@@ -37,6 +40,7 @@
         "pg-hstore": "^2.3.4",
         "sequelize": "6.6.4",
         "sequelize-cli": "^6.2.0",
+        "swagger-jsdoc": "^6.1.0",
         "uuid": "8.3.2"
     },
     "devDependencies": {

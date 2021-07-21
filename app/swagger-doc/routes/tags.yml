@@ -1,0 +1,9 @@
+tags:
+    - name: auth
+      description: Login/Register operations
+    - name: todos
+      description: Operations to-do items
+    - name: users
+      description: Operations about user
+    - name: reset-password
+      description: Reseting passwords
