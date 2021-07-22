@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
+const path = require('path');
 
 require('./plugins/wrapError');
 
@@ -49,7 +50,11 @@ app.use(router);
 app.use(errorHandler);
 
 app.set('di', di);
-app.use('/', toggleAPIDocs, express.static('docs'));
+app.use(
+    '/',
+    toggleAPIDocs,
+    express.static(path.join(__dirname, '../public/api-doc'))
+);
 
 app.use((req, res, next) => {
     res.status(404).send('Not found!');

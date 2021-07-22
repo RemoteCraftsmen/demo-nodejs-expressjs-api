@@ -12,11 +12,12 @@
         "test": "NODE_ENV=test mocha --exit ./app/test/ --recursive",
         "testp": "NODE_ENV=test mocha --exit --",
         "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./app/test/",
-        "docs": "rm -rf /docs & apidoc -i app/ -o docs/"
+        "apidoc": "rm -rf public/api-doc & ./node_modules/apidoc/bin/apidoc -i app/docs -o public/api-doc"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "apidoc": "^0.28.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
