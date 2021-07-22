@@ -12,7 +12,7 @@
         "test": "NODE_ENV=test mocha --exit ./app/test/ --recursive",
         "testp": "NODE_ENV=test mocha --exit --",
         "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./app/test/",
-        "apidoc": "rm -rf app/apidoc & ./node_modules/apidoc/bin/apidoc -i app/docs -o app/apidoc"
+        "apidoc": "rm -rf public/api-doc & ./node_modules/apidoc/bin/apidoc -i app/docs -o public/api-doc"
     },
     "author": "",
     "license": "ISC",

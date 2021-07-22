@@ -13,3 +13,4 @@ yarn.lock
 public/*
 swagger.json
 apidoc/*
+api-doc/*

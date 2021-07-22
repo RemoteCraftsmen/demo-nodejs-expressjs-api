@@ -13,7 +13,7 @@
  *            "password_confirmation": "12345678"
  *        }
  *
- *    @apiError (400) BadRequest              Reset password token was not found </br>
+ *    @apiError (400) BadRequest              Reset password token was not found <br />
  *                                            Password reset token expired
  *
  *    @apiError (500) InternalServerError     Errors in configuration
