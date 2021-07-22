@@ -41,7 +41,6 @@ app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
     res.send({ code: 200, message: 'Request not allowed by CORS' });
 });
-//app.use(helmet());
 app.use(
     helmet({
         contentSecurityPolicy: false
