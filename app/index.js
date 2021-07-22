@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
-
+const path = require('path');
 require('./plugins/wrapError');
 
 const db = require('./models');
@@ -51,7 +51,7 @@ app.use(errorHandler);
 
 app.set('di', di);
 
-app.use('/', toggleAPIDocs, express.static('docs'));
+app.use('/swagger', express.static(path.join(__dirname, '../public/swagger')));
 
 app.use((req, res, next) => {
     res.status(404).send('Not found!');

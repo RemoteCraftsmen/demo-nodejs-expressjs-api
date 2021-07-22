@@ -11,3 +11,5 @@ apidoc
 yarn.lock
 docs
 .env
+swagger.json
+public/*
