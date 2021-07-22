@@ -41,7 +41,12 @@ app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
     res.send({ code: 200, message: 'Request not allowed by CORS' });
 });
-app.use(helmet());
+//app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: false
+    })
+);
 app.use(bearerToken());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -50,6 +55,7 @@ app.use(router);
 app.use(errorHandler);
 
 app.set('di', di);
+
 app.use(
     '/',
     toggleAPIDocs,
