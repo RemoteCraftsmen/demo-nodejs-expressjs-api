@@ -1,0 +1,17 @@
+components:
+    requestBodies:
+        UserBody:
+            description: A JSON object containing user information
+            required: true
+            content:
+                application/json:
+                    schema:
+                        properties:
+                            userName:
+                                type: string
+                            firstName:
+                                type: string
+                            lastName:
+                                type: string
+                            email:
+                                type: string

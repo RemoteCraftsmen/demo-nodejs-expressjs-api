@@ -1,0 +1,8 @@
+components:
+    responses:
+        Todo:
+            description: ToDoObjectschemas
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Todo'

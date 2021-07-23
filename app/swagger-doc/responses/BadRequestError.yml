@@ -1,0 +1,15 @@
+components:
+    responses:
+        BadRequestError:
+            description: BadRequest
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            errors:
+                                type: array
+                                items:
+                                    type: object
+                                    allOf:
+                                        - $ref: '#/components/schemas/ValidationError'
