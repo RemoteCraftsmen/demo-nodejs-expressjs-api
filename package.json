@@ -16,10 +16,12 @@
         "swagger2json": "rm -f swagger.json & ./node_modules/swagger-jsdoc/bin/swagger-jsdoc.js -d app/swaggerDefinition.js app/swagger-doc/**/*.yml",
         "swagger2html": "rm -f ./public/swagger/index.html & app/scripts/swagger2html/index.js swagger.json ./public/swagger/index.html",
         "generate-swagger": "npm run swagger2json; npm run swagger2html"
+        "apidoc": "rm -rf public/api-doc & ./node_modules/apidoc/bin/apidoc -i app/docs -o public/api-doc"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "apidoc": "^0.28.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",

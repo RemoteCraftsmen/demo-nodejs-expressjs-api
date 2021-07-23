@@ -9,7 +9,6 @@ yarn-error.log
 package-lock.json
 apidoc
 yarn.lock
-docs
 .env
-swagger.json
 public/*
+swagger.json
