@@ -7,11 +7,11 @@
         "node": ">= 8.0.0"
     },
     "scripts": {
-        "dev": "NODE_ENV=development nodemon ./app/index.js",
-        "start": "NODE_ENV=production node ./app/index.js",
-        "test": "NODE_ENV=test mocha --exit ./app/test/ --recursive",
+        "dev": "NODE_ENV=development nodemon ./src/index.js",
+        "start": "NODE_ENV=production node ./src/index.js",
+        "test": "NODE_ENV=test mocha --exit ./test/ --recursive",
         "testp": "NODE_ENV=test mocha --exit --",
-        "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./app/test/",
+        "test-pipeline": "NODE_ENV=test mocha --exit --reporter mocha-junit-reporter --reporter-options mochaFile=./test-reports/junit.xml ./test/",
         "docs": "rm -rf /docs & apidoc -i app/ -o docs/",
         "swagger2json": "rm -f swagger.json & ./node_modules/swagger-jsdoc/bin/swagger-jsdoc.js -d app/swaggerDefinition.js app/swagger-doc/**/*.yml",
         "swagger2html": "rm -f ./public/swagger/index.html & app/scripts/swagger2html/index.js swagger.json ./public/swagger/index.html",

@@ -1,5 +1,5 @@
 const map = require('lodash/map');
-const models = require('../../models/index');
+const models = require('../../src/models/index');
 
 module.exports = async () => {
     return await Promise.all(

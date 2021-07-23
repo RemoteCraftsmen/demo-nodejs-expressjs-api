@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { User } = require('../../models');
+const { User } = require('../../src/models');
 
 class UserFactory {
     static generate(props) {

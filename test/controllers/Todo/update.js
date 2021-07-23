@@ -8,7 +8,7 @@ const UserFactory = require('../../factories/user');
 const TodoFactory = require('../../factories/todo');
 const truncateDatabase = require('../../helpers/truncate');
 
-const app = require('../../../index');
+const app = require('../../../src/index');
 const request = require('supertest')(app);
 
 let loggerUserId;

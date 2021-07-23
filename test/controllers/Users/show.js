@@ -1,12 +1,11 @@
 const { expect } = require('chai');
-
 const { StatusCodes } = require('http-status-codes');
 
 const Register = require('../../helpers/register');
 const UserFactory = require('../../factories/user');
 const truncateDatabase = require('../../helpers/truncate');
 
-const app = require('../../../index');
+const app = require('../../../src/index');
 const request = require('supertest')(app);
 
 let users = [];
@@ -26,34 +25,30 @@ describe('Users', () => {
         users.push(await UserFactory.create());
     });
 
-    describe('GET /users', () => {
+    describe('GET /users/{id}', () => {
         it('returns OK sending valid data as USER', async () => {
-            const {
-                body: { rows },
-                statusCode
-            } = await request
-                .get('/users')
+            const { body, statusCode } = await request
+                .get(`/users/${users[0].id}`)
                 .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            for (const user of users) {
-                expect(rows).to.deep.include({
-                    id: user.id,
-                    userName: user.userName,
-                    lastName: user.lastName,
-                    firstName: user.firstName,
-                    email: user.email,
-                    createdAt: user.createdAt.toISOString(),
-                    updatedAt: user.updatedAt.toISOString()
-                });
-            }
+            expect(body).to.have.property('email');
+            expect(body.email).to.equal(users[0].email);
 
             expect(statusCode).to.equal(StatusCodes.OK);
         });
 
-        it('returns UNAUTHORIZED as NOT-LOGGED-IN', async () => {
-            const { statusCode } = await request.get('/users');
+        it('returns BAD_REQUEST if user.id is not valid UUID as USER', async () => {
+            const { body, statusCode } = await request
+                .get('/users/99999999')
+                .set('Authorization', 'Bearer ' + loggedUserToken);
 
-            expect(statusCode).to.equal(StatusCodes.UNAUTHORIZED);
+            expect(body).to.have.property('errors');
+            expect(body.errors).to.deep.include({
+                message: 'Must be a valid UUID.',
+                param: 'id'
+            });
+
+            expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
     });
 });
