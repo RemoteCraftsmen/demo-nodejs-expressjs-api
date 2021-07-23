@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
 const path = require('path');
+
 require('./plugins/wrapError');
 
 const db = require('./models');
@@ -41,7 +42,11 @@ app.use(function (err, req, res, next) {
     if (err.message !== 'Not allowed by CORS') return next();
     res.send({ code: 200, message: 'Request not allowed by CORS' });
 });
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: false
+    })
+);
 app.use(bearerToken());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -51,7 +56,14 @@ app.use(errorHandler);
 
 app.set('di', di);
 
+
 app.use('/swagger', express.static(path.join(__dirname, '../public/swagger')));
+app.use(
+    '/',
+    toggleAPIDocs,
+    express.static(path.join(__dirname, '../public/api-doc'))
+);
+
 
 app.use((req, res, next) => {
     res.status(404).send('Not found!');

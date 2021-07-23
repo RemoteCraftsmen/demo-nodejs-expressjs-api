@@ -30,6 +30,7 @@ Configure the database in config/config.json (under development)
 ## Run for development
 
 ### start node server
+
 ```
 npm run dev
 ```
@@ -37,12 +38,14 @@ npm run dev
 ## Run for production
 
 ### start node server
+
 ```
 npm run build
 npm start
 ```
 
 ## Run tests
+
 ```
 npm run test
 ```
@@ -51,10 +54,9 @@ npm run test
 
 ### Register the user
 
-`POST /users`
+`POST auth/register`
 
-**Params:** `username`, `first_name`, `last_name`, `email`, `password`
-**Response:** You'll receive a JSON response containing a token.
+**Params:** `username`, `first_name`, `last_name`, `email`, `password` **Response:** You'll receive a JSON response containing a token.
 
 **Notes:**
 
@@ -68,14 +70,12 @@ When making future requests include the token in one of these places:
 
 `POST /auth/login`
 
-**Params:** `email`, `password`
-**Response:** You'll receive a JSON response containing a token.
+**Params:** `email`, `password` **Response:** You'll receive a JSON response containing a token.
 
 ### DEMO
 
 Live demo available at http://node-express-demo.rmtcfm.com
 
-
-###DOCUMENTATION 
+### DOCUMENTATION
 
 **path** ./apidoc/index.html
