@@ -4,9 +4,9 @@ const create = [
     body('name')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('Name is required.')
         .isLength({ min: 2 })
-        .withMessage('first name must have more than 2 characters'),
+        .withMessage('First name must have more than 2 characters.'),
 
     body('creatorId').optional(),
 

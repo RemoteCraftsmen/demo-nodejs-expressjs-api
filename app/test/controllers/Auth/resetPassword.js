@@ -49,7 +49,7 @@ describe('Reset-password', () => {
 
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
-                message: 'is required',
+                message: 'Email is required.',
                 param: 'email'
             });
 

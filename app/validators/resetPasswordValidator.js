@@ -1,3 +1,3 @@
 const { body } = require('express-validator');
 
-module.exports = [body('email').exists().withMessage('is required')];
+module.exports = [body('email').exists().withMessage('Email is required.')];

@@ -6,7 +6,7 @@ const login = [
         .isEmpty()
         .withMessage('Should not be empty')
         .isEmail()
-        .withMessage('Mail not valid'),
+        .withMessage('Mail is not valid'),
 
     body('password')
         .not()

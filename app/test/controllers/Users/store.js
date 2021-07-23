@@ -46,22 +46,22 @@ describe('Users', () => {
 
             expect(body.errors).to.deep.include({
                 param: 'firstName',
-                message: 'cannot be blank'
+                message: 'First name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'lastName',
-                message: 'cannot be blank'
+                message: 'Last name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'userName',
-                message: 'cannot be blank'
+                message: 'User name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'password',
-                message: 'cannot be blank'
+                message: 'Password is required.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
@@ -79,7 +79,7 @@ describe('Users', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'email',
-                message: 'is not valid'
+                message: 'Email is not valid.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
@@ -98,7 +98,7 @@ describe('Users', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'email',
-                message: 'already in use'
+                message: 'Already in use.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
@@ -116,7 +116,7 @@ describe('Users', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'password',
-                message: 'password should be longer  than 8 characters'
+                message: 'Password should be longer than 8 characters.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);

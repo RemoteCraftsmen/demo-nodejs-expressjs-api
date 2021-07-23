@@ -31,22 +31,22 @@ describe('Auth', () => {
 
             expect(body.errors).to.deep.include({
                 param: 'firstName',
-                message: 'cannot be blank'
+                message: 'First name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'lastName',
-                message: 'cannot be blank'
+                message: 'Last name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'userName',
-                message: 'cannot be blank'
+                message: 'User name is required.'
             });
 
             expect(body.errors).to.deep.include({
                 param: 'password',
-                message: 'cannot be blank'
+                message: 'Password is required.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);

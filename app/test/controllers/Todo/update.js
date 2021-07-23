@@ -60,7 +60,7 @@ describe('Todos', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'name',
-                message: 'cannot be blank'
+                message: 'Name is required.'
             });
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
         });
@@ -117,7 +117,7 @@ describe('Todos', () => {
 
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
-                message: 'must be valid UUID',
+                message: 'Must be a valid UUID.',
                 param: 'id'
             });
 

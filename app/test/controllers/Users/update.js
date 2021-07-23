@@ -59,39 +59,39 @@ describe('Users', () => {
 
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
-                message: 'must be valid UUID',
+                message: 'Must be a valid UUID.',
                 param: 'id'
             });
             expect(body.errors).to.deep.include({
-                message: 'cannot be blank',
+                message: 'First name is required.',
                 param: 'firstName'
             });
             expect(body.errors).to.deep.include({
-                message: 'first name must have more than 2 characters',
+                message: 'First name must have more than 2 characters.',
                 param: 'firstName'
             });
             expect(body.errors).to.deep.include({
-                message: 'cannot be blank',
+                message: 'User name is required.',
                 param: 'userName'
             });
             expect(body.errors).to.deep.include({
-                message: 'user name must have more than 2 characters',
+                message: 'User name must have more than 2 characters.',
                 param: 'userName'
             });
             expect(body.errors).to.deep.include({
-                message: 'cannot be blank',
+                message: 'Last name is required.',
                 param: 'lastName'
             });
             expect(body.errors).to.deep.include({
-                message: 'last Name must have more than 2 characters',
+                message: 'Last Name must have more than 2 characters.',
                 param: 'lastName'
             });
             expect(body.errors).to.deep.include({
-                message: 'cannot be blank',
+                message: 'Email is required.',
                 param: 'email'
             });
             expect(body.errors).to.deep.include({
-                message: 'is not valid',
+                message: 'Email is not valid.',
                 param: 'email'
             });
 
