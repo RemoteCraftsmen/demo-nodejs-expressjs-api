@@ -6,7 +6,7 @@ async function isMailTaken(email, di, userId) {
     const user = await userRepository.getByEmail(email);
 
     if (user && user.id !== userId) {
-        return Promise.reject('already in use');
+        return Promise.reject('Already in use.');
     }
 }
 
@@ -14,32 +14,32 @@ const basic = [
     body('firstName')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('First name is required.')
         .isLength({ min: 2 })
-        .withMessage('first name must have more than 2 characters'),
+        .withMessage('First name must have more than 2 characters.'),
 
     body('userName')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('User name is required.')
         .isLength({ min: 2 })
-        .withMessage('user name must have more than 2 characters'),
+        .withMessage('User name must have more than 2 characters.'),
 
     body('lastName')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('Last name is required.')
         .isLength({ min: 2 })
-        .withMessage('last Name must have more than 2 characters')
+        .withMessage('Last Name must have more than 2 characters.')
 ];
 
 const withPassword = [
     body('password')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('Password is required.')
         .isLength({ min: 8 })
-        .withMessage('password should be longer  than 8 characters')
+        .withMessage('Password should be longer  than 8 characters.')
 ];
 
 const update = [
@@ -47,9 +47,9 @@ const update = [
     body('email')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('Email is required.')
         .isEmail()
-        .withMessage('is not valid')
+        .withMessage('Email is not valid.')
         .bail()
         .custom((email, { req }) =>
             isMailTaken(email, req.app.get('di'), req.params.id)
@@ -62,9 +62,9 @@ const store = [
     body('email')
         .not()
         .isEmpty()
-        .withMessage('cannot be blank')
+        .withMessage('Email is required.')
         .isEmail()
-        .withMessage('is not valid')
+        .withMessage('Email is not valid.')
         .bail()
         .custom((email, { req }) => isMailTaken(email, req.app.get('di')))
 ];

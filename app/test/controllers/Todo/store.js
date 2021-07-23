@@ -42,7 +42,7 @@ describe('Todos', () => {
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
                 param: 'name',
-                message: 'cannot be blank'
+                message: 'Name is required.'
             });
 
             expect(statusCode).to.equal(StatusCodes.BAD_REQUEST);
