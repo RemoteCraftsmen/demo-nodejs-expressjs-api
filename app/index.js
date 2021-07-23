@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
 const path = require('path');
+
 require('./plugins/wrapError');
 
 const db = require('./models');
