@@ -4,7 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const Register = require('../../helpers/register');
 const truncateDatabase = require('../../helpers/truncate');
 
-const app = require('../../../index');
+const app = require('../../../../index');
 const request = require('supertest')(app);
 
 let loggedUserId;

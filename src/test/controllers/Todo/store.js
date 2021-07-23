@@ -5,7 +5,7 @@ const Register = require('../../helpers/register');
 const TodoFactory = require('../../factories/todo');
 const truncateDatabase = require('../../helpers/truncate');
 
-const app = require('../../../index');
+const app = require('../../../../index');
 const request = require('supertest')(app);
 
 let loggerUserId;

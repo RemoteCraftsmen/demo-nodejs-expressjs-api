@@ -5,19 +5,19 @@ const bearerToken = require('express-bearer-token');
 const helmet = require('helmet');
 const path = require('path');
 
-require('./plugins/wrapError');
+require('./src/plugins/wrapError');
 
-const db = require('./models');
+const db = require('./src/models');
 
-const sequelize = require('./util/database');
+const sequelize = require('./src/util/database');
 
-const toggleAPIDocs = require('./middleware/toggleAPIDocs');
+const toggleAPIDocs = require('./src/middleware/toggleAPIDocs');
 
-const config = require('../config');
-const di = require('./di');
-const router = require('./routes')(di);
+const config = require('./config');
+const di = require('./src/di');
+const router = require('./src/routes')(di);
 
-const errorHandler = require('./plugins/errorHandler');
+const errorHandler = require('./src/plugins/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,14 +56,12 @@ app.use(errorHandler);
 
 app.set('di', di);
 
-
 app.use('/swagger', express.static(path.join(__dirname, '../public/swagger')));
 app.use(
     '/',
     toggleAPIDocs,
     express.static(path.join(__dirname, '../public/api-doc'))
 );
-
 
 app.use((req, res, next) => {
     res.status(404).send('Not found!');
