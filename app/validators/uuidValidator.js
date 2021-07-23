@@ -1,12 +1,17 @@
 const { param } = require('express-validator');
 const { validate } = require('uuid');
 
-async function isUUIDValid(uuid) {
+function isUUIDValid(uuid) {
     if (!validate(uuid)) {
-        return Promise.reject('Must be a valid UUID.');
+        return false;
     }
+    return true;
 }
 
 module.exports = arg => {
-    return [param(arg).custom(uuid => isUUIDValid(uuid))];
+    return [
+        param(arg)
+            .custom(uuid => isUUIDValid(uuid))
+            .withMessage('Must be a valid UUID.')
+    ];
 };
