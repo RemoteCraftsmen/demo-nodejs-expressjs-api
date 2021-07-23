@@ -3,7 +3,7 @@ const { validate } = require('uuid');
 
 async function isUUIDValid(uuid) {
     if (!validate(uuid)) {
-        return Promise.reject('Must be valid UUID.');
+        return Promise.reject('Must be a valid UUID.');
     }
 }
 

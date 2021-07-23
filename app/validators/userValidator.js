@@ -39,7 +39,7 @@ const withPassword = [
         .isEmpty()
         .withMessage('Password is required.')
         .isLength({ min: 8 })
-        .withMessage('Password should be longer  than 8 characters.')
+        .withMessage('Password should be longer than 8 characters.')
 ];
 
 const update = [

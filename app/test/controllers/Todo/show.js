@@ -62,7 +62,7 @@ describe('Todos', () => {
 
             expect(body).to.have.property('errors');
             expect(body.errors).to.deep.include({
-                message: 'Must be valid UUID.',
+                message: 'Must be a valid UUID.',
                 param: 'id'
             });
 
