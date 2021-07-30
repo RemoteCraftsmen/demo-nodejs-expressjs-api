@@ -4,7 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const truncateDatabase = require('../../helpers/truncate');
 const userFactory = require('../../factories/user');
 
-const app = require('../../../index');
+const app = require('../../../src/index');
 const request = require('supertest')(app);
 
 let userData;

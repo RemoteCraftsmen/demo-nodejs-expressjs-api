@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { Todo } = require('../../models');
+const { Todo } = require('../../src/models');
 
 class TodoFactory {
     static generate(props) {
