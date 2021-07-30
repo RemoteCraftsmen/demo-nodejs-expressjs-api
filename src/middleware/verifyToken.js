@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 
-const config = require('../../config');
+const config = require('../config');
 
 module.exports = (request, response, next) => {
     const token = request.token || null;

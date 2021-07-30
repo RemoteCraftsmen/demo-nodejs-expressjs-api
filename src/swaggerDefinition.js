@@ -1,6 +1,6 @@
 const {
     app: { url }
-} = require('../config');
+} = require('./config');
 
 module.exports = {
     openapi: '3.0.0',
