@@ -1,0 +1,103 @@
+paths:
+    /users:
+        post:
+            tags:
+                - user
+            summary: 'Create user'
+            description: 'Add new user.'
+            requestBody:
+                $ref: '#/components/requestBodies/UserBody'
+            responses:
+                '201':
+                    $ref: '#/components/responses/Created'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+        get:
+            tags:
+                - user
+            summary: 'Get list of users'
+            description: 'Get list of users.'
+            responses:
+                '200':
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+    '/user/{userId}':
+        get:
+            tags:
+                - user
+            summary: 'Get user by user id'
+            description: 'Get user by user id.'
+            parameters:
+                - name: userId
+                  in: path
+                  description: 'The name that needs to be fetched.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                '200':
+                    $ref: '#/components/responses/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+        put:
+            tags:
+                - user
+            summary: 'Updated user'
+            description: 'Updated user.'
+            parameters:
+                - name: userId
+                  in: path
+                  description: 'Id of user that need to be updated.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            requestBody:
+                $ref: '#/components/requestBodies/UserBody'
+            responses:
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+        delete:
+            tags:
+                - user
+            summary: 'Delete user'
+            description: 'Delete user.'
+            parameters:
+                - name: userId
+                  in: path
+                  description: 'Id of user that needs to be deleted.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                '204':
+                    $ref: '#/components/responses/NoContent'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'

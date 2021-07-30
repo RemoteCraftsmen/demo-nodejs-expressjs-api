@@ -1,0 +1,4 @@
+components:
+    responses:
+        ForbiddenError:
+            description: User doesn't have the right permission

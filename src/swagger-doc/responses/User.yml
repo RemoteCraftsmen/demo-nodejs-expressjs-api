@@ -1,0 +1,8 @@
+components:
+    responses:
+        User:
+            description: UserObject
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/User'

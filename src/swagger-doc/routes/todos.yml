@@ -1,0 +1,101 @@
+paths:
+    /todos:
+        post:
+            tags:
+                - todos
+            summary: 'Create new todo object'
+            description: 'Create new todo object.'
+            requestBody:
+                $ref: '#/components/requestBodies/TodoBody'
+            responses:
+                '201':
+                    $ref: '#/components/responses/Todo'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+        get:
+            tags:
+                - todos
+            summary: 'Returns a list of todos'
+            description: 'Returns a list of todos.'
+            responses:
+                '200':
+                    description: 'Successful operation'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Todo'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+    '/todos/{todoId}':
+        get:
+            tags:
+                - todos
+            summary: 'Show ToDo element'
+            description: 'Returns a single todo.'
+            parameters:
+                - name: todoId
+                  in: path
+                  description: 'ID of todo to return.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                '200':
+                    $ref: '#/components/responses/Todo'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+        put:
+            tags:
+                - todos
+            summary: 'Update ToDo element'
+            description: 'Update ToDo element.'
+            requestBody:
+                $ref: '#/components/requestBodies/TodoBody'
+            parameters:
+                - name: todoId
+                  in: path
+                  description: 'ID of todo to return.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                '200':
+                    $ref: '#/components/responses/Todo'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+        delete:
+            tags:
+                - todos
+            summary: 'Deletes a todo'
+            description: 'Deletes a todo.'
+            parameters:
+                - name: todoId
+                  in: path
+                  description: 'ID of a ToDo List element.'
+                  required: true
+                  schema:
+                      type: string
+                      format: uuid
+            responses:
+                '204':
+                    $ref: '#/components/responses/NoContent'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
