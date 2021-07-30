@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const truncateDatabase = require('../../helpers/truncate');
 const userFactory = require('../../factories/user');
-const app = require('../../../index');
+const app = require('../../../src/index');
 const request = require('supertest')(app);
 const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');
@@ -18,7 +18,7 @@ const passwordResetTokenGeneratorHandler = di.get(
     'services.passwordResetTokenGeneratorHandler'
 );
 
-describe('Reset-password', () => {
+describe('Change-password', () => {
     before(async () => {
         await truncateDatabase();
         userData = userFactory.generate();
@@ -61,10 +61,8 @@ describe('Reset-password', () => {
                 passwordConfirmation: '456password'
             });
 
-        console.log(body.errors);
-
         expect(body.errors).to.deep.include({
-            message: 'must match password',
+            message: 'Password confirmation must match password.',
             param: 'passwordConfirmation'
         });
 
@@ -77,12 +75,12 @@ describe('Reset-password', () => {
         );
 
         expect(body.errors).to.deep.include({
-            message: 'is required',
+            message: 'Password is required.',
             param: 'password'
         });
 
         expect(body.errors).to.deep.include({
-            message: 'is required',
+            message: 'Password confirmation is required.',
             param: 'passwordConfirmation'
         });
 

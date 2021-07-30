@@ -48,6 +48,7 @@ describe('Reset-password', () => {
             const { body, status } = await request.post(`/reset-password/`);
 
             expect(body).to.have.property('errors');
+
             expect(body.errors).to.deep.include({
                 message: 'Email is required.',
                 param: 'email'
