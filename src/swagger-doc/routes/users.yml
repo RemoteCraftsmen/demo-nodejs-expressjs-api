@@ -2,7 +2,7 @@ paths:
     /users:
         post:
             tags:
-                - user
+                - users
             summary: 'Create user'
             description: 'Add new user.'
             requestBody:
@@ -18,7 +18,7 @@ paths:
                     $ref: '#/components/responses/ForbiddenError'
         get:
             tags:
-                - user
+                - users
             summary: 'Get list of users'
             description: 'Get list of users.'
             responses:
@@ -37,7 +37,7 @@ paths:
     '/user/{userId}':
         get:
             tags:
-                - user
+                - users
             summary: 'Get user by user id'
             description: 'Get user by user id.'
             parameters:
@@ -59,7 +59,7 @@ paths:
                     $ref: '#/components/responses/ForbiddenError'
         put:
             tags:
-                - user
+                - users
             summary: 'Updated user'
             description: 'Updated user.'
             parameters:
@@ -81,7 +81,7 @@ paths:
                     $ref: '#/components/responses/ForbiddenError'
         delete:
             tags:
-                - user
+                - users
             summary: 'Delete user'
             description: 'Delete user.'
             parameters:
