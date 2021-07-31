@@ -2,9 +2,8 @@
 
 ### Prerequisites
 
--   Node - v10.11.0
--   NPM - v6.4.1
--   Yarn - 2.12.2
+-   Node - v14.17.4
+-   NPM - v7.20.3
 -   Docker - v18.06.1 (optional)
 
 ### Installing
@@ -16,13 +15,15 @@ git clone git clone git@bitbucket.org:remotecraftsmen/nodejs-express-api.git
 cd ./nodejs-express-api
 
 #install dependencies
-yarn install
+npm install
 
 #docker setup
 docker-compose up --build #or install postgres manually)
 
+# copy file and set proper data inside
+cp .env.example .env
+
 #database setup
-Configure the database in config/config.json (under development)
 ./node_modules/.bin/sequelize db:migrate
 ./node_modules/.bin/sequelize db:seed:all
 ```
@@ -78,4 +79,6 @@ Live demo available at http://node-express-demo.rmtcfm.com
 
 ### DOCUMENTATION
 
-**path** ./apidoc/index.html
+**path** ./
+
+**path** ./swagger
