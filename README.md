@@ -11,7 +11,7 @@
 From terminal
 
 ```
-git clone git clone git@bitbucket.org:remotecraftsmen/nodejs-express-api.git
+git clone git@bitbucket.org:remotecraftsmen/nodejs-express-api.git
 cd ./nodejs-express-api
 
 #install dependencies
@@ -57,7 +57,7 @@ npm run test
 
 `POST auth/register`
 
-**Params:** `username`, `first_name`, `last_name`, `email`, `password` **Response:** You'll receive a JSON response containing a token.
+**Params:** `username`, `firstName`, `lastName`, `email`, `password` **Response:** You'll receive a JSON response containing a token.
 
 **Notes:**
 
@@ -71,14 +71,25 @@ When making future requests include the token in one of these places:
 
 `POST /auth/login`
 
-**Params:** `email`, `password` **Response:** You'll receive a JSON response containing a token.
+**Params:** `email`, `password` **Response:** You'll receive a JSON response containing a token and user data.
 
 ### DEMO
 
 Live demo available at http://node-express-demo.rmtcfm.com
 
-### DOCUMENTATION
+# Documentation
 
-**path** ./
+There are two ways to use API documentation
 
-**path** ./swagger
+## Api doc
+
+```
+npm run apidoc
+```
+
+## Swagger doc
+
+```
+npm run swagger2json
+npm run swagger2html
+```
