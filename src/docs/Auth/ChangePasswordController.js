@@ -10,7 +10,7 @@
  *    @apiParamExample {json} Request-Example:
  *        {
  *            "password": "12345678",
- *            "password_confirmation": "12345678"
+ *            "passwordConfirmation": "12345678"
  *        }
  *
  *    @apiError (400) BadRequest              Reset password token was not found <br />
