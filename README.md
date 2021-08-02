@@ -8,6 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+For MacOS with file sensitivity, add this option to docker compose mysql: command: --lower_case_table_names=1
+
 -   Node - v14.17.4
 -   NPM - v7.20.3
 -   Docker - v18.06.1 (optional)
@@ -42,19 +44,20 @@ npm run db-setup
 npm run db-setup-fresh
 ```
 
-## Run for development
+## Run for production
+
+```
+# docker setup
+docker-compose -f docker-compose.prod.yml up --build -d # or install mysql and redis manually
+
+# run process manager
+pm2 start pm2.json --env=production
+```
+
+## Development
 
 ```
 npm run dev
-```
-
-## Run for production
-
-### start node server
-
-```
-npm run build
-npm start
 ```
 
 ## Run tests
