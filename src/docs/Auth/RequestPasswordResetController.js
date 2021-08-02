@@ -1,5 +1,5 @@
 /**
- *    @api {post} /reset-password Request for reset password
+ *    @api {post} /auth/reset-password Request for reset password
  *    @apiName PostPasswordResetPassword
  *    @apiGroup ResetPassword
  *    @apiVersion 1.0.0

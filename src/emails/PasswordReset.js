@@ -1,5 +1,3 @@
-/** @param {{frontendUrls:string, noReplyAddress:string}} config */
-
 class PasswordReset {
     constructor(config) {
         this.config = config;

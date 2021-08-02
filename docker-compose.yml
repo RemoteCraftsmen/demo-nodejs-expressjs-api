@@ -1,47 +1,31 @@
 version: '3'
 
 services:
-  db:
-    image: postgres
-    container_name: postgres.nodejs-express-api.docker
-    restart: always
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: api
-    volumes:
-    - ~/data/postgres.nodejs-express-api.docker:/var/lib/postgresql/data
-    ports:
-    - 127.0.0.1:5432:5432
-    networks:
-    - global
+    db:
+        image: postgres
+        container_name: postgres.nodejs-express-api.docker
+        restart: always
+        environment:
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
+        volumes:
+            - ~/data/postgres.nodejs-express-api.docker:/var/lib/postgresql/data
+        ports:
+            - 127.0.0.1:${DATABASE_PORT}:5432
+        networks:
+            - global
 
-  db_test:
-    image: postgres
-    container_name: postgres_test.nodejs-express-api.docker
-    restart: always
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: api_test
-    volumes:
-    - ~/data/postgres_test.nodejs-express-api.docker:/var/lib/postgresql/data
-    ports:
-    - 127.0.0.1:5433:5432
-    networks:
-    - global
-    
-  mailcatcher:
-    image: schickling/mailcatcher
-    container_name: mailcatcher.nodejs-express-api.docker
-    labels:
-      traefik.frontend.rule: "Host:nodejs-express-api.test,mailcatcher.nodejs-express-api.test"
-      traefik.port: "1080"
-    ports:
-      - 127.0.0.1:1025:1025
-    networks:
-    - global
+    mailcatcher:
+        image: schickling/mailcatcher
+        container_name: mailcatcher.nodejs-express-api.docker
+        restart: unless-stopped
+        ports:
+            - 127.0.0.1:${MAIL_PORT}:1025
+            - 127.0.0.1:1080:1080
+        networks:
+            - global
 
 networks:
-  global:
-    external: true
+    global:
+        external: true
