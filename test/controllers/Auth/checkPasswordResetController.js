@@ -19,7 +19,7 @@ const passwordResetTokenGeneratorHandler = di.get(
 );
 
 describe('Auth', () => {
-    describe('POST /auth/reset-password/:token', () => {
+    describe('POST /auth/reset-password/{token}', () => {
         before(async () => {
             await truncateDatabase();
             userData = userFactory.generate();
