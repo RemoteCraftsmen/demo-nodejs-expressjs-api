@@ -10,5 +10,6 @@ package-lock.json
 apidoc
 yarn.lock
 .env
+.env.test
 public/*
 swagger.json
