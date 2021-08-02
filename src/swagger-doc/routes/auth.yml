@@ -25,3 +25,58 @@ paths:
                     $ref: '#/components/responses/BadRequestError'
                 '401':
                     $ref: '#/components/responses/UnauthorizedError'
+
+    /auth/reset-password:
+        post:
+            tags:
+                - auth
+            summary: 'Request for reset password'
+            description: 'User ask server to change his password, as respond he gets an email with token, which is giving access to this action.'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    description: User email
+                                    type: string
+                                    format: email
+            responses:
+                '204':
+                    $ref: '#/components/responses/NoContent'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+
+    '/reset-password/{passwordResetToken}':
+        post:
+            tags:
+                - auth
+            summary: 'Set new password using token'
+            description: 'If user already has recived email with token, he can send new password which will be hashed and stored in db.'
+            parameters:
+                - in: path
+                  name: passwordResetToken
+                  description: 'Token which was send to users email, when asking for password reset.'
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                password:
+                                    description: 'New password'
+                                    type: string
+                                    format: password
+                                    example: 'password123'
+                                passwordConfirmation:
+                                    description: 'New password confirmation.'
+                                    type: string
+                                    format: password
+                                    example: 'password123'
+            responses:
+                '204':
+                    $ref: '#/components/responses/NoContent'

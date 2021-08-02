@@ -35,7 +35,7 @@ describe('Change-password', () => {
         const { email } = user;
 
         const response = await request
-            .post(`/reset-password/${user.passwordResetToken}`)
+            .post(`/auth/reset-password/${user.passwordResetToken}`)
             .send({
                 password,
                 passwordConfirmation
@@ -55,7 +55,7 @@ describe('Change-password', () => {
 
     it('returns BAD REQUEST when password and password repeat are not equal as NOT LOGGED', async () => {
         const { body, status } = await request
-            .post(`/reset-password/${user.passwordResetToken}`)
+            .post(`/auth/reset-password/${user.passwordResetToken}`)
             .send({
                 password: 'password123',
                 passwordConfirmation: '456password'
@@ -71,7 +71,7 @@ describe('Change-password', () => {
 
     it('returns BAD REQUEST when body section is empty as NOT LOGGED', async () => {
         const { body, status } = await request.post(
-            `/reset-password/${user.passwordResetToken}`
+            `/auth/reset-password/${user.passwordResetToken}`
         );
 
         expect(body.errors).to.deep.include({

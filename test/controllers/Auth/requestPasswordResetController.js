@@ -23,7 +23,7 @@ describe('Reset-password', () => {
     it('returns NO_CONTENT sending valid data as NOT LOGGED', async () => {
         const { email } = userData;
         const { status } = await request
-            .post('/reset-password/')
+            .post('/auth/reset-password/')
             .send({ email });
 
         const updatedUser = await userRepository.getByEmail(email);
@@ -37,7 +37,7 @@ describe('Reset-password', () => {
         const email = 'fakemail@example.com';
 
         const { status } = await request
-            .post('/reset-password/')
+            .post('/auth/reset-password/')
             .send({ email });
 
         expect(status).to.equal(StatusCodes.NO_CONTENT);
@@ -45,7 +45,9 @@ describe('Reset-password', () => {
 
     describe('POST /reset-password', () => {
         it('returns BAD REQUEST when body section is empty as NOT LOGGED', async () => {
-            const { body, status } = await request.post(`/reset-password/`);
+            const { body, status } = await request.post(
+                `/auth/reset-password/`
+            );
 
             expect(body).to.have.property('errors');
 

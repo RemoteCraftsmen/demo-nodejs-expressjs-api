@@ -1,5 +1,5 @@
 /**
- *    @api {post} /reset-password/:token Reset password
+ *    @api {post} /auth/reset-password/:token Reset password
  *    @apiName PostPasswordResetchangePassword
  *    @apiGroup ResetPassword
  *    @apiVersion 1.0.0
