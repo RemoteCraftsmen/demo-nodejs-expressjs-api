@@ -6,21 +6,21 @@ const changePasswordValidator = require('../validators/changePasswordValidator')
 const resetPasswordValidator = require('../validators/resetPasswordValidator');
 
 module.exports = di => {
-    const resetPasswordController = di.get(
-        'controllers.auth.resetPasswordController'
+    const requestPasswordResetController = di.get(
+        'controllers.auth.requestPasswordResetController'
     );
-    const changePasswordController = di.get(
-        'controllers.auth.changePasswordController'
+    const checkPasswordResetController = di.get(
+        'controllers.auth.checkPasswordResetController'
     );
 
     router.post('/', [resetPasswordValidator, validate], (...args) =>
-        resetPasswordController.invoke(...args)
+        requestPasswordResetController.invoke(...args)
     );
 
     router.post(
         '/:passwordResetToken',
         [changePasswordValidator, validate],
-        (...args) => changePasswordController.invoke(...args)
+        (...args) => checkPasswordResetController.invoke(...args)
     );
 
     return router;

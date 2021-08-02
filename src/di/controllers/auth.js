@@ -4,8 +4,8 @@ module.exports = {
             class: '/controllers/Auth/LoginController',
             arguments: ['@repositories.user', '@services.auth']
         },
-        'controllers.auth.resetPasswordController': {
-            class: '/controllers/Auth/ResetPasswordController',
+        'controllers.auth.requestPasswordResetController': {
+            class: '/controllers/Auth/RequestPasswordResetController',
             arguments: [
                 '@repositories.user',
                 '@services.sendMailHandler',
@@ -13,8 +13,8 @@ module.exports = {
                 '@services.passwordResetTokenGeneratorHandler'
             ]
         },
-        'controllers.auth.changePasswordController': {
-            class: '/controllers/Auth/ChangePasswordController',
+        'controllers.auth.checkPasswordResetController': {
+            class: '/controllers/Auth/CheckPasswordResetController',
             arguments: ['@repositories.user']
         },
         'controllers.auth.registerController': {
