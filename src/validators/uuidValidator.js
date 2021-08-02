@@ -5,6 +5,7 @@ function isUUIDValid(uuid) {
     if (!validate(uuid)) {
         return false;
     }
+
     return true;
 }
 

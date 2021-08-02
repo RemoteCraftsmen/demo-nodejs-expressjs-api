@@ -64,7 +64,7 @@ npm run dev
 
 ```
 # copy file and set proper data inside
-cp .env.example .env.test
+cp .env.test.example .env.test
 
 docker-compose --env-file .env.test -f docker-compose.test.yml up -d
 

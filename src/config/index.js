@@ -41,6 +41,5 @@ module.exports = {
         secret: env('JWT_SECRET')
     },
     frontendUrls: env('FRONTEND_URLS').split(' '),
-    noReplyAddress: env('NO_REPLY_ADDRESS'),
-    enableDocs: true
+    noReplyAddress: env('NO_REPLY_ADDRESS')
 };

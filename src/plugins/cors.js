@@ -2,8 +2,7 @@ const cors = require('cors');
 const config = require('../config');
 
 module.exports = app => {
-    let localWhiteList = ['http://localhost:4200'];
-    let originsWhitelist = localWhiteList.concat(config.frontendUrls);
+    let originsWhitelist = config.frontendUrls;
 
     let corsOptions = {
         origin: (origin, callback) => {
