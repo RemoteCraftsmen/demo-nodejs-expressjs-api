@@ -4,7 +4,7 @@ services:
     db_test:
         image: postgres
         container_name: postgres_test.nodejs-express-api.docker
-        restart: always
+        restart: unless-stopped
         environment:
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -18,7 +18,7 @@ services:
 
     mailcatcher:
         image: schickling/mailcatcher
-        container_name: mailcatcher.nodejs-express-api.docker
+        container_name: mailcatcher_test.nodejs-express-api.docker
         restart: unless-stopped
         ports:
             - 127.0.0.1:${MAIL_PORT}:1025
