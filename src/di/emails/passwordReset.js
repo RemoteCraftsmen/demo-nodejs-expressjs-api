@@ -1,4 +1,5 @@
 const config = require('../../config');
+
 module.exports = {
     parameters: {
         config

@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const dayjs = require('dayjs');
 
-class ResetPasswordController {
+class RequestPasswordResetController {
     constructor(
         userRepository,
         sendMailHandler,
@@ -45,4 +45,4 @@ class ResetPasswordController {
     }
 }
 
-module.exports = ResetPasswordController;
+module.exports = RequestPasswordResetController;

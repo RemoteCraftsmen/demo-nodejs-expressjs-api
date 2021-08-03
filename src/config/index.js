@@ -6,7 +6,6 @@ const env = (key, defaultValue = null) => process.env[key] || defaultValue;
 const isEnabled = key => env(key) && env(key) === 'true';
 
 module.exports = {
-    enableDocs: isEnabled(env('ENABLEDOCS')),
     app: {
         url: env('APP_URL', 'http://127.0.0.1:3000')
     },
@@ -42,6 +41,5 @@ module.exports = {
         secret: env('JWT_SECRET')
     },
     frontendUrls: env('FRONTEND_URLS').split(' '),
-    noReplyAddress: env('NO_REPLY_ADDRESS'),
-    enableDocs: true
+    noReplyAddress: env('NO_REPLY_ADDRESS')
 };

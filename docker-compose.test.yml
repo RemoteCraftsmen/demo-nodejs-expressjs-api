@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-    db:
+    db_test:
         image: postgres
-        container_name: postgres.nodejs-express-api.docker
+        container_name: postgres_test.nodejs-express-api.docker
         restart: always
         environment:
             POSTGRES_USER: ${DATABASE_USERNAME}
             POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
             POSTGRES_DB: ${DATABASE_NAME}
         volumes:
-            - ~/data/postgres.nodejs-express-api.docker:/var/lib/postgresql/data
+            - ~/data/postgres_test.nodejs-express-api.docker:/var/lib/postgresql/data
         ports:
             - 127.0.0.1:${DATABASE_PORT}:5432
         networks:

@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 
-class ChangePasswordController {
+class CheckPasswordResetController {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
@@ -40,4 +40,4 @@ class ChangePasswordController {
     }
 }
 
-module.exports = ChangePasswordController;
+module.exports = CheckPasswordResetController;
