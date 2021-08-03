@@ -83,8 +83,6 @@ npm run test
 
 When making future requests include the token in one of these places:
 
--   access_token -> in the request body.
--   access_token -> in the request params.
 -   header -> Authorization: Bearer <token>.
 
 ### Logging in
