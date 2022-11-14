@@ -1,8 +1,13 @@
-{
+require('dotenv').config();
+
+const env = (key, defaultValue = null) => process.env[key] || defaultValue;
+
+module.exports = {
     "apps": [
         {
-            "name": "node-express-api",
-            "script": "./src/index.js",
+            name: env('PM2_NAME', 'NodeExpress') + 'API',
+            namespace: env('PM2_NAME', 'NodeExpressAPI'),
+            "script": "./src/bin/server.js",
             "watch": false,
             "instances": "2",
             "exec_mode": "cluster",
