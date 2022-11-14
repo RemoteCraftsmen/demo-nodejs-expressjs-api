@@ -8,6 +8,14 @@
         "npm": "~7.20.3"
     },
     "scripts": {
+        "dc-conf": "npm run dc-conf-${NODE_ENV:-dev}",
+        "dc-conf-dev": "docker-compose -f docker-compose.prod.yml -f docker-compose.dev.yml",
+        "dc-conf-test": "docker-compose -f docker-compose.prod.yml --env-file .env.test",
+        "dc-up": "npm run --silent dc-conf -- -- up -d",
+        "dc-ps": "npm run --silent dc-conf -- -- ps",
+        "dc-logs": "npm run --silent dc-conf -- -- logs -f",
+        "dc-tail": "npm run --silent dc-logs -- --tail 5",
+        "dc-down": "npm run --silent dc-conf -- -- down",
         "dev": "NODE_ENV=development nodemon ./src/index.js",
         "start": "NODE_ENV=production node ./src/index.js",
         "test": "NODE_ENV=test mocha --exit ./test/ --recursive",

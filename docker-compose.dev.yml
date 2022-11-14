@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+    mailcatcher:
+        image: schickling/mailcatcher
+        container_name: ${COMPOSE_PROJECT_NAME}.mailcatcher.docker
+        restart: unless-stopped
+        ports:
+            - 127.0.0.1:${MAIL_PORT}:1025
+            - 127.0.0.1:1080:1080
+        networks:
+            - global
+
+networks:
+    global:
+        external: true
