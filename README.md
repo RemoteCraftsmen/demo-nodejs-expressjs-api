@@ -19,21 +19,20 @@ For MacOS with file sensitivity, add this option to docker compose mysql: comman
 From terminal
 
 ```
-git clone git@bitbucket.org:remotecraftsmen/nodejs-express-api.git
-cd ./nodejs-express-api
+git clone git@github.com:RemoteCraftsmen/demo-nodejs-expressjs-api.git
+cd ./demo-nodejs-expressjs-api
 
-#install dependencies
+# install dependencies
 npm install
-
-#docker setup
-docker-compose up --build #or install postgres manually
 
 # copy file and set proper data inside
 cp .env.example .env
 
-#database setup
-./node_modules/.bin/sequelize db:migrate
-./node_modules/.bin/sequelize db:seed:all
+# docker setup
+npm run dc-up
+
+# database setup
+npm run db-setup-fresh
 
 # other useful commands
 npm run db-drop
@@ -48,10 +47,10 @@ npm run db-setup-fresh
 
 ```
 # docker setup
-docker-compose -f docker-compose.prod.yml up --build -d # or install mysql and redis manually
+npm run dc-up
 
 # run process manager
-pm2 start pm2.json --env=production
+pm2 start pm2.config.js --env=production
 ```
 
 ## Development
@@ -63,10 +62,11 @@ npm run dev
 ## Run tests
 
 ```
-# copy file and set proper data inside
-cp .env.test.example .env.test
+# copy file and set proper data inside (different ports, user names)
+cp .env.example .env.test
 
-docker-compose --env-file .env.test -f docker-compose.test.yml up -d
+NODE_ENV=test npm run dc-up
+NODE_ENV=test npm run db-setup-fresh 
 
 npm run test
 ```
@@ -93,11 +93,13 @@ When making future requests include the token in one of these places:
 
 ### DEMO
 
-Live demo available at http://node-express-demo.rmtcfm.com
+Live demo available at https://node-express-demo.rmtcfm.com
 
 # Documentation
 
 There are two ways to use API documentation
+https://node-express-demo.rmtcfm.com
+https://node-express-demo.rmtcfm.com/swagger
 
 ## Api doc
 
